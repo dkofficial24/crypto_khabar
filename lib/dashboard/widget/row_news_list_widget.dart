@@ -44,7 +44,7 @@ class NewsRowListWidget extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
-                      newsItem.imgUrls[0],
+                      newsItem.imgUrl,
                       fit: BoxFit.fitHeight,
                       errorBuilder: (ctx, obj, stack) {
                         return Container(

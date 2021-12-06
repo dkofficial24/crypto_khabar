@@ -25,7 +25,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Image.network(
-                  _newsItem.imgUrls[0],
+                  _newsItem.imgUrl,
                   fit: BoxFit.fitWidth,
                   errorBuilder: (ctx, obj, stack) {
                     return Container(

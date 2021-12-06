@@ -22,4 +22,6 @@ class TopNewsProvider extends ChangeNotifier {
   void onRefresh(RefreshController refreshController) {
     refreshController.refreshCompleted();
   }
+
+  void loadMore() async{}
 }

@@ -5,6 +5,7 @@ import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -41,37 +42,42 @@ class _TopNewsPageState extends State<TopNewsPage> {
                   onRefresh: () {
                     provider.onRefresh(_refreshController);
                   },
-                  child: ListView.separated(
-                      itemBuilder: (ctx, index) {
-                        if (index == 0 || index % 4 == 0) {
-                          return ColumnNewsListWidget(
-                            newsItem: provider.newsItemList[index],
-                            callback: () {
-                              Navigator.pushNamed(
-                                  context, AppRoutes.NewsDetailsPage,
-                                  arguments: provider.newsItemList[index]);
-                            },
-                          );
-                        }
+                  child: LazyLoadScrollView(
+                    onEndOfPage: provider.loadMore,scrollOffset: 50,
+                    child: Dismissible(
+                      child: ListView.separated(
+                          itemBuilder: (ctx, index) {
+                            if (index == 0 || index % 4 == 0) {
+                              return ColumnNewsListWidget(
+                                newsItem: provider.newsItemList[index],
+                                callback: () {
+                                  Navigator.pushNamed(
+                                      context, AppRoutes.NewsDetailsPage,
+                                      arguments: provider.newsItemList[index]);
+                                },
+                              );
+                            }
 
-                        return NewsRowListWidget(
-                          newsItem: provider.newsItemList[index],
-                          callback: () {
-                            Navigator.pushNamed(
-                                context, AppRoutes.NewsDetailsPage,
-                                arguments: provider.newsItemList[index]);
+                            return NewsRowListWidget(
+                              newsItem: provider.newsItemList[index],
+                              callback: () {
+                                Navigator.pushNamed(
+                                    context, AppRoutes.NewsDetailsPage,
+                                    arguments: provider.newsItemList[index]);
+                              },
+                            );
                           },
-                        );
-                      },
-                      separatorBuilder: (ctx, index) {
-                        return Container(
-                          margin: EdgeInsets.symmetric(vertical: 8),
-                          height: 1,
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.grey,
-                        );
-                      },
-                      itemCount: _topNewsProvider.newsItemList.length),
+                          separatorBuilder: (ctx, index) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              height: 1,
+                              width: MediaQuery.of(context).size.width,
+                              color: Colors.grey,
+                            );
+                          },
+                          itemCount: _topNewsProvider.newsItemList.length),
+                    ),
+                  ),
                 ));
           },
         ),

@@ -22,7 +22,7 @@ class ColumnNewsListWidget extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Image.network(
-                newsItem.imgUrls[0],
+                newsItem.imgUrl,
                 fit: BoxFit.cover,
               ),
             ),
