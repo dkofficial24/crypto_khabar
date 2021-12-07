@@ -14,6 +14,7 @@ class NewsRowListWidget extends StatelessWidget {
       onTap: callback,
       child: Container(
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
               flex: 4,

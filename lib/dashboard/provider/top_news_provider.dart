@@ -8,18 +8,19 @@ class TopNewsProvider extends ChangeNotifier {
   bool isLoading = false;
 
   TopNewsProvider() {
-    loadNews();
+    fetchNewsByPagination();
   }
 
-  Future loadNews() async {
+  Future fetchNewsByPagination() async {
     isLoading = true;
     notifyListeners();
-    newsItemList = await NewsService().fetchNews();
+    newsItemList = await NewsService().fetchNewsByPagination();
     isLoading = false;
     notifyListeners();
   }
 
-  void onRefresh(RefreshController refreshController) {
+  void onRefresh(RefreshController refreshController) async {
+    await fetchNewsByPagination();
     refreshController.refreshCompleted();
   }
 

@@ -1,7 +1,9 @@
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
 import 'package:crypto_khabar/dashboard/widget/column_news_list_widget.dart';
+import 'package:crypto_khabar/dashboard/widget/drawer_menu.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
+import 'package:crypto_khabar/shared/notification_service.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,12 @@ class _TopNewsPageState extends State<TopNewsPage> {
   void initState() {
     _topNewsProvider = TopNewsProvider();
     _refreshController = RefreshController(initialRefresh: false);
+    init();
     super.initState();
+  }
+
+  Future init() async {
+    NotificationService();
   }
 
   @override
@@ -30,6 +37,9 @@ class _TopNewsPageState extends State<TopNewsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Top News"),
+      ),
+      drawer: Drawer(
+        child: DrawerMenuWidget(),
       ),
       body: ChangeNotifierProvider<TopNewsProvider>(
         create: (ctx) => _topNewsProvider,
@@ -43,22 +53,12 @@ class _TopNewsPageState extends State<TopNewsPage> {
                     provider.onRefresh(_refreshController);
                   },
                   child: LazyLoadScrollView(
-                    onEndOfPage: provider.loadMore,scrollOffset: 50,
-                    child: Dismissible(
-                      child: ListView.separated(
-                          itemBuilder: (ctx, index) {
-                            if (index == 0 || index % 4 == 0) {
-                              return ColumnNewsListWidget(
-                                newsItem: provider.newsItemList[index],
-                                callback: () {
-                                  Navigator.pushNamed(
-                                      context, AppRoutes.NewsDetailsPage,
-                                      arguments: provider.newsItemList[index]);
-                                },
-                              );
-                            }
-
-                            return NewsRowListWidget(
+                    onEndOfPage: provider.fetchNewsByPagination,isLoading: provider.isLoading,
+                    scrollOffset: 50,
+                    child: ListView.separated(
+                        itemBuilder: (ctx, index) {
+                          if (index == 0 || index % 4 == 0) {
+                            return ColumnNewsListWidget(
                               newsItem: provider.newsItemList[index],
                               callback: () {
                                 Navigator.pushNamed(
@@ -66,17 +66,26 @@ class _TopNewsPageState extends State<TopNewsPage> {
                                     arguments: provider.newsItemList[index]);
                               },
                             );
-                          },
-                          separatorBuilder: (ctx, index) {
-                            return Container(
-                              margin: EdgeInsets.symmetric(vertical: 8),
-                              height: 1,
-                              width: MediaQuery.of(context).size.width,
-                              color: Colors.grey,
-                            );
-                          },
-                          itemCount: _topNewsProvider.newsItemList.length),
-                    ),
+                          }
+
+                          return NewsRowListWidget(
+                            newsItem: provider.newsItemList[index],
+                            callback: () {
+                              Navigator.pushNamed(
+                                  context, AppRoutes.NewsDetailsPage,
+                                  arguments: provider.newsItemList[index]);
+                            },
+                          );
+                        },
+                        separatorBuilder: (ctx, index) {
+                          return Container(
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            height: 1,
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.grey,
+                          );
+                        },
+                        itemCount: _topNewsProvider.newsItemList.length),
                   ),
                 ));
           },
