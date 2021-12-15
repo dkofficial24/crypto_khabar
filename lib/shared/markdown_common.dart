@@ -12,7 +12,7 @@ class MarkdownView extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Markdown(
       controller: controller,
-      data: data,styleSheet: MarkdownStyleSheet(p: GoogleFonts.roboto(fontSize: 18),),
+      data: data,styleSheet: MarkdownStyleSheet(p: GoogleFonts.roboto(fontSize: 16),),
       shrinkWrap: true,
       onTapLink: (txt, href, title) {
         try {
