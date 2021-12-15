@@ -1,6 +1,8 @@
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
+import 'package:crypto_khabar/shared/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NewsDetailsPage extends StatefulWidget {
@@ -19,13 +21,14 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
         body: Container(
       margin: EdgeInsets.symmetric(horizontal: 8),
       child: ListView(
+        shrinkWrap: true,
         children: [
           Container(
               height: MediaQuery.of(context).size.height * 0.25,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Image.network(
-                  _newsItem.imgUrl,
+                  _newsItem?.imgUrl ?? "",
                   fit: BoxFit.fitWidth,
                   errorBuilder: (ctx, obj, stack) {
                     return Container(
@@ -43,13 +46,8 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
           ),
           Text(AppUtils.formatDate(_newsItem.date)),
           SizedBox(height: 8),
-          Text(
+          MarkdownView(
             _newsItem.details,
-            style: GoogleFonts.roboto(fontSize: 16),
-            // style: Theme.of(context).textTheme.bodyText2.copyWith(
-            //       fontSize: 16,
-            //       letterSpacing: 0.5,wordSpacing: 0.5,
-            //     ),
           )
         ],
       ),
