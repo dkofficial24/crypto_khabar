@@ -5,11 +5,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MarkdownView extends StatelessWidget {
   final String data;
-  const MarkdownView(this.data);
+  final ScrollController controller;
+  const MarkdownView(this.data,this.controller);
 
   @override
   Widget build(BuildContext context) {
     return  Markdown(
+      controller: controller,
       data: data,styleSheet: MarkdownStyleSheet(p: GoogleFonts.roboto(fontSize: 18),),
       shrinkWrap: true,
       onTapLink: (txt, href, title) {

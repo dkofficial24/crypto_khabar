@@ -36,7 +36,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Top News"),
+        title: Text("Crypto News"),
       ),
       drawer: Drawer(
         child: DrawerMenuWidget(),

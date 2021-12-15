@@ -12,6 +12,13 @@ class NewsDetailsPage extends StatefulWidget {
 
 class _NewsDetailsPageState extends State<NewsDetailsPage> {
   NewsItem _newsItem;
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +53,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
           ),
           Text(AppUtils.formatDate(_newsItem.date)),
           SizedBox(height: 8),
-          MarkdownView(
-            _newsItem.details,
-          )
+          MarkdownView(_newsItem.details, _scrollController)
         ],
       ),
     ));

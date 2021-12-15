@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             )
           : ThemeData(
               brightness: Brightness.dark,
-              primaryColor: Color(0xFF282727),
+              primaryColor: Colors.black,
               accentColor: Colors.cyan[600],
             ),
       home: SplashPage(),
