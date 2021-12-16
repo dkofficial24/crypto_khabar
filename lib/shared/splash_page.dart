@@ -11,7 +11,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     AuthService().loginAnonymously().then((value) {
-      Navigator.pushReplacementNamed(context, AppRoutes.TopNewsPage);
+      Navigator.pushReplacementNamed(context, AppRoutes.Dashboard);
     }).timeout(Duration(seconds: 2));
 
     super.initState();

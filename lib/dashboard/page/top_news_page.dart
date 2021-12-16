@@ -47,14 +47,15 @@ class _TopNewsPageState extends State<TopNewsPage> {
           builder: (context, provider, child) {
             return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: SmartRefresher(
-                  controller: _refreshController,
-                  onRefresh: () {
-                    provider.onRefresh(_refreshController);
-                  },
-                  child: LazyLoadScrollView(
-                    onEndOfPage: provider.fetchNewsByPagination,isLoading: provider.isLoading,
-                    scrollOffset: 50,
+                child: LazyLoadScrollView(
+                  onEndOfPage: provider.fetchNewsByPagination,
+                  isLoading: provider.isLoading,
+                  scrollOffset: 50,
+                  child: SmartRefresher(
+                    controller: _refreshController,
+                    onRefresh: () {
+                      provider.onRefresh(_refreshController);
+                    },
                     child: ListView.separated(
                         itemBuilder: (ctx, index) {
                           if (index == 0 || index % 4 == 0) {
