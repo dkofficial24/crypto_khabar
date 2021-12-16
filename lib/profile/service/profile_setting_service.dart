@@ -1,3 +1,5 @@
+import 'package:broadcast_events/broadcast_events.dart';
+import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/shared/shared_pref_helper.dart';
 
 class ProfileSettingService {
@@ -12,6 +14,8 @@ class ProfileSettingService {
   Future setDarkTheme(bool status) async {
     SharedPrefHelper sharedPrefHelper = SharedPrefHelper();
     await sharedPrefHelper.saveValue("isDarkTheme", status);
+
+    BroadcastEvents().publish<bool>(ThemeChange,arguments: status);
   }
 
   Future<bool> isDarkTheme() async {

@@ -1,3 +1,4 @@
+import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:crypto_khabar/shared/splash_page.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
@@ -12,25 +13,24 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-
-
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  bool isDarkTheme=false;
+  bool isDarkTheme = false;
 
   @override
   void initState() {
-    ProfileSettingService().isDarkTheme().then((value) {
+    BroadcastEvents().subscribe<bool>(ThemeChange, onThemeChange);
+
+    ProfileSettingService().isDarkTheme().then((status) {
       setState(() {
-        isDarkTheme = value;
+        isDarkTheme = status;
       });
     });
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,22 +40,34 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: isDarkTheme
           ? ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.lightBlue[800],
-        accentColor: Colors.cyan[600],
-        // // fontFamily: 'Georgia',
-        //  textTheme: TextTheme(
-        //  //  headline1: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-        //   // headline6: TextStyle(fontSize: 30.0, fontStyle: FontStyle.italic),
-        //   // bodyText2: GoogleFonts.roboto(),
-        //  ),
-      )
+              brightness: Brightness.light,
+              primaryColor: Colors.lightBlue[800],
+              accentColor: Colors.cyan[600],
+              // // fontFamily: 'Georgia',
+              //  textTheme: TextTheme(
+              //  //  headline1: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+              //   // headline6: TextStyle(fontSize: 30.0, fontStyle: FontStyle.italic),
+              //   // bodyText2: GoogleFonts.roboto(),
+              //  ),
+            )
           : ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.black,
-        accentColor: Colors.cyan[600],
-      ),
+              brightness: Brightness.dark,
+              primaryColor: Colors.black,
+              accentColor: Colors.cyan[600],
+            ),
       home: SplashPage(),
     );
+  }
+
+  onThemeChange(status) {
+    setState(() {
+      isDarkTheme = status;
+    });
+  }
+
+  @override
+  void dispose() {
+    BroadcastEvents().unsubscribe<bool>(ThemeChange, handler: onThemeChange);
+    super.dispose();
   }
 }
