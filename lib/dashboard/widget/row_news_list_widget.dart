@@ -28,10 +28,14 @@ class NewsRowListWidget extends StatelessWidget {
                     overflow: TextOverflow.fade,
                   ),
                   SizedBox(height: 8),
-                  Text("${newsItem.source} . ${AppUtils.formatDate(newsItem.date)}",
-                    style: TextStyle(
-                        fontSize: 12
-                    ),
+                  Row(
+                    children: [
+                      Text("${newsItem.source} . ${AppUtils.formatDate(newsItem.date)}",
+                        style: TextStyle(
+                            fontSize: 12
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),

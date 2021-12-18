@@ -8,6 +8,7 @@ class NewsItem {
   String imgUrl;
   List<String> imgUrls;
   String category;
+  String sourceLink;
 
   NewsItem(
       {
@@ -19,7 +20,8 @@ class NewsItem {
         this.source,
         this.imgUrl,
         this.imgUrls,
-        this.category
+        this.category,
+        this.sourceLink
       });
 
   NewsItem.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class NewsItem {
     source = json['source'];
     imgUrl = json['imgUrl'];
     category = json['category'];
+    sourceLink = json['sourceLink'];
     imgUrls = json['imgUrls']?.cast<String>();
   }
 
@@ -45,6 +48,7 @@ class NewsItem {
     data['imgUrl'] = this.imgUrl;
     data['imgUrls'] = this.imgUrls;
     data['category'] = this.category;
+    data['sourceLink'] = this.sourceLink;
     return data;
   }
 }

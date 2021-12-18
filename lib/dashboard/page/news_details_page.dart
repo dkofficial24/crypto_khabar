@@ -2,8 +2,6 @@ import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/shared/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class NewsDetailsPage extends StatefulWidget {
   @override
@@ -25,37 +23,49 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
     _newsItem = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
+        appBar: AppBar(
+          title: Text("News"),
+          actions: [
+            IconButton(icon: Icon(Icons.bookmark_border, color: Colors.white)),
+            IconButton(
+                onPressed: () {
+                  AppUtils.shareNews(_newsItem);
+                },
+                icon: Icon(Icons.share, color: Colors.white)),
+            SizedBox(width: 8)
+          ],
+        ),
         body: Container(
-      margin: EdgeInsets.symmetric(horizontal: 8),
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          Container(
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.network(
-                  _newsItem?.imgUrl ?? "",
-                  fit: BoxFit.fitWidth,
-                  errorBuilder: (ctx, obj, stack) {
-                    return Container(
-                        child: Image.asset(
-                      "assets/images/placeholder.png",
-                      fit: BoxFit.fitHeight,
-                    ));
-                  },
-                ),
-              )),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: Text(_newsItem.title,
-                style: Theme.of(context).textTheme.headline6),
+          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              Container(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                      _newsItem?.imgUrl ?? "",
+                      fit: BoxFit.fitWidth,
+                      errorBuilder: (ctx, obj, stack) {
+                        return Container(
+                            child: Image.asset(
+                          "assets/images/placeholder.png",
+                          fit: BoxFit.fitHeight,
+                        ));
+                      },
+                    ),
+                  )),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Text(_newsItem.title,
+                    style: Theme.of(context).textTheme.headline6),
+              ),
+              Text(AppUtils.formatDate(_newsItem.date)),
+              SizedBox(height: 8),
+              MarkdownView(_newsItem.details, _scrollController)
+            ],
           ),
-          Text(AppUtils.formatDate(_newsItem.date)),
-          SizedBox(height: 8),
-          MarkdownView(_newsItem.details, _scrollController)
-        ],
-      ),
-    ));
+        ));
   }
 }

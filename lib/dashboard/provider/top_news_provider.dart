@@ -23,6 +23,4 @@ class TopNewsProvider extends ChangeNotifier {
     await fetchNewsByPagination();
     refreshController.refreshCompleted();
   }
-
-  void loadMore() async{}
 }

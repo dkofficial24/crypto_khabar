@@ -26,6 +26,13 @@ class ColumnNewsListWidget extends StatelessWidget {
                 child: Image.network(
                   newsItem.imgUrl,
                   fit: BoxFit.cover,
+                  errorBuilder: (ctx, obj, stack) {
+                    return Container(
+                        child: Image.asset(
+                          "assets/images/placeholder.png",
+                          fit: BoxFit.cover,
+                        ));
+                  },
                 ),
               ),
             ),

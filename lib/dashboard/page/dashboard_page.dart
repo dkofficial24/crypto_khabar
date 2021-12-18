@@ -20,7 +20,9 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: tabPage[_selectedIndex],
+      body: IndexedStack(
+          index: _selectedIndex,
+          children: tabPage),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: onTabSelect,

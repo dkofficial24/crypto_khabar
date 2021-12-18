@@ -7,9 +7,8 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage>{
   ProfileSettingProvider provider;
-
 
   @override
   void initState() {
@@ -37,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 16),
                     ProfileItem(
-                      title: "Bookmark",
+                      title: "Saved",
                       iconData: Icons.bookmark_outline,
                       callback: () {},
                       lastChild: Icon(
@@ -99,9 +98,11 @@ class ProfileItem extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.all(2),
-            child: Icon(iconData),
+            child: Icon(iconData,color: Theme.of(context).iconTheme.color,),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4), color: Colors.cyan),
+              borderRadius: BorderRadius.circular(4),
+            //  color: Colors.cyan,
+            ),
           ),
           SizedBox(width: 16),
           Text(

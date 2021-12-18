@@ -43,15 +43,17 @@ class _MyAppState extends State<MyApp> {
               brightness: Brightness.light,
               primaryColor: Colors.lightBlue[800],
               accentColor: Colors.cyan[600],
+              iconTheme: IconThemeData(color: Colors.lightBlue[800])
               // // fontFamily: 'Georgia',
               //  textTheme: TextTheme(
               //  //  headline1: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
               //   // headline6: TextStyle(fontSize: 30.0, fontStyle: FontStyle.italic),
               //   // bodyText2: GoogleFonts.roboto(),
               //  ),
-            )
+              )
           : ThemeData(
               brightness: Brightness.dark,
+              iconTheme: IconThemeData(color: Colors.lightBlue[800]),
               primaryColor: Colors.black,
               accentColor: Colors.cyan[600],
             ),
