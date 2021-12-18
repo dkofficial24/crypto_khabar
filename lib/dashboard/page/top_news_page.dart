@@ -1,5 +1,6 @@
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
+import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/dashboard/widget/column_news_list_widget.dart';
 import 'package:crypto_khabar/dashboard/widget/drawer_menu.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
@@ -176,9 +177,11 @@ class _TopNewsPageState extends State<TopNewsPage> {
           motion: const ScrollMotion(),
           children: [
             SlidableAction(
-              onPressed: (ctx) {
-                // provider.onDismiss(index);
-              },
+              onPressed: _topNewsProvider.savingNews
+                  ? null
+                  : (ctx) {
+                      _topNewsProvider.saveNews(newsItem);
+                    },
               foregroundColor: Theme.of(context).primaryColor,
               icon: Icons.bookmark_border,
               label: 'Save',

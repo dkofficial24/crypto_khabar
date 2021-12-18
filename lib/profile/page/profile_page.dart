@@ -1,4 +1,5 @@
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
+import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,7 +8,7 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage>{
+class _ProfilePageState extends State<ProfilePage> {
   ProfileSettingProvider provider;
 
   @override
@@ -34,17 +35,7 @@ class _ProfilePageState extends State<ProfilePage>{
                       "Settings",
                       style: Theme.of(context).textTheme.headline6,
                     ),
-                    SizedBox(height: 16),
-                    ProfileItem(
-                      title: "Saved",
-                      iconData: Icons.bookmark_outline,
-                      callback: () {},
-                      lastChild: Icon(
-                        Icons.arrow_forward_ios,
-                        size: 15,
-                      ),
-                    ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 12),
                     ProfileItem(
                       title: "Dark Mode",
                       iconData: Icons.brightness_6_outlined,
@@ -56,7 +47,20 @@ class _ProfilePageState extends State<ProfilePage>{
                         value: provider.isDarkMode,
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 12),
+                    ProfileItem(
+                      title: "Saved",
+                      iconData: Icons.bookmark_outline,
+                      callback: () {
+                        print("calling");
+                        Navigator.pushNamed(context, AppRoutes.SavedNewsPage);
+                      },
+                      lastChild: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 15,
+                      ),
+                    ),
+                    SizedBox(height: 8),
                     ProfileItem(
                       title: "Notifications",
                       iconData: Icons.notifications_outlined,
@@ -86,32 +90,45 @@ class ProfileItem extends StatelessWidget {
   const ProfileItem({
     @required this.title,
     @required this.iconData,
-    @required this.callback,
     @required this.lastChild,
+    this.callback,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12),
-      child: Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(2),
-            child: Icon(iconData,color: Theme.of(context).iconTheme.color,),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-            //  color: Colors.cyan,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        if (callback != null) {
+          callback();
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Row(
+          children: [
+            GestureDetector(
+              child: Container(
+                padding: EdgeInsets.all(2),
+                child: Icon(
+                  iconData,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  //  color: Colors.cyan,
+                ),
+              ),
             ),
-          ),
-          SizedBox(width: 16),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          Expanded(child: Container()),
-          lastChild
-        ],
+            SizedBox(width: 16),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+            Expanded(child: Container(),),
+            lastChild
+          ],
+        ),
       ),
     );
   }

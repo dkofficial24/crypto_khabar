@@ -1,4 +1,5 @@
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
+import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/shared/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class NewsDetailsPage extends StatefulWidget {
 class _NewsDetailsPageState extends State<NewsDetailsPage> {
   NewsItem _newsItem;
   ScrollController _scrollController;
-
+  bool savingNews = false;
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -26,7 +27,11 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
         appBar: AppBar(
           title: Text("News"),
           actions: [
-            IconButton(icon: Icon(Icons.bookmark_border, color: Colors.white)),
+            IconButton(
+                onPressed: (){
+                  saveNews(_newsItem);
+                },
+                icon: Icon(Icons.bookmark_border, color: Colors.white)),
             IconButton(
                 onPressed: () {
                   AppUtils.shareNews(_newsItem);
@@ -67,5 +72,24 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
             ],
           ),
         ));
+  }
+
+  Future saveNews(NewsItem newsItem) async {
+    if(!savingNews) {
+      setState(() {
+        savingNews = true;
+      });
+      try {
+       bool status = await NewsService().saveNews(newsItem);
+       if(status) {
+         AppUtils.showToast("News saved");
+       }
+      }catch(e){
+        print("ERROR:$e");
+      }
+      setState(() {
+        savingNews = false;
+      });
+    }
   }
 }

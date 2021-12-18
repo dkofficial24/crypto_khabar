@@ -34,7 +34,7 @@ class NewsItem {
     imgUrl = json['imgUrl'];
     category = json['category'];
     sourceLink = json['sourceLink'];
-    imgUrls = json['imgUrls']?.cast<String>();
+   // imgUrls = json['imgUrls']?.cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -46,7 +46,7 @@ class NewsItem {
     data['author'] = this.author;
     data['source'] = this.source;
     data['imgUrl'] = this.imgUrl;
-    data['imgUrls'] = this.imgUrls;
+   // data['imgUrls'] = this.imgUrls;
     data['category'] = this.category;
     data['sourceLink'] = this.sourceLink;
     return data;

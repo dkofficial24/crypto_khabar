@@ -1,19 +1,70 @@
+import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class SavedDbService{
 
+  static SavedDbService _instance;
 
-
-  openDb()async{
-    var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'saved.db');
-    Database database = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-          // When creating the db, create the table
-          await db.execute(
-              'CREATE TABLE Test (id INTEGER PRIMARY KEY, name TEXT, value INTEGER, num REAL)');
-        });
+  SavedDbService._internal() {
+    init();
   }
+
+  factory SavedDbService() {
+    if (_instance == null) {
+      _instance = SavedDbService._internal();
+    }
+    return _instance;
+  }
+
+  final String tableName = "SavedNewsTable";
+  Database database;
+
+  Future init() async {
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'saved_news_db4.db');
+
+    database =
+    await openDatabase(path, version: 1, onCreate: (db, version) async {
+      await db.execute(
+          "create table $tableName (id String primary key,title text,details text,date integer,author text,source text,imgUrl text,category text,sourceLink text)");
+      print("Table created !");
+    });
+  }
+
+  Future<bool> saveNews(NewsItem newsItem) async {
+    try {
+      if (database != null) {
+        database.insert(tableName, newsItem.toJson());
+        print("SavedDbService saveNews successfully");
+        return true;
+      }
+    } catch (e) {
+      print("SavedDbService saveNews $e");
+    }
+    return false;
+  }
+
+  Future<List<NewsItem>> getAllSavedNews() async {
+    if (database == null) return [];
+    List<Map<String, dynamic>> mapList =
+    await database.rawQuery("Select * from $tableName");
+
+    if (mapList == null) {
+      return [];
+    }
+
+    List<NewsItem> newsList = [];
+    mapList.forEach((map) {
+      newsList.add(NewsItem.fromJson(map));
+    });
+    return newsList;
+  }
+
+  Future removeSavedNews(String id)async{
+    await database.rawDelete("delete from $tableName where id=?",[id]);
+    print("removed Saved News !");
+  }
+
 
 }
