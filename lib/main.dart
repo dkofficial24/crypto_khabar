@@ -1,15 +1,21 @@
+import 'dart:async';
+
 import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:crypto_khabar/shared/splash_page.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'constants.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(MyApp());
+  runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    runApp(MyApp());
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
 class MyApp extends StatefulWidget {

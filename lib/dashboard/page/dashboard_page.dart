@@ -1,4 +1,5 @@
 import 'package:crypto_khabar/dashboard/page/top_news_page.dart';
+import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/learn/page/learn_page.dart';
 import 'package:crypto_khabar/profile/page/profile_page.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,12 @@ class _DashboardPageState extends State<DashboardPage> {
     LearnPage(),
     ProfilePage(),
   ];
+
+  @override
+  void initState() {
+    NewsService();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

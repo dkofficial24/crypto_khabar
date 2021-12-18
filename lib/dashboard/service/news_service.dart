@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/saved_db_service.dart';
+import 'package:crypto_khabar/shared/firebase_service/firebase_push_notification_service.dart';
 import 'package:crypto_khabar/shared/news_firebase_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 
@@ -31,6 +32,7 @@ class NewsService {
         isNetConnected = false;
       }
     });
+    PushNotificationService();
     SavedDbService();
   }
 
