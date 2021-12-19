@@ -1,4 +1,5 @@
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -37,6 +38,9 @@ class SavedDbService{
       if (database != null) {
         database.insert(tableName, newsItem.toJson());
         print("SavedDbService saveNews successfully");
+        FirebaseAnalytics.instance.logEvent(name: 'save_news',parameters: {
+          "save_news":newsItem.title
+        });
         return true;
       }
     } catch (e) {

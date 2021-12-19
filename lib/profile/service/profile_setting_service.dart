@@ -1,6 +1,6 @@
 import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/constants.dart';
-import 'package:crypto_khabar/shared/shared_pref_helper.dart';
+import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
 
 class ProfileSettingService {
   ProfileSettingService._internal();

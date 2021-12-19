@@ -1,5 +1,6 @@
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -43,6 +44,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       lastChild: Switch(
                         onChanged: (value) {
                           provider.setThemeMode(value);
+                          FirebaseAnalytics.instance.logEvent(name: 'theme_change',parameters: {
+                            "isDark":value
+                          });
                         },
                         value: provider.isDarkMode,
                       ),
@@ -68,6 +72,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       lastChild: Switch(
                         onChanged: (value) {
                           provider.setNotificationReceiveStatus(value);
+                          FirebaseAnalytics.instance.logEvent(name: 'notification_status',parameters: {
+                            "notification_status:":value
+                          });
                         },
                         value: provider.getNotification,
                       ),

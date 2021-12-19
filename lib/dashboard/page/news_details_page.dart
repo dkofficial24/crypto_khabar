@@ -1,6 +1,6 @@
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
-import 'package:crypto_khabar/shared/markdown_common.dart';
+import 'package:crypto_khabar/shared/widget/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 

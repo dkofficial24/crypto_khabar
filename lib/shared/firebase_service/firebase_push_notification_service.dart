@@ -1,4 +1,4 @@
-import 'package:crypto_khabar/shared/notification_service.dart';
+import 'package:crypto_khabar/shared/services/notification_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
