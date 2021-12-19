@@ -36,7 +36,9 @@ class SavedDbService{
   Future<bool> saveNews(NewsItem newsItem) async {
     try {
       if (database != null) {
-        database.insert(tableName, newsItem.toJson());
+        //database.insert(tableName, newsItem.toJson());
+        database.rawInsert("insert or replace into $tableName values(?,?,?,?,?,?,?,?,?)",[newsItem.id,newsItem.title,newsItem.details,newsItem.date,newsItem.author,
+          newsItem.source,newsItem.imgUrl,newsItem.category,newsItem.sourceLink,]);
         print("SavedDbService saveNews successfully");
         FirebaseAnalytics.instance.logEvent(name: 'save_news',parameters: {
           "save_news":newsItem.title

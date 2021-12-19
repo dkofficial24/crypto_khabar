@@ -7,9 +7,14 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class TopNewsProvider extends ChangeNotifier {
   List<NewsItem> newsItemList = [];
   bool isLoading = false;
-
+  bool shimmer = false;
   TopNewsProvider() {
-    fetchNewsByPagination();
+    shimmer = true;
+    notifyListeners();
+    fetchNewsByPagination().then((value){
+      shimmer = false;
+      notifyListeners();
+    });
   }
 
   Future fetchNewsByPagination() async {

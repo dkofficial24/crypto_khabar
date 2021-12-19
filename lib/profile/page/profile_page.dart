@@ -1,5 +1,6 @@
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
+import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,16 +27,12 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (ctx, provider, child) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Profile"),
+              title: Text("Settings"),
             ),
             body: Container(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: ListView(
                   children: [
-                    Text(
-                      "Settings",
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
                     SizedBox(height: 12),
                     ProfileItem(
                       title: "Dark Mode",
@@ -43,7 +40,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       callback: () {},
                       lastChild: Switch(
                         onChanged: (value) {
-                          provider.setThemeMode(value);
+                          provider.setThemeMode(value).then((value) {
+                            AppUtils.markThemeManuallySet();
+                          });
                           FirebaseAnalytics.instance.logEvent(name: 'theme_change',parameters: {
                             "isDark":value
                           });

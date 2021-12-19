@@ -30,12 +30,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     BroadcastEvents().subscribe<bool>(ThemeChange, onThemeChange);
 
-    ProfileSettingService().isDarkTheme().then((status) {
-      setState(() {
-        isDarkTheme = status;
-      });
-    });
-    super.initState();
+    ProfileSettingService();
   }
 
   @override
@@ -46,6 +41,12 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: isDarkTheme
           ? ThemeData(
+              brightness: Brightness.dark,
+              iconTheme: IconThemeData(color: Colors.lightBlue[800]),
+              primaryColor: Colors.black,
+              accentColor: Colors.cyan[600],
+            )
+          : ThemeData(
               brightness: Brightness.light,
               primaryColor: Colors.lightBlue[800],
               accentColor: Colors.cyan[600],
@@ -56,13 +57,7 @@ class _MyAppState extends State<MyApp> {
               //   // headline6: TextStyle(fontSize: 30.0, fontStyle: FontStyle.italic),
               //   // bodyText2: GoogleFonts.roboto(),
               //  ),
-              )
-          : ThemeData(
-              brightness: Brightness.dark,
-              iconTheme: IconThemeData(color: Colors.lightBlue[800]),
-              primaryColor: Colors.black,
-              accentColor: Colors.cyan[600],
-            ),
+              ),
       home: SplashPage(),
     );
   }
