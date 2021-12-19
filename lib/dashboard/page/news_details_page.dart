@@ -41,11 +41,12 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
           ],
         ),
         body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          margin: EdgeInsets.symmetric(horizontal: 4, vertical: 12),
           child: ListView(
             shrinkWrap: true,
             children: [
               Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   height: MediaQuery.of(context).size.height * 0.25,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
@@ -62,11 +63,14 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                     ),
                   )),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
+                padding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
                 child: Text(_newsItem.title,
                     style: Theme.of(context).textTheme.headline6),
               ),
-              Text(AppUtils.formatDate(_newsItem.date)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(AppUtils.formatDate(_newsItem.date)),
+              ),
               SizedBox(height: 8),
               MarkdownView(_newsItem.details, _scrollController)
             ],

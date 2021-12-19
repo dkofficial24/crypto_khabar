@@ -33,9 +33,9 @@ class MarkdownView extends StatelessWidget {
                 errorBuilder: (ctx, obj, stack) {
                   return Container(
                       child: Image.asset(
-                        "assets/images/placeholder.png",
-                        fit: BoxFit.fitWidth,
-                      ));
+                    "assets/images/placeholder.png",
+                    fit: BoxFit.fitWidth,
+                  ));
                 },
               ),
             ));
