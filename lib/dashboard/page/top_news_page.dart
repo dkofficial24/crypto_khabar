@@ -54,9 +54,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: LazyLoadScrollView(
                       onEndOfPage: (){
-                        print('');
                         provider.fetchNewsByPagination();
-                        print('');
                       },
                       isLoading: provider.isLoading,
                       scrollOffset: 50,

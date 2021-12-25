@@ -1,6 +1,6 @@
+import 'package:crypto_khabar/article/page/article_page.dart';
 import 'package:crypto_khabar/dashboard/page/top_news_page.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
-import 'package:crypto_khabar/learn/page/learn_page.dart';
 import 'package:crypto_khabar/profile/page/profile_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   List<Widget> tabPage = [
     TopNewsPage(),
-    LearnPage(),
+    ArticlePage(),
     ProfilePage(),
   ];
 
@@ -43,8 +43,8 @@ class _DashboardPageState extends State<DashboardPage> {
             label: 'Learn',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
+            icon: Icon(Icons.build),
+            label: 'Setting',
           ),
         ],
       ),

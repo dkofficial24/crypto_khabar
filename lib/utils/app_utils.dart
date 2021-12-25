@@ -1,3 +1,4 @@
+import 'package:crypto_khabar/article/model/article.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,6 +19,12 @@ class AppUtils {
     String detail =
         "-${newsItem.title}- \n\n ${newsItem.details} \n ${newsItem?.sourceLink ?? ''}";
     Share.share(detail, subject: newsItem.title);
+  }
+
+  static void shareArticle(Article article) {
+    String detail =
+        "-${article.title}- \n\n ${article.detail} \n ${article?.source ?? ''}";
+    Share.share(detail, subject: article.title);
   }
 
   static Future<bool> isThemeManuallySet() async {
