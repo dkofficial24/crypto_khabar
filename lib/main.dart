@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
               brightness: Brightness.light,
               primaryColor: Colors.lightBlue[800],
               accentColor: Colors.cyan[600],
-              iconTheme: IconThemeData(color: Colors.lightBlue[800])
+              iconTheme: IconThemeData(color: Colors.lightBlue[800]),
               // // fontFamily: 'Georgia',
               //  textTheme: TextTheme(
               //  //  headline1: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),

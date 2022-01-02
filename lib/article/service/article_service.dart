@@ -33,10 +33,10 @@ class ArticleService {
     QuerySnapshot data;
 
     if (last == null) {
-      data = await articleRef.orderBy("date").limit(5).get();
+      data = await articleRef.orderBy("date",descending: true).limit(20).get();
     } else {
       data = await articleRef
-          .orderBy("date", descending: false)
+          .orderBy("date", descending: true)
           .limit(4)
           .startAfterDocument(last)
           .get();

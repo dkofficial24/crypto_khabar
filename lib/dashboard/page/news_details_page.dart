@@ -3,6 +3,7 @@ import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/shared/widget/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class NewsDetailsPage extends StatefulWidget {
   @override
@@ -65,7 +66,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
                 child: Text(_newsItem.title,
-                    style: Theme.of(context).textTheme.headline6),
+                    style: GoogleFonts.hind(textStyle: Theme.of(context).textTheme.headline6)),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),

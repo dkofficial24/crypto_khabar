@@ -18,10 +18,10 @@ class NewsFirebaseService {
     QuerySnapshot data;
 
     if (last == null) {
-      data = await newsRef.orderBy('date').limit(5).get();
+      data = await newsRef.orderBy('date',descending: true).limit(5).get();
     } else {
       data = await newsRef
-          .orderBy("date", descending: false)
+          .orderBy("date", descending: true)
           .limit(3)
           .startAfterDocument(last)
           .get();

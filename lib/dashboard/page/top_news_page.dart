@@ -53,19 +53,27 @@ class _TopNewsPageState extends State<TopNewsPage> {
                 : Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: LazyLoadScrollView(
-                      onEndOfPage: (){
+                      onEndOfPage: () {
                         provider.fetchNewsByPagination();
                       },
                       isLoading: provider.isLoading,
                       scrollOffset: 50,
                       child: ListView.separated(
                           itemBuilder: (ctx, index) {
-                            if(index == _topNewsProvider.newsItemList.length){
-                              return provider.isLoading?Center(child: Container(
-                                padding: EdgeInsets.symmetric(vertical: 4,horizontal: 4),
-                               height: 30,
-                                width: 30,
-                                child: CircularProgressIndicator(strokeWidth: 2,),),):Container();
+                            if (index == _topNewsProvider.newsItemList.length) {
+                              return provider.isLoading
+                                  ? Center(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 4, horizontal: 4),
+                                        height: 30,
+                                        width: 30,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                    )
+                                  : Container();
                             }
                             if (index == 0 || index % 4 == 0) {
                               return createSlidable(
@@ -77,7 +85,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
                                     Navigator.pushNamed(
                                         context, AppRoutes.NewsDetailsPage,
                                         arguments:
-                                        provider.newsItemList[index]);
+                                            provider.newsItemList[index]);
                                   },
                                 ),
                               );
@@ -90,8 +98,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
                                 callback: () {
                                   Navigator.pushNamed(
                                       context, AppRoutes.NewsDetailsPage,
-                                      arguments:
-                                      provider.newsItemList[index]);
+                                      arguments: provider.newsItemList[index]);
                                 },
                               ),
                             );
@@ -104,7 +111,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
                               color: Colors.grey,
                             );
                           },
-                          itemCount: _topNewsProvider.newsItemList.length+1),
+                          itemCount: _topNewsProvider.newsItemList.length + 1),
                     ));
           },
         ),
@@ -181,15 +188,15 @@ class _TopNewsPageState extends State<TopNewsPage> {
                   : (ctx) {
                       _topNewsProvider.saveNews(newsItem);
                     },
-              foregroundColor: Theme.of(context).primaryColor,
               icon: Icons.bookmark_border,
               label: 'Save',
+              backgroundColor: Theme.of(context).canvasColor,
             ),
             SlidableAction(
               onPressed: (ctx) {
                 AppUtils.shareNews(newsItem);
               },
-              foregroundColor: Theme.of(context).primaryColor,
+              backgroundColor: Theme.of(context).canvasColor,
               icon: Icons.share,
               label: 'Share',
             ),
