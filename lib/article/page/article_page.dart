@@ -22,7 +22,6 @@ class _ArticlePageState extends State<ArticlePage> {
   @override
   void initState() {
     _provider = ArticleProvider();
-    // if (Pl;p0atform.isAndroid) WebView.platform = AndroidWebView();
     super.initState();
   }
 
@@ -44,12 +43,24 @@ class _ArticlePageState extends State<ArticlePage> {
                   onEndOfPage: () {
                     provider.fetchNewsByPagination();
                   },
-                  child: ListView.builder(
+                  child: ListView.separated(
                       itemCount: provider.articleList.length,
+
+                      separatorBuilder: (ctx,index){
+                        return Container(
+                          key: Key(index.toString()),
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          height: 1,
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.grey,
+                        );
+                      },
+
                       itemBuilder: (context, index) {
                         ExpandableController _expandedController = ExpandableController();
                         Article article = provider.articleList[index];
                         return ExpandablePanel(controller: _expandedController,
+                          key: Key(index.toString()),
                           header: Text(article.title,
                               style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
                           expanded: GestureDetector(

@@ -9,15 +9,19 @@ class ArticleProvider extends ChangeNotifier {
 
   bool isLoading = false;
 
-  ArticleProvider(){
+  ArticleProvider() {
     fetchNewsByPagination();
   }
 
   Future fetchNewsByPagination() async {
-    isLoading = true;
-    notifyListeners();
-    _articleList = await ArticleService().fetchArticleByPagination();
-    isLoading = false;
-    notifyListeners();
+    // isLoading = true;
+    //notifyListeners();
+    final articleList = await ArticleService().fetchArticleByPagination();
+    if (_articleList.length != articleList.length) {
+      _articleList = articleList;
+      notifyListeners();
+    }
+    //  isLoading = false;
+    // notifyListeners();
   }
 }
