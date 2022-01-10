@@ -43,9 +43,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           provider.setThemeMode(value).then((value) {
                             AppUtils.markThemeManuallySet();
                           });
-                          FirebaseAnalytics.instance.logEvent(name: 'theme_change',parameters: {
-                            "isDark":value
-                          });
+                          FirebaseAnalytics.instance.logEvent(
+                              name: 'theme_change',
+                              parameters: {"isDark": value});
                         },
                         value: provider.isDarkMode,
                       ),
@@ -55,7 +55,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: "Saved",
                       iconData: Icons.bookmark_outline,
                       callback: () {
-                        print("calling");
                         Navigator.pushNamed(context, AppRoutes.SavedNewsPage);
                       },
                       lastChild: Icon(
@@ -71,9 +70,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       lastChild: Switch(
                         onChanged: (value) {
                           provider.setNotificationReceiveStatus(value);
-                          FirebaseAnalytics.instance.logEvent(name: 'notification_status',parameters: {
-                            "notification_status:":value
-                          });
+                          FirebaseAnalytics.instance.logEvent(
+                              name: 'notification_status',
+                              parameters: {"notification_status:": value});
                         },
                         value: provider.getNotification,
                       ),
@@ -131,7 +130,9 @@ class ProfileItem extends StatelessWidget {
               title,
               style: Theme.of(context).textTheme.subtitle1,
             ),
-            Expanded(child: Container(),),
+            Expanded(
+              child: Container(),
+            ),
             lastChild
           ],
         ),

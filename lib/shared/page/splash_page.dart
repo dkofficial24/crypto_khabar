@@ -10,10 +10,9 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    AuthService().loginAnonymously().then((value) {
+    Future.delayed(Duration(seconds: 2)).then((value) {
       Navigator.pushReplacementNamed(context, AppRoutes.Dashboard);
-    }).timeout(Duration(seconds: 2));
-
+    });
     super.initState();
   }
 
