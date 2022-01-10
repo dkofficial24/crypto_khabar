@@ -17,10 +17,10 @@ class ArticleProvider extends ChangeNotifier {
     // isLoading = true;
     //notifyListeners();
     final articleList = await ArticleService().fetchArticleByPagination();
-    if (_articleList.length != articleList.length) {
+  //  if (_articleList.length != articleList.length) {
       _articleList = articleList;
       notifyListeners();
-    }
+    //}
     //  isLoading = false;
     // notifyListeners();
   }

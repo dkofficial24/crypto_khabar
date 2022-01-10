@@ -9,6 +9,7 @@ class NewsItem {
   List<String> imgUrls;
   String category;
   String sourceLink;
+  bool showNotification;
 
   NewsItem(
       {
@@ -21,7 +22,8 @@ class NewsItem {
         this.imgUrl,
         this.imgUrls,
         this.category,
-        this.sourceLink
+        this.sourceLink,
+        this.showNotification = true
       });
 
   NewsItem.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class NewsItem {
     imgUrl = json['imgUrl'];
     category = json['category'];
     sourceLink = json['sourceLink'];
+    showNotification = json['showNotification'];
    // imgUrls = json['imgUrls']?.cast<String>();
   }
 
@@ -49,6 +52,7 @@ class NewsItem {
    // data['imgUrls'] = this.imgUrls;
     data['category'] = this.category;
     data['sourceLink'] = this.sourceLink;
+    data['showNotification'] = this.showNotification;
     return data;
   }
 }

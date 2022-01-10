@@ -10,7 +10,20 @@ class NewsFirebaseService {
   factory NewsFirebaseService() {
     return _newsService;
   }
+
   QueryDocumentSnapshot last;
+
+  Future<NewsItem> fetchNewsById(String id) async {
+    CollectionReference newsRef = FirebaseFirestore.instance.collection("news");
+    QuerySnapshot data = await newsRef
+        .where('id', isEqualTo: id)
+        .orderBy('date', descending: true)
+        .get();
+    if (data != null && data.docs.length > 0) {
+      return NewsItem.fromJson(data.docs[0].data());
+    }
+    throw Exception("No such id exists");
+  }
 
   Future<List<NewsItem>> fetchNewsByPagination() async {
     List<NewsItem> newsItemList = [];
@@ -18,7 +31,7 @@ class NewsFirebaseService {
     QuerySnapshot data;
 
     if (last == null) {
-      data = await newsRef.orderBy('date',descending: true).limit(5).get();
+      data = await newsRef.orderBy('date', descending: true).limit(5).get();
     } else {
       data = await newsRef
           .orderBy("date", descending: true)

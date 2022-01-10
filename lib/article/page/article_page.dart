@@ -34,7 +34,6 @@ class _ArticlePageState extends State<ArticlePage> {
         builder: (ctx, child) {
           return Consumer<ArticleProvider>(
             builder: (ctx, provider, child) {
-
               return Padding(
                 padding: EdgeInsets.all(16),
                 child: LazyLoadScrollView(
@@ -63,33 +62,25 @@ class _ArticlePageState extends State<ArticlePage> {
                           key: Key(index.toString()),
                           header: Text(article.title,
                               style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
-                          expanded: GestureDetector(
-                            child: Column(
-                              children: [
-                                MarkdownView(article.detail,ScrollController()),
-                                SizedBox(height: 4),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(
-                                            context, AppRoutes.WebViewPage,
-                                            arguments: article.source);
-                                      },
-                                      icon: Icon(Icons.open_in_browser),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
+                          expanded: Column(
+                            children: [
+                              MarkdownView(article.detail,ScrollController()),
+                              SizedBox(height: 4),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      Navigator.pushNamed(
+                                          context, AppRoutes.WebViewPage,
+                                          arguments: article.source);
+                                    },
+                                    icon: Icon(Icons.open_in_browser),
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
-                          // collapsed: Text(
-                          //   article.detail,
-                          //   softWrap: true,
-                          //   maxLines: 2,
-                          //   overflow: TextOverflow.ellipsis,
-                          // ),
                         );
                       }),
                 ),

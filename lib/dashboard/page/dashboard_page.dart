@@ -5,6 +5,7 @@ import 'package:crypto_khabar/profile/page/profile_page.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
+BuildContext globalContext;
 class DashboardPage extends StatefulWidget {
   @override
   _DashboardPageState createState() => _DashboardPageState();
@@ -28,6 +29,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    globalContext = context;
     return Scaffold(
       body: IndexedStack(index: _selectedIndex, children: tabPage),
       bottomNavigationBar: BottomNavigationBar(
