@@ -27,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (ctx, provider, child) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Settings"),
+              title: Text("सेटिंग"),
             ),
             body: Container(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -35,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     SizedBox(height: 12),
                     ProfileItem(
-                      title: "Dark Mode",
+                      title: "डार्क थीम",
                       iconData: Icons.brightness_6_outlined,
                       callback: () {},
                       lastChild: Switch(
@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 12),
                     ProfileItem(
-                      title: "Saved",
+                      title: "बुकमार्क ख़बर",
                       iconData: Icons.bookmark_outline,
                       callback: () {
                         Navigator.pushNamed(context, AppRoutes.SavedNewsPage);
@@ -64,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 8),
                     ProfileItem(
-                      title: "Notifications",
+                      title: "नोटिफिकेशन्स",
                       iconData: Icons.notifications_outlined,
                       callback: () {},
                       lastChild: Switch(

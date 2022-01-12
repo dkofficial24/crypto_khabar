@@ -27,7 +27,7 @@ class DetailPageState extends State<ArticleDetailPage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Article"),
+          title: Text("आर्टिकल"),
           actions: [
             IconButton(
                 onPressed: (){
@@ -84,7 +84,7 @@ class DetailPageState extends State<ArticleDetailPage> {
       try {
         bool status = await ArticleService().saveArticle(article);
         if(status) {
-          AppUtils.showToast("Article saved");
+          AppUtils.showToast("आर्टिकल बुकमार्क हो गयी");
         }
       }catch(e){
         print("ERROR:$e");

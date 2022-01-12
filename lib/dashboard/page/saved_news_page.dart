@@ -24,7 +24,7 @@ class _SavedNewsPageState extends State<SavedNewsPage> {
       create: (ctx) => _provider,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Saved News"),
+          title: Text("बुकमार्क ख़बर"),
         ),
         body: Consumer<SavedNewsProvider>(
           builder: (context, provider, child) {

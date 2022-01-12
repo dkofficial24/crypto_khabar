@@ -39,7 +39,7 @@ class TopNewsProvider extends ChangeNotifier {
       try {
         bool status = await NewsService().saveNews(newsItem);
         if(status) {
-          AppUtils.showToast("News saved");
+          AppUtils.showToast("बुकमार्क हो गयी");
         }
       }catch(e){
         print("ERROR:$e");

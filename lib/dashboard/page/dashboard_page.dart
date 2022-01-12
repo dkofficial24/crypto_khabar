@@ -38,15 +38,15 @@ class _DashboardPageState extends State<DashboardPage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'होम',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
-            label: 'Learn',
+            label: 'सीखें',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.build),
-            label: 'Setting',
+            label: 'सेटिंग',
           ),
         ],
       ),
