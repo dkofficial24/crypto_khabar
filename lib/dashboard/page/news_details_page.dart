@@ -26,7 +26,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("News"),
+          title: Text("क्रिप्टो खबर"),
           actions: [
             IconButton(
                 onPressed: (){

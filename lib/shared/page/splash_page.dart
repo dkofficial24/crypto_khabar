@@ -20,7 +20,7 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text("Loading..."),
+        child: Image.asset("assets/images/app_icon.png"),
       ),
     );
   }

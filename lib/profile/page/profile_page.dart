@@ -27,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (ctx, provider, child) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("सेटिंग"),
+              title: Text("क्रिप्टो खबर"),
             ),
             body: Container(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
