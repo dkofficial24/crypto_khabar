@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.crypto_khabar">
    <application
-        android:label="Crypto Khabar Uat"
+        android:label="क्रिप्टो खबर"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

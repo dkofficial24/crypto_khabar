@@ -1,41 +1,78 @@
 {
   "project_info": {
-    "project_number": "772778622450",
-    "project_id": "crypto-khabar-debug",
-    "storage_bucket": "crypto-khabar-debug.appspot.com"
+    "project_number": "907391154292",
+    "project_id": "crypto-khabar",
+    "storage_bucket": "crypto-khabar.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:772778622450:android:b9b143c7573474c589ff6b",
+        "mobilesdk_app_id": "1:907391154292:android:9a7cf2d4a5962b884af921",
         "android_client_info": {
-          "package_name": "com.example.crypto_khabar.debug"
+          "package_name": "com.example.crypto_khabar"
         }
       },
       "oauth_client": [
         {
-          "client_id": "772778622450-pn9k1c3mitu8s9irb41d70ivjmev9qdc.apps.googleusercontent.com",
+          "client_id": "907391154292-0tr371skn5dqemhepq938u3ns7co4j6k.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.crypto_khabar.debug",
+            "package_name": "com.example.crypto_khabar",
             "certificate_hash": "575ae95a7f409992fdba56b8914f352a13b3470b"
           }
         },
         {
-          "client_id": "772778622450-lv0pcea3i5kaac6oab12cjmmf9ltan6s.apps.googleusercontent.com",
+          "client_id": "907391154292-2ti2vcd5j97f0vkfo5q7c7f427162ag5.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDV7YGS5XP8WY4RyZmTjf_N-kdogqQbl2o"
+          "current_key": "AIzaSyDp0Mck6ZpYSWuHlnfSEkB6Twn6-rDXVbk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "772778622450-lv0pcea3i5kaac6oab12cjmmf9ltan6s.apps.googleusercontent.com",
+              "client_id": "907391154292-2ti2vcd5j97f0vkfo5q7c7f427162ag5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:907391154292:android:d78b39714653c9044af921",
+        "android_client_info": {
+          "package_name": "com.example.crypto_khabar_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "907391154292-31a2vsq6kqfnpaevnjrubvfa6dmkgrjs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.crypto_khabar_admin",
+            "certificate_hash": "575ae95a7f409992fdba56b8914f352a13b3470b"
+          }
+        },
+        {
+          "client_id": "907391154292-2ti2vcd5j97f0vkfo5q7c7f427162ag5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp0Mck6ZpYSWuHlnfSEkB6Twn6-rDXVbk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "907391154292-2ti2vcd5j97f0vkfo5q7c7f427162ag5.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
