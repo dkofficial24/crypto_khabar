@@ -44,19 +44,17 @@ class PushNotificationService {
 
       FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
         final remoteNotification = remoteMessage.notification;
-        print("message received");
+        print("message received...");
         if (ProfileSettingService().notificationStatus) {
           NotificationService().showNotification(
               remoteNotification.title, remoteNotification.body);
         }
-       // BroadcastEvents().publish(NewsReceivedEvent);
+        //BroadcastEvents().publish(NewsReceivedEvent);
       });
       FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) async {
         if (remoteMessage == null) return;
         if ((await isMessageIdExists(remoteMessage.messageId))) return;
-        LoaderController().showLoader(globalContext);
         await onNotificationClick(remoteMessage);
-        LoaderController().dismissLoader(globalContext);
       });
 
       FirebaseMessaging.onBackgroundMessage(onBackgroundMessage);
@@ -94,10 +92,13 @@ class PushNotificationService {
 
   Future fetchNewsById(String id) async {
     try {
+      LoaderController().showLoader(globalContext);
       NewsItem newsItem = await NewsFirebaseService().fetchNewsById(id);
+      LoaderController().dismissLoader(globalContext);
       Navigator.pushNamed(globalContext, AppRoutes.NewsDetailsPage,
           arguments: newsItem);
     } catch (e) {
+      LoaderController().dismissLoader(globalContext);
       print("FirebasePushNotificationService fetchNewsById err:$e");
     }
   }

@@ -63,7 +63,7 @@ class ProfileSettingService {
     SharedPrefHelper sharedPrefHelper = SharedPrefHelper();
     String value = await sharedPrefHelper.getValue("NotificationReceiveStatus");
     if (value == null) {
-      return false;
+      return true;
     }
     return value == "true";
   }

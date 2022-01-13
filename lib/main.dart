@@ -34,6 +34,7 @@ class _MyAppState extends State<MyApp> {
     BroadcastEvents().subscribe<bool>(ThemeChange, onThemeChange);
 
     ProfileSettingService();
+    super.initState();
   }
 
   @override
