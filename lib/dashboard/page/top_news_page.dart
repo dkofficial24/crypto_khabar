@@ -1,3 +1,5 @@
+import 'package:broadcast_events/broadcast_events.dart';
+import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
@@ -33,13 +35,18 @@ class _TopNewsPageState extends State<TopNewsPage> {
 
   Future init() async {
     NotificationService();
+    BroadcastEvents().subscribe(NewsReceivedEvent, fetchNews);
+  }
+
+  void fetchNews(_) {
+    _topNewsProvider.fetchNewsByPagination();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Crypto News"),
+        title: Text("क्रिप्टो खबर"),
       ),
       // drawer: Drawer(
       //   child: DrawerMenuWidget(),
@@ -189,7 +196,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
                       _topNewsProvider.saveNews(newsItem);
                     },
               icon: Icons.bookmark_border,
-              label: 'Save',
+              label: 'बुकमार्क करें',
               backgroundColor: Theme.of(context).canvasColor,
             ),
             SlidableAction(
@@ -198,7 +205,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
               },
               backgroundColor: Theme.of(context).canvasColor,
               icon: Icons.share,
-              label: 'Share',
+              label: 'शेयर',
             ),
           ],
         ),
@@ -209,6 +216,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
   @override
   void dispose() {
     print("Disposing top news page");
+    BroadcastEvents().unsubscribe(NewsReceivedEvent,handler: fetchNews);
     super.dispose();
   }
 }

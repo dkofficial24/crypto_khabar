@@ -28,7 +28,7 @@ class _ArticlePageState extends State<ArticlePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Learn")),
+      appBar: AppBar(title: Text("क्रिप्टो खबर")),
       body: ChangeNotifierProvider<ArticleProvider>(
         create: (context) => _provider,
         builder: (ctx, child) {

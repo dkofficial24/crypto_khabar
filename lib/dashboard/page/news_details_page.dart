@@ -26,7 +26,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("News"),
+          title: Text("क्रिप्टो खबर"),
           actions: [
             IconButton(
                 onPressed: (){
@@ -87,7 +87,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
       try {
        bool status = await NewsService().saveNews(newsItem);
        if(status) {
-         AppUtils.showToast("News saved");
+         AppUtils.showToast("बुकमार्क हो गयी");
        }
       }catch(e){
         print("ERROR:$e");
