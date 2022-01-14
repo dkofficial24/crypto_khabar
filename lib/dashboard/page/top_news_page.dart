@@ -65,28 +65,52 @@ class _TopNewsPageState extends State<TopNewsPage> {
                       },
                       isLoading: provider.isLoading,
                       scrollOffset: 50,
-                      child: ListView.separated(
-                          itemBuilder: (ctx, index) {
-                            if (index == _topNewsProvider.newsItemList.length) {
-                              return provider.isLoading
-                                  ? Center(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 4, horizontal: 4),
-                                        height: 30,
-                                        width: 30,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
+                      child: SmartRefresher(
+                        controller: _refreshController,
+                        enablePullUp: false,
+                        reverse: false,
+                        enableTwoLevel: false,
+                        enablePullDown: true,
+                        onRefresh: () {
+                          provider.onRefresh(_refreshController);
+                        },
+                        child: ListView.separated(
+                            itemBuilder: (ctx, index) {
+                              if (index ==
+                                  _topNewsProvider.newsItemList.length) {
+                                return provider.isLoading
+                                    ? Center(
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 4, horizontal: 4),
+                                          height: 30,
+                                          width: 30,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  : Container();
-                            }
-                            if (index == 0 || index % 4 == 0) {
+                                      )
+                                    : Container();
+                              }
+                              if (index == 0 || index % 4 == 0) {
+                                return createSlidable(
+                                  provider.newsItemList[index],
+                                  context,
+                                  child: ColumnNewsListWidget(
+                                    newsItem: provider.newsItemList[index],
+                                    callback: () {
+                                      Navigator.pushNamed(
+                                          context, AppRoutes.NewsDetailsPage,
+                                          arguments:
+                                              provider.newsItemList[index]);
+                                    },
+                                  ),
+                                );
+                              }
                               return createSlidable(
                                 provider.newsItemList[index],
                                 context,
-                                child: ColumnNewsListWidget(
+                                child: NewsRowListWidget(
                                   newsItem: provider.newsItemList[index],
                                   callback: () {
                                     Navigator.pushNamed(
@@ -96,29 +120,18 @@ class _TopNewsPageState extends State<TopNewsPage> {
                                   },
                                 ),
                               );
-                            }
-                            return createSlidable(
-                              provider.newsItemList[index],
-                              context,
-                              child: NewsRowListWidget(
-                                newsItem: provider.newsItemList[index],
-                                callback: () {
-                                  Navigator.pushNamed(
-                                      context, AppRoutes.NewsDetailsPage,
-                                      arguments: provider.newsItemList[index]);
-                                },
-                              ),
-                            );
-                          },
-                          separatorBuilder: (ctx, index) {
-                            return Container(
-                              margin: EdgeInsets.symmetric(vertical: 8),
-                              height: 1,
-                              width: MediaQuery.of(context).size.width,
-                              color: Colors.grey,
-                            );
-                          },
-                          itemCount: _topNewsProvider.newsItemList.length + 1),
+                            },
+                            separatorBuilder: (ctx, index) {
+                              return Container(
+                                margin: EdgeInsets.symmetric(vertical: 8),
+                                height: 1,
+                                width: MediaQuery.of(context).size.width,
+                                color: Colors.grey,
+                              );
+                            },
+                            itemCount:
+                                _topNewsProvider.newsItemList.length + 1),
+                      ),
                     ));
           },
         ),
@@ -216,7 +229,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
   @override
   void dispose() {
     print("Disposing top news page");
-    BroadcastEvents().unsubscribe(NewsReceivedEvent,handler: fetchNews);
+    BroadcastEvents().unsubscribe(NewsReceivedEvent, handler: fetchNews);
     super.dispose();
   }
 }

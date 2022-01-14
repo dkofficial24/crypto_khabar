@@ -23,7 +23,7 @@ class ColumnNewsListWidget extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.network(
+                child: AppUtils.isValidUrl(newsItem.imgUrl)?Image.network(
                   newsItem.imgUrl,
                   fit: BoxFit.cover,
                   errorBuilder: (ctx, obj, stack) {
@@ -33,7 +33,11 @@ class ColumnNewsListWidget extends StatelessWidget {
                           fit: BoxFit.cover,
                         ));
                   },
-                ),
+                ):Container(
+                    child: Image.asset(
+                      "assets/images/placeholder.png",
+                      fit: BoxFit.cover,
+                    )),
               ),
             ),
             SizedBox(height: 8),

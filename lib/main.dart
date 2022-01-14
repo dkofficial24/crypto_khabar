@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
       theme: isDarkTheme
           ? ThemeData(
               brightness: Brightness.dark,
-              iconTheme: IconThemeData(color: Colors.lightBlue[800]),
+              iconTheme: IconThemeData(color: Colors.blue),
               primaryColor: Colors.black,
               accentColor: Colors.cyan[600],
             )

@@ -36,11 +36,15 @@ class NewsService {
     SavedDbService();
   }
 
-  Future<List<NewsItem>> fetchNewsByPagination() async {
+  Future<List<NewsItem>> fetchNewsByPagination({bool appendInEnd=true}) async {
     if (isNetConnected) {
       List<NewsItem> itemList =
-          await NewsFirebaseService().fetchNewsByPagination();
-      newsItemList.addAll(itemList);
+          await NewsFirebaseService().fetchNewsByPagination(appendInEnd: appendInEnd);
+      if(appendInEnd) {
+        newsItemList.addAll(itemList);
+      }else{
+        newsItemList.setAll(0, itemList);
+      }
       return newsItemList;
     } else {
       AppUtils.showToast("Internet not available");

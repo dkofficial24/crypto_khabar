@@ -38,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: "डार्क थीम",
                       iconData: Icons.brightness_6_outlined,
                       callback: () {},
-                      lastChild: Switch(
+                      lastChild: Switch(activeColor: Colors.blue,
                         onChanged: (value) {
                           provider.setThemeMode(value).then((value) {
                             AppUtils.markThemeManuallySet();
@@ -68,6 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       iconData: Icons.notifications_outlined,
                       callback: () {},
                       lastChild: Switch(
+                        activeColor: Colors.blue,
                         onChanged: (value) {
                           provider.setNotificationReceiveStatus(value);
                           FirebaseAnalytics.instance.logEvent(

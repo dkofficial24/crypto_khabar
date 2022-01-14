@@ -25,12 +25,12 @@ class NewsFirebaseService {
     throw Exception("No such id exists");
   }
 
-  Future<List<NewsItem>> fetchNewsByPagination() async {
+  Future<List<NewsItem>> fetchNewsByPagination({bool appendInEnd=true}) async {
     List<NewsItem> newsItemList = [];
     CollectionReference newsRef = FirebaseFirestore.instance.collection("news");
     QuerySnapshot data;
 
-    if (last == null) {
+    if (last == null || !appendInEnd) {
       data = await newsRef.orderBy('date', descending: true).limit(5).get();
     } else {
       data = await newsRef

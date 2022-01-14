@@ -53,12 +53,12 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                     borderRadius: BorderRadius.circular(16),
                     child: Image.network(
                       _newsItem?.imgUrl ?? "",
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.cover,
                       errorBuilder: (ctx, obj, stack) {
                         return Container(
                             child: Image.asset(
                           "assets/images/placeholder.png",
-                          fit: BoxFit.fitHeight,
+                          fit: BoxFit.cover,
                         ));
                       },
                     ),
