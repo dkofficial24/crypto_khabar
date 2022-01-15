@@ -2,8 +2,10 @@ import 'package:crypto_khabar/article/page/article_page.dart';
 import 'package:crypto_khabar/dashboard/page/top_news_page.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/profile/page/profile_page.dart';
+import 'package:crypto_khabar/app_update/service/app_update_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 BuildContext globalContext;
 class DashboardPage extends StatefulWidget {
@@ -24,6 +26,11 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     NewsService();
     FirebaseAnalytics.instance.logEvent(name: 'dashboard');
+
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      AppUpdateHelper().checkLatestUpdate();
+    });
+
     super.initState();
   }
 

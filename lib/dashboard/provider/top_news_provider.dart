@@ -17,16 +17,24 @@ class TopNewsProvider extends ChangeNotifier {
     });
   }
 
-  Future fetchNewsByPagination() async {
+  Future fetchNewsByPagination({bool appendInEnd=true}) async {
     isLoading = true;
     notifyListeners();
-    newsItemList = await NewsService().fetchNewsByPagination();
+    newsItemList = await NewsService().fetchNewsByPagination(appendInEnd: appendInEnd);
     isLoading = false;
+    if(!appendInEnd){
+      newsItemList.sort(
+          (a,b){
+            return b.date-a.date;
+          }
+      );
+    }
+
     notifyListeners();
   }
 
   void onRefresh(RefreshController refreshController) async {
-    await fetchNewsByPagination();
+    await fetchNewsByPagination(appendInEnd: false);
     refreshController.refreshCompleted();
   }
 

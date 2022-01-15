@@ -38,4 +38,11 @@ class AppUtils {
   static Future markThemeManuallySet() async {
     await SharedPrefHelper().saveValue("isThemeManuallySetKey", true);
   }
+
+  static bool isValidUrl(String url){
+    if(url == null || url.isEmpty){
+      return false;
+    }
+    return Uri.tryParse(url)?.hasAbsolutePath ?? false;
+  }
 }

@@ -45,10 +45,10 @@ class PushNotificationService {
       FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
         final remoteNotification = remoteMessage.notification;
         print("message received...");
-        if (ProfileSettingService().notificationStatus) {
-          NotificationService().showNotification(
-              remoteNotification.title, remoteNotification.body);
-        }
+        // if (ProfileSettingService().notificationStatus) {
+        //   NotificationService().showNotification(
+        //       remoteNotification.title, remoteNotification.body);
+        // }
         //BroadcastEvents().publish(NewsReceivedEvent);
       });
       FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) async {

@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 class NewsRowListWidget extends StatelessWidget {
   final NewsItem newsItem;
   final Function callback;
-  const NewsRowListWidget({@required this.newsItem,@required this.callback});
+
+  const NewsRowListWidget({@required this.newsItem, @required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +31,9 @@ class NewsRowListWidget extends StatelessWidget {
                   SizedBox(height: 8),
                   Row(
                     children: [
-                      Text("${newsItem.source} . ${AppUtils.formatDate(newsItem.date)}",
-                        style: TextStyle(
-                            fontSize: 12
-                        ),
+                      Text(
+                        "${newsItem.source} . ${AppUtils.formatDate(newsItem.date)}",
+                        style: TextStyle(fontSize: 12),
                       ),
                     ],
                   )
@@ -48,17 +48,23 @@ class NewsRowListWidget extends StatelessWidget {
                   height: 60,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      newsItem.imgUrl,
-                      fit: BoxFit.fitHeight,
-                      errorBuilder: (ctx, obj, stack) {
-                        return Container(
+                    child: AppUtils.isValidUrl(newsItem.imgUrl)
+                        ? Image.network(
+                            newsItem.imgUrl,
+                            fit: BoxFit.fitHeight,
+                            errorBuilder: (ctx, obj, stack) {
+                              return Container(
+                                  child: Image.asset(
+                                "assets/images/placeholder.png",
+                                fit: BoxFit.fitHeight,
+                              ));
+                            },
+                          )
+                        : Container(
                             child: Image.asset(
-                              "assets/images/placeholder.png",
-                              fit: BoxFit.fitHeight,
-                            ));
-                      },
-                    ),
+                            "assets/images/placeholder.png",
+                            fit: BoxFit.fitHeight,
+                          )),
                   )),
             )
           ],
