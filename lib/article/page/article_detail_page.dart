@@ -59,7 +59,7 @@ class DetailPageState extends State<ArticleDetailPage> {
                         return Container(
                             child: Image.asset(
                               "assets/images/placeholder.png",
-                              fit: BoxFit.fitHeight,
+                              fit: BoxFit.cover,
                             ));
                       },
                     ),

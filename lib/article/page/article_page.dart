@@ -18,7 +18,6 @@ class ArticlePage extends StatefulWidget {
 class _ArticlePageState extends State<ArticlePage> {
   ArticleProvider _provider;
 
-
   @override
   void initState() {
     _provider = ArticleProvider();
@@ -42,46 +41,14 @@ class _ArticlePageState extends State<ArticlePage> {
                   onEndOfPage: () {
                     provider.fetchNewsByPagination();
                   },
-                  child: ListView.separated(
-                      itemCount: provider.articleList.length,
-
-                      separatorBuilder: (ctx,index){
-                        return Container(
-                          key: Key(index.toString()),
-                          margin: EdgeInsets.symmetric(vertical: 8),
-                          height: 1,
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.grey,
-                        );
-                      },
-
-                      itemBuilder: (context, index) {
-                        ExpandableController _expandedController = ExpandableController();
-                        Article article = provider.articleList[index];
-                        return ExpandablePanel(controller: _expandedController,
-                          key: Key(index.toString()),
-                          header: Text(article.title,
-                              style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
-                          expanded: Column(
-                            children: [
-                              MarkdownView(article.detail,ScrollController()),
-                              SizedBox(height: 4),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, AppRoutes.WebViewPage,
-                                          arguments: article.source);
-                                    },
-                                    icon: Icon(Icons.open_in_browser),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        );
+                  child: GridView.builder(
+                      itemCount: _provider.articleList.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,childAspectRatio: 1/1.5,
+                        crossAxisSpacing: 4,mainAxisSpacing: 4
+                      ),
+                      itemBuilder: (ctx, index) {
+                        return getGridItem(_provider.articleList[index]);
                       }),
                 ),
               );
@@ -91,5 +58,80 @@ class _ArticlePageState extends State<ArticlePage> {
       ),
     );
   }
-}
 
+  Widget getGridItem(Article article) {
+    return InkWell(
+      onTap: (){
+        Navigator.pushNamed(context, AppRoutes.ArticleDetailPage,arguments: article);
+      },
+      child: Container(
+        color: Theme.of(context).secondaryHeaderColor,
+        height:150,
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Image.asset(
+              "assets/images/bitcoin.jpeg",
+            ),
+            SizedBox(height: 8),
+            Flexible(
+              child: Text(
+                article.title,
+                softWrap: true,
+                maxLines: 4,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  ListView getListView(ArticleProvider provider, BuildContext context) {
+    return ListView.separated(
+        itemCount: provider.articleList.length,
+        separatorBuilder: (ctx, index) {
+          return Container(
+            key: Key(index.toString()),
+            margin: EdgeInsets.symmetric(vertical: 8),
+            height: 1,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.grey,
+          );
+        },
+        itemBuilder: (context, index) {
+          ExpandableController _expandedController = ExpandableController();
+          Article article = provider.articleList[index];
+          return Container(
+            child: Text(article.title,
+                style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
+          );
+          // return ExpandablePanel(controller: _expandedController,
+          //   key: Key(index.toString()),
+          //   header: Text(article.title,
+          //       style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
+          //   expanded: Column(
+          //     children: [
+          //       MarkdownView(article.detail,ScrollController()),
+          //       SizedBox(height: 4),
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.end,
+          //         children: [
+          //           IconButton(
+          //             onPressed: () {
+          //               Navigator.pushNamed(
+          //                   context, AppRoutes.WebViewPage,
+          //                   arguments: article.source);
+          //             },
+          //             icon: Icon(Icons.open_in_browser),
+          //           ),
+          //         ],
+          //       )
+          //     ],
+          //   ),
+          // );
+        });
+  }
+}
