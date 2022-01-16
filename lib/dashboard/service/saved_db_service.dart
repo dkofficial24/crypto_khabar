@@ -1,4 +1,5 @@
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
+import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -31,6 +32,7 @@ class SavedDbService{
           "create table $tableName (id String primary key,title text,details text,date integer,author text,source text,imgUrl text,category text,sourceLink text)");
       print("Table created !");
     });
+    NewsService().loadAllSavedNewsId();
   }
 
   Future<bool> saveNews(NewsItem newsItem) async {

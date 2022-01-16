@@ -36,10 +36,26 @@ class _TopNewsPageState extends State<TopNewsPage> {
   Future init() async {
     NotificationService();
     BroadcastEvents().subscribe(NewsReceivedEvent, fetchNews);
+    BroadcastEvents().subscribe(NewsBookmarkRemove, onBookmarkRemovedEvent);
+    BroadcastEvents().subscribe(NewsBookmarked, onBookmarkedEvent);
   }
 
   void fetchNews(_) {
     _topNewsProvider.fetchNewsByPagination();
+  }
+
+  void onBookmarkRemovedEvent(_){
+    if(mounted){
+      setState(() {
+      });
+    }
+  }
+
+  void onBookmarkedEvent(_){
+    if(mounted){
+      setState(() {
+      });
+    }
   }
 
   @override
@@ -206,9 +222,13 @@ class _TopNewsPageState extends State<TopNewsPage> {
               onPressed: _topNewsProvider.savingNews
                   ? null
                   : (ctx) {
-                      _topNewsProvider.saveNews(newsItem);
+                if(_topNewsProvider.isNewsBookmarked(newsItem.id)){
+                  _topNewsProvider.removeBookmarkNews(newsItem);
+                }else {
+                  _topNewsProvider.bookmarkNews(newsItem);
+                }
                     },
-              icon: Icons.bookmark_border,
+              icon: _topNewsProvider.isNewsBookmarked(newsItem.id)?Icons.bookmark:Icons.bookmark_border,
               label: 'बुकमार्क करें',
               backgroundColor: Theme.of(context).canvasColor,
             ),
@@ -237,6 +257,8 @@ class _TopNewsPageState extends State<TopNewsPage> {
   void dispose() {
     print("Disposing top news page");
     BroadcastEvents().unsubscribe(NewsReceivedEvent, handler: fetchNews);
+    BroadcastEvents().unsubscribe(NewsBookmarkRemove, handler: onBookmarkRemovedEvent);
+    BroadcastEvents().unsubscribe(NewsBookmarked, handler: onBookmarkedEvent);
     super.dispose();
   }
 }

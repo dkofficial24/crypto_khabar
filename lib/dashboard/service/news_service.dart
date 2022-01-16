@@ -18,6 +18,8 @@ class NewsService {
     return _newsService;
   }
 
+  Set<String> bookmarkedNewsIdSet = Set();
+
   List<NewsItem> newsItemList = [];
   StreamSubscription subscription;
   bool isNetConnected = true;
@@ -36,13 +38,14 @@ class NewsService {
     SavedDbService();
   }
 
-  Future<List<NewsItem>> fetchNewsByPagination({bool appendInEnd=true}) async {
+  Future<List<NewsItem>> fetchNewsByPagination(
+      {bool appendInEnd = true}) async {
     if (isNetConnected) {
-      List<NewsItem> itemList =
-          await NewsFirebaseService().fetchNewsByPagination(appendInEnd: appendInEnd);
-      if(appendInEnd) {
+      List<NewsItem> itemList = await NewsFirebaseService()
+          .fetchNewsByPagination(appendInEnd: appendInEnd);
+      if (appendInEnd) {
         newsItemList.addAll(itemList);
-      }else{
+      } else {
         newsItemList.setAll(0, itemList);
       }
       return newsItemList;
@@ -53,6 +56,7 @@ class NewsService {
   }
 
   Future<bool> saveNews(NewsItem newsItem) async {
+    markNewsItemSaved(newsItem.id);
     return await SavedDbService().saveNews(newsItem);
   }
 
@@ -60,7 +64,28 @@ class NewsService {
     return await SavedDbService().getAllSavedNews();
   }
 
-  Future removeSavedNews(String id)async{
+  Future removeSavedNews(String id) async {
+    removeNewsItemFromBookmark(id);
     await SavedDbService().removeSavedNews(id);
+  }
+
+  Future loadAllSavedNewsId() async {
+    List<NewsItem> listNews = await getAllSavedNews();
+    bookmarkedNewsIdSet.clear();
+    listNews.forEach((newsItem) {
+      bookmarkedNewsIdSet.add(newsItem.id);
+    });
+  }
+
+  void markNewsItemSaved(String id) {
+    bookmarkedNewsIdSet.add(id);
+  }
+
+  void removeNewsItemFromBookmark(String id) {
+    bookmarkedNewsIdSet.remove(id);
+  }
+
+  bool isNewsBookmarked(String id) {
+    return bookmarkedNewsIdSet.contains(id);
   }
 }

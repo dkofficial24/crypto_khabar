@@ -1,14 +1,11 @@
-import 'package:broadcast_events/broadcast_events.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/page/dashboard_page.dart';
-import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:crypto_khabar/shared/firebase_service/news_firebase_service.dart';
 import 'package:crypto_khabar/shared/services/notification_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
@@ -97,6 +94,9 @@ class PushNotificationService {
       LoaderController().dismissLoader(globalContext);
       Navigator.pushNamed(globalContext, AppRoutes.NewsDetailsPage,
           arguments: newsItem);
+      FirebaseAnalytics.instance.logEvent(
+          name: "app_open_by_notification_click",
+          parameters: {"title": newsItem.title});
     } catch (e) {
       LoaderController().dismissLoader(globalContext);
       print("FirebasePushNotificationService fetchNewsById err:$e");
