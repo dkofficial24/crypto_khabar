@@ -2,11 +2,11 @@ import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
-import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/dashboard/widget/column_news_list_widget.dart';
-import 'package:crypto_khabar/dashboard/widget/drawer_menu.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/shared/services/notification_service.dart';
+import 'package:crypto_khabar/shared/services/remote_config_service.dart';
+import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
@@ -214,7 +214,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
             ),
             SlidableAction(
               onPressed: (ctx) {
-                AppUtils.shareNews(newsItem);
+                shareNews(context, newsItem);
               },
               backgroundColor: Theme.of(context).canvasColor,
               icon: Icons.share,
@@ -224,6 +224,13 @@ class _TopNewsPageState extends State<TopNewsPage> {
         ),
         key: UniqueKey(),
         child: child);
+  }
+
+  Future<void> shareNews(BuildContext context, NewsItem newsItem) async {
+    LoaderController().showLoader(context);
+    String downloadLink = await RemoteConfigService().getAppDownloadLink();
+    LoaderController().dismissLoader(context);
+    AppUtils.shareNews(newsItem, appLink: downloadLink);
   }
 
   @override

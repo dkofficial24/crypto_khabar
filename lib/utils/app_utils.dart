@@ -15,15 +15,15 @@ class AppUtils {
     Fluttertoast.showToast(msg: msg);
   }
 
-  static void shareNews(NewsItem newsItem) {
+  static void shareNews(NewsItem newsItem,{String appLink=''}) {
     String detail =
-        "-${newsItem.title}- \n\n ${newsItem.details} \n ${newsItem?.sourceLink ?? ''}";
+        "${newsItem.title} \n\n $appLink";
     Share.share(detail, subject: newsItem.title);
   }
 
-  static void shareArticle(Article article) {
+  static void shareArticle(Article article,{String appLink=''}) {
     String detail =
-        "-${article.title}- \n\n ${article.detail} \n ${article?.source ?? ''}";
+        "${article.title} \n '$appLink";
     Share.share(detail, subject: article.title);
   }
 

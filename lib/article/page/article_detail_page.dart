@@ -1,20 +1,20 @@
 import 'package:crypto_khabar/article/model/article.dart';
 import 'package:crypto_khabar/article/service/article_service.dart';
+import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/widget/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 
 class ArticleDetailPage extends StatefulWidget {
-
   @override
   DetailPageState createState() => DetailPageState();
 }
 
 class DetailPageState extends State<ArticleDetailPage> {
-
   Article _article;
   ScrollController _scrollController;
   bool savingArticle = false;
+
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -30,13 +30,13 @@ class DetailPageState extends State<ArticleDetailPage> {
           title: Text("आर्टिकल"),
           actions: [
             IconButton(
-                onPressed: (){
+                onPressed: () {
                   saveArticle(_article);
                 },
                 icon: Icon(Icons.bookmark_border, color: Colors.white)),
             IconButton(
                 onPressed: () {
-                  AppUtils.shareArticle(_article);
+                  shareArticle();
                 },
                 icon: Icon(Icons.share, color: Colors.white)),
             SizedBox(width: 8)
@@ -58,14 +58,14 @@ class DetailPageState extends State<ArticleDetailPage> {
                       errorBuilder: (ctx, obj, stack) {
                         return Container(
                             child: Image.asset(
-                              "assets/images/placeholder.png",
-                              fit: BoxFit.fitHeight,
-                            ));
+                          "assets/images/placeholder.png",
+                          fit: BoxFit.fitHeight,
+                        ));
                       },
                     ),
                   )),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                 child: Text(_article.title,
                     style: Theme.of(context).textTheme.headline6),
               ),
@@ -76,17 +76,22 @@ class DetailPageState extends State<ArticleDetailPage> {
         ));
   }
 
+  Future<void> shareArticle() async {
+    String downloadLink = await RemoteConfigService().getAppDownloadLink();
+    AppUtils.shareArticle(_article, appLink: downloadLink);
+  }
+
   Future saveArticle(Article article) async {
-    if(!savingArticle) {
+    if (!savingArticle) {
       setState(() {
         savingArticle = true;
       });
       try {
         bool status = await ArticleService().saveArticle(article);
-        if(status) {
+        if (status) {
           AppUtils.showToast("आर्टिकल बुकमार्क हो गयी");
         }
-      }catch(e){
+      } catch (e) {
         print("ERROR:$e");
       }
       setState(() {
