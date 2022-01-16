@@ -1,5 +1,7 @@
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
+import 'package:crypto_khabar/shared/services/remote_config_service.dart';
+import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/shared/widget/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +36,11 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                 },
                 icon: Icon(Icons.bookmark_border, color: Colors.white)),
             IconButton(
-                onPressed: () {
-                  AppUtils.shareNews(_newsItem);
+                onPressed: () async{
+                  LoaderController().showLoader(context);
+                  String downloadLink = await RemoteConfigService().getAppDownloadLink();
+                  LoaderController().dismissLoader(context);
+                  AppUtils.shareNews(_newsItem,appLink: downloadLink);
                 },
                 icon: Icon(Icons.share, color: Colors.white)),
             SizedBox(width: 8)
@@ -87,7 +92,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
       try {
        bool status = await NewsService().saveNews(newsItem);
        if(status) {
-         AppUtils.showToast("बुकमार्क हो गयी");
+         AppUtils.showToast("बुकमार्क हो गयी है");
        }
       }catch(e){
         print("ERROR:$e");

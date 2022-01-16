@@ -1,9 +1,12 @@
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
+import 'package:crypto_khabar/shared/services/remote_config_service.dart';
+import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -77,7 +80,19 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                         value: provider.getNotification,
                       ),
-                    )
+                    ),
+                    SizedBox(height: 8),
+                    ProfileItem(
+                      title: "शेयर ऐप",
+                      iconData: Icons.share,
+                      callback: () async{
+                        LoaderController().showLoader(context);
+                        String downloadLink = await RemoteConfigService().getAppDownloadLink();
+                        LoaderController().dismissLoader(context);
+                        Share.share(downloadLink,subject: "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करेंं");
+                      },
+                      lastChild: Container(),
+                    ),
                   ],
                 )),
           );

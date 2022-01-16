@@ -36,6 +36,7 @@ class RemoteConfigService {
 
   Future downloadUpdateConfig() async {
     try {
+      appUpdateCompleter = Completer();
       String configJson = _remoteConfig.getString("app_update_config");
       _appUpdateConfig = AppUpdateConfig.fromJson(jsonDecode(configJson));
       appUpdateCompleter.complete(_appUpdateConfig);
@@ -49,5 +50,14 @@ class RemoteConfigService {
       return _appUpdateConfig;
     }
     return appUpdateCompleter.future;
+  }
+
+  Future<String> getAppDownloadLink() async {
+    if (_appUpdateConfig == null) {
+      await downloadUpdateConfig();
+    }
+    String linkUrl = _appUpdateConfig.appUrl;
+    linkUrl = linkUrl + " " + "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करें";
+    return linkUrl;
   }
 }
