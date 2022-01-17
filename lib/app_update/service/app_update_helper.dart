@@ -3,6 +3,7 @@ import 'package:crypto_khabar/dashboard/page/dashboard_page.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
 import 'package:crypto_khabar/shared/widget/view_utils.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,7 +20,7 @@ class AppUpdateHelper {
   static const String DefaultContent =
       "ऐप का नया वर्जन प्ले स्टोर पर उपलब्ध है।";
 
-  static const String DefaultUpdateButtonText = "अपडेट करें";
+  static const String DefaultUpdateButtonText = "अपडेट";
   static const String DefaultIgnoreButtonTxt = "बाद में";
 
   Future checkLatestUpdate() async {
@@ -27,6 +28,9 @@ class AppUpdateHelper {
       AppUpdateConfig config = await RemoteConfigService().getAppUpdateConfig();
       if (config == null) {
         print("AppUpdateHelper checkLatestUpdate AppUpdateConfig is null");
+        return;
+      }
+      if (!config.shouldUpdateShowDialog) {
         return;
       }
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -48,13 +52,25 @@ class AppUpdateHelper {
               negativeTextButton:
                   config?.negativeButton ?? DefaultIgnoreButtonTxt,
               forceUpdate: isForceUpdate, positiveAction: () {
-            //Navigator.pop(globalContext);
             launch(config.appUrl);
+            FirebaseAnalytics.instance
+                .logEvent(name: "app_update_accepted", parameters: {
+              "appCurrentVersion": appCurrentVersion,
+            });
           }, negativeAction: () {
             saveUpdateCheckLaterTime();
+            FirebaseAnalytics.instance
+                .logEvent(name: "app_update_ignored_by_button", parameters: {
+              "appCurrentVersion": appCurrentVersion,
+            });
           }, onBackPress: (isDismiss) {
             if (isDismiss) {
               saveUpdateCheckLaterTime();
+              FirebaseAnalytics.instance.logEvent(
+                  name: "app_update_ignored_by_click_outside",
+                  parameters: {
+                    "appCurrentVersion": appCurrentVersion,
+                  });
             }
           });
         }

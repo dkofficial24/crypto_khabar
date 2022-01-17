@@ -6,6 +6,7 @@ class AppUpdateConfig {
   String latestVersion;
   String minimumVersion;
   String appUrl;
+  bool shouldUpdateShowDialog;
 
   AppUpdateConfig.fromJson(Map<String, dynamic> json) {
     title = json['title'];
@@ -15,5 +16,6 @@ class AppUpdateConfig {
     latestVersion = json['latestVersion'];
     minimumVersion = json['minimumVersion'];
     appUrl = json['appUrl'] ?? '';
+    shouldUpdateShowDialog = json['shouldUpdateShowDialog'] ?? false;
   }
 }

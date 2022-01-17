@@ -1,6 +1,7 @@
 import 'package:crypto_khabar/dashboard/provider/saved_news_provider.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -44,6 +45,7 @@ class _SavedNewsPageState extends State<SavedNewsPage> {
                             .removeSavedNews(_provider.newsItemList[index].id);
                         _provider.newsItemList.removeAt(index);
                         setState(() {});
+                        FirebaseAnalytics.instance.logEvent(name: "removeSavedNews");
                       },
                       child: NewsRowListWidget(
                         newsItem: _provider.newsItemList[index],
