@@ -35,9 +35,9 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.crypto_khabar"
+        applicationId "com.edgetechapps.crypto_khabar"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
