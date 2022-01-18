@@ -7,17 +7,54 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:772778622450:android:b9b143c7573474c589ff6b",
+        "mobilesdk_app_id": "1:772778622450:android:01d52fbc9e048e4a89ff6b",
         "android_client_info": {
-          "package_name": "com.example.crypto_khabar.debug"
+          "package_name": "com.edgetechapps.crypto_khabar.debug"
         }
       },
       "oauth_client": [
         {
-          "client_id": "772778622450-pn9k1c3mitu8s9irb41d70ivjmev9qdc.apps.googleusercontent.com",
+          "client_id": "772778622450-acvegh5g8g28rkl32ba56qgcdk9m65ms.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.crypto_khabar.debug",
+            "package_name": "com.edgetechapps.crypto_khabar.debug",
+            "certificate_hash": "575ae95a7f409992fdba56b8914f352a13b3470b"
+          }
+        },
+        {
+          "client_id": "772778622450-lv0pcea3i5kaac6oab12cjmmf9ltan6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV7YGS5XP8WY4RyZmTjf_N-kdogqQbl2o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "772778622450-lv0pcea3i5kaac6oab12cjmmf9ltan6s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772778622450:android:dbb12ecc30e2622a89ff6b",
+        "android_client_info": {
+          "package_name": "com.example.crypto_khabar_admin.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772778622450-2cgf2tm105qkcks7barp25ucnbdsirj8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.crypto_khabar_admin.debug",
             "certificate_hash": "575ae95a7f409992fdba56b8914f352a13b3470b"
           }
         },

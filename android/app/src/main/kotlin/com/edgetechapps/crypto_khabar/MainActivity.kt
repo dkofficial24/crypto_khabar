@@ -1,4 +1,4 @@
-package com.example.crypto_khabar
+package com.edgetechapps.crypto_khabar
 
 import io.flutter.embedding.android.FlutterActivity
 
