@@ -30,3 +30,47 @@ showActionDialog(BuildContext context,
         );
       });
 }
+
+showUpdateDialog(BuildContext context,
+    {@required String title,
+    @required String content,
+    @required String positiveTextButton,
+    @required String negativeTextButton,
+    @required Function positiveAction,
+    Function negativeAction,
+    Function onBackPress,
+    bool forceUpdate = false}) {
+  showDialog(
+      context: context,
+      builder: (ctx) {
+        return WillPopScope(
+          onWillPop: () async {
+            if (onBackPress != null) {
+              onBackPress(!forceUpdate);
+            }
+            return !forceUpdate;
+          },
+          child: AlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions: [
+              forceUpdate
+                  ? Container()
+                  : TextButton(
+                      onPressed: () {
+                        if (negativeAction != null) {
+                          negativeAction();
+                        }
+                        Navigator.pop(context);
+                      },
+                      child: Text(negativeTextButton),
+                    ),
+              TextButton(
+                onPressed: positiveAction,
+                child: Text(positiveTextButton),
+              ),
+            ],
+          ),
+        );
+      });
+}

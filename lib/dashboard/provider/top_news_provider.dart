@@ -8,26 +8,26 @@ class TopNewsProvider extends ChangeNotifier {
   List<NewsItem> newsItemList = [];
   bool isLoading = false;
   bool shimmer = false;
+
   TopNewsProvider() {
     shimmer = true;
     notifyListeners();
-    fetchNewsByPagination().then((value){
+    fetchNewsByPagination().then((value) {
       shimmer = false;
       notifyListeners();
     });
   }
 
-  Future fetchNewsByPagination({bool appendInEnd=true}) async {
+  Future fetchNewsByPagination({bool appendInEnd = true}) async {
     isLoading = true;
     notifyListeners();
-    newsItemList = await NewsService().fetchNewsByPagination(appendInEnd: appendInEnd);
+    newsItemList =
+        await NewsService().fetchNewsByPagination(appendInEnd: appendInEnd);
     isLoading = false;
-    if(!appendInEnd){
-      newsItemList.sort(
-          (a,b){
-            return b.date-a.date;
-          }
-      );
+    if (!appendInEnd) {
+      newsItemList.sort((a, b) {
+        return b.date - a.date;
+      });
     }
 
     notifyListeners();
@@ -39,21 +39,40 @@ class TopNewsProvider extends ChangeNotifier {
   }
 
   bool savingNews = false;
+  bool removingBookmarkNews = false;
 
-  Future saveNews(NewsItem newsItem) async {
-    if(!savingNews) {
+  Future bookmarkNews(NewsItem newsItem) async {
+    if (!savingNews) {
       savingNews = true;
       notifyListeners();
       try {
         bool status = await NewsService().saveNews(newsItem);
-        if(status) {
-          AppUtils.showToast("बुकमार्क हो गयी");
+        if (status) {
+          //AppUtils.showToast("बुकमार्क हो गयी");
         }
-      }catch(e){
+      } catch (e) {
         print("ERROR:$e");
       }
       savingNews = false;
       notifyListeners();
     }
+  }
+
+  Future removeBookmarkNews(NewsItem newsItem) async {
+    if (!removingBookmarkNews) {
+      removingBookmarkNews = true;
+      notifyListeners();
+      try {
+        await NewsService().removeSavedNews(newsItem.id);
+      } catch (e) {
+        print("ERROR:$e");
+      }
+      removingBookmarkNews = false;
+      notifyListeners();
+    }
+  }
+
+  bool isNewsBookmarked(String id) {
+    return NewsService().isNewsBookmarked(id);
   }
 }

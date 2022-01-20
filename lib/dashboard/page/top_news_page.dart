@@ -2,11 +2,11 @@ import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
-import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/dashboard/widget/column_news_list_widget.dart';
-import 'package:crypto_khabar/dashboard/widget/drawer_menu.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/shared/services/notification_service.dart';
+import 'package:crypto_khabar/shared/services/remote_config_service.dart';
+import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
@@ -36,10 +36,26 @@ class _TopNewsPageState extends State<TopNewsPage> {
   Future init() async {
     NotificationService();
     BroadcastEvents().subscribe(NewsReceivedEvent, fetchNews);
+    BroadcastEvents().subscribe(NewsBookmarkRemove, onBookmarkRemovedEvent);
+    BroadcastEvents().subscribe(NewsBookmarked, onBookmarkedEvent);
   }
 
   void fetchNews(_) {
     _topNewsProvider.fetchNewsByPagination();
+  }
+
+  void onBookmarkRemovedEvent(_){
+    if(mounted){
+      setState(() {
+      });
+    }
+  }
+
+  void onBookmarkedEvent(_){
+    if(mounted){
+      setState(() {
+      });
+    }
   }
 
   @override
@@ -206,15 +222,19 @@ class _TopNewsPageState extends State<TopNewsPage> {
               onPressed: _topNewsProvider.savingNews
                   ? null
                   : (ctx) {
-                      _topNewsProvider.saveNews(newsItem);
+                if(_topNewsProvider.isNewsBookmarked(newsItem.id)){
+                  _topNewsProvider.removeBookmarkNews(newsItem);
+                }else {
+                  _topNewsProvider.bookmarkNews(newsItem);
+                }
                     },
-              icon: Icons.bookmark_border,
+              icon: _topNewsProvider.isNewsBookmarked(newsItem.id)?Icons.bookmark:Icons.bookmark_border,
               label: 'बुकमार्क करें',
               backgroundColor: Theme.of(context).canvasColor,
             ),
             SlidableAction(
               onPressed: (ctx) {
-                AppUtils.shareNews(newsItem);
+                shareNews(context, newsItem);
               },
               backgroundColor: Theme.of(context).canvasColor,
               icon: Icons.share,
@@ -226,10 +246,19 @@ class _TopNewsPageState extends State<TopNewsPage> {
         child: child);
   }
 
+  Future<void> shareNews(BuildContext context, NewsItem newsItem) async {
+    LoaderController().showLoader(context);
+    String downloadLink = await RemoteConfigService().getAppDownloadLink();
+    LoaderController().dismissLoader(context);
+    AppUtils.shareNews(newsItem, appLink: downloadLink);
+  }
+
   @override
   void dispose() {
     print("Disposing top news page");
     BroadcastEvents().unsubscribe(NewsReceivedEvent, handler: fetchNews);
+    BroadcastEvents().unsubscribe(NewsBookmarkRemove, handler: onBookmarkRemovedEvent);
+    BroadcastEvents().unsubscribe(NewsBookmarked, handler: onBookmarkedEvent);
     super.dispose();
   }
 }
