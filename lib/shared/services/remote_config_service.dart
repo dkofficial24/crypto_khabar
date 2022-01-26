@@ -36,7 +36,9 @@ class RemoteConfigService {
 
   Future downloadUpdateConfig() async {
     try {
-      appUpdateCompleter = Completer();
+      if(appUpdateCompleter.isCompleted) {
+        appUpdateCompleter = Completer();
+      }
       String configJson = _remoteConfig.getString("app_update_config");
       _appUpdateConfig = AppUpdateConfig.fromJson(jsonDecode(configJson));
       appUpdateCompleter.complete(_appUpdateConfig);

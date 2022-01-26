@@ -29,6 +29,10 @@ class _SavedNewsPageState extends State<SavedNewsPage> {
         ),
         body: Consumer<SavedNewsProvider>(
           builder: (context, provider, child) {
+            if(_provider.newsItemList.length == 0){
+              return Center(child: Text("कोई भी खबर बुकमार्क नहीं है। "),);
+            }
+
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: ListView.separated(
