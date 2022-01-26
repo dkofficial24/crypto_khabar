@@ -66,7 +66,7 @@ class _ArticlePageState extends State<ArticlePage> {
                             children: [
                               MarkdownView(article.detail,ScrollController()),
                               SizedBox(height: 4),
-                              Row(
+                              (article.source !=null && article.source.isNotEmpty) ?Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   IconButton(
@@ -78,7 +78,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                     icon: Icon(Icons.open_in_browser),
                                   ),
                                 ],
-                              )
+                              ):Container()
                             ],
                           ),
                         );
