@@ -18,6 +18,7 @@ class RemoteConfigService {
 
   RemoteConfig _remoteConfig;
   AppUpdateConfig _appUpdateConfig;
+  bool _isAdEnabled = true;
   Completer<AppUpdateConfig> appUpdateCompleter = Completer();
 
   init() async {
@@ -36,11 +37,12 @@ class RemoteConfigService {
 
   Future downloadUpdateConfig() async {
     try {
-      if(appUpdateCompleter.isCompleted) {
+      if (appUpdateCompleter.isCompleted) {
         appUpdateCompleter = Completer();
       }
       String configJson = _remoteConfig.getString("app_update_config");
       _appUpdateConfig = AppUpdateConfig.fromJson(jsonDecode(configJson));
+      _isAdEnabled = _remoteConfig.getBool("is_ad_enabled");
       appUpdateCompleter.complete(_appUpdateConfig);
     } catch (e) {
       appUpdateCompleter.completeError("Error while downloadUpdateConfig");
@@ -54,12 +56,18 @@ class RemoteConfigService {
     return appUpdateCompleter.future;
   }
 
+  bool isAdEnabled() {
+    return _isAdEnabled;
+  }
+
   Future<String> getAppDownloadLink() async {
     if (_appUpdateConfig == null) {
       await downloadUpdateConfig();
     }
     String linkUrl = _appUpdateConfig.appUrl;
-    linkUrl = linkUrl + " " + "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करें";
+    linkUrl = linkUrl +
+        " " +
+        "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करें";
     return linkUrl;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:broadcast_events/broadcast_events.dart';
+import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
@@ -9,6 +10,7 @@ import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class NewsDetailsPage extends StatefulWidget {
   @override
@@ -20,10 +22,13 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
   ScrollController _scrollController;
   bool savingNews = false;
   bool removeBookmarkingNews = false;
+  bool isBannerAdReady = false;
+  BannerAd bannerAd;
 
   @override
   void initState() {
     _scrollController = ScrollController();
+    initAd();
     super.initState();
   }
 
@@ -38,7 +43,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
             IconButton(
                 onPressed: () {
                   if (isNewsBookmarked(_newsItem.id)) {
-                     removeNewsFromBookmark(_newsItem.id);
+                    removeNewsFromBookmark(_newsItem.id);
                   } else {
                     bookmarkNews(_newsItem);
                   }
@@ -68,38 +73,45 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
         ),
         body: Container(
           margin: EdgeInsets.symmetric(horizontal: 4, vertical: 12),
-          child: ListView(
-            shrinkWrap: true,
+          child: Column(
             children: [
-              Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  height: MediaQuery.of(context).size.height * 0.25,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Image.network(
-                      _newsItem?.imgUrl ?? "",
-                      fit: BoxFit.cover,
-                      errorBuilder: (ctx, obj, stack) {
-                        return Container(
-                            child: Image.asset(
-                          "assets/images/placeholder.png",
-                          fit: BoxFit.cover,
-                        ));
-                      },
+              Expanded(
+                child: ListView(
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.network(
+                            _newsItem?.imgUrl ?? "",
+                            fit: BoxFit.cover,
+                            errorBuilder: (ctx, obj, stack) {
+                              return Container(
+                                  child: Image.asset(
+                                "assets/images/placeholder.png",
+                                fit: BoxFit.cover,
+                              ));
+                            },
+                          ),
+                        )),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                      child: Text(_newsItem.title,
+                          style: GoogleFonts.hind(
+                              textStyle:
+                                  Theme.of(context).textTheme.headline6)),
                     ),
-                  )),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                child: Text(_newsItem.title,
-                    style: GoogleFonts.hind(
-                        textStyle: Theme.of(context).textTheme.headline6)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(AppUtils.formatDate(_newsItem.date)),
+                    ),
+                    SizedBox(height: 8),
+                    MarkdownView(_newsItem.details, _scrollController),
+                  ],
+                ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(AppUtils.formatDate(_newsItem.date)),
-              ),
-              SizedBox(height: 8),
-              MarkdownView(_newsItem.details, _scrollController)
+              adBannerWidget()
             ],
           ),
         ));
@@ -143,5 +155,44 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
 
   bool isNewsBookmarked(String id) {
     return NewsService().isNewsBookmarked(id);
+  }
+
+  initAd() {
+    bannerAd = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          setState(() {
+            isBannerAdReady = false;
+          });
+          ad.dispose();
+        },
+      ),
+    );
+    bannerAd.load();
+  }
+
+  Container adBannerWidget() {
+    return AdHelper.isAdEnabled() && isBannerAdReady
+        ? Container(
+            width: bannerAd.size.width.toDouble(),
+            height: bannerAd.size.height.toDouble(),
+            child: AdWidget(ad: bannerAd),
+          )
+        : Container();
+  }
+
+  @override
+  void dispose() {
+    bannerAd.dispose();
+    super.dispose();
   }
 }

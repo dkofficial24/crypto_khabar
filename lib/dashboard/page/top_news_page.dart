@@ -1,4 +1,5 @@
 import 'package:broadcast_events/broadcast_events.dart';
+import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
@@ -11,6 +12,7 @@ import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -44,17 +46,15 @@ class _TopNewsPageState extends State<TopNewsPage> {
     _topNewsProvider.fetchNewsByPagination();
   }
 
-  void onBookmarkRemovedEvent(_){
-    if(mounted){
-      setState(() {
-      });
+  void onBookmarkRemovedEvent(_) {
+    if (mounted) {
+      setState(() {});
     }
   }
 
-  void onBookmarkedEvent(_){
-    if(mounted){
-      setState(() {
-      });
+  void onBookmarkedEvent(_) {
+    if (mounted) {
+      setState(() {});
     }
   }
 
@@ -75,84 +75,102 @@ class _TopNewsPageState extends State<TopNewsPage> {
                 ? newsRowShimmer()
                 : Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: LazyLoadScrollView(
-                      onEndOfPage: () {
-                        provider.fetchNewsByPagination();
-                      },
-                      isLoading: provider.isLoading,
-                      scrollOffset: 50,
-                      child: SmartRefresher(
-                        controller: _refreshController,
-                        enablePullUp: false,
-                        reverse: false,
-                        enableTwoLevel: false,
-                        enablePullDown: true,
-                        onRefresh: () {
-                          provider.onRefresh(_refreshController);
-                        },
-                        child: ListView.separated(
-                            itemBuilder: (ctx, index) {
-                              if (index ==
-                                  _topNewsProvider.newsItemList.length) {
-                                return provider.isLoading
-                                    ? Center(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 4, horizontal: 4),
-                                          height: 30,
-                                          width: 30,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          ),
-                                        ),
-                                      )
-                                    : Container();
-                              }
-                              if (index == 0 || index % 4 == 0) {
-                                return createSlidable(
-                                  provider.newsItemList[index],
-                                  context,
-                                  child: ColumnNewsListWidget(
-                                    newsItem: provider.newsItemList[index],
-                                    callback: () {
-                                      Navigator.pushNamed(
-                                          context, AppRoutes.NewsDetailsPage,
-                                          arguments:
-                                              provider.newsItemList[index]);
-                                    },
-                                  ),
-                                );
-                              }
-                              return createSlidable(
-                                provider.newsItemList[index],
-                                context,
-                                child: NewsRowListWidget(
-                                  newsItem: provider.newsItemList[index],
-                                  callback: () {
-                                    Navigator.pushNamed(
-                                        context, AppRoutes.NewsDetailsPage,
-                                        arguments:
-                                            provider.newsItemList[index]);
-                                  },
-                                ),
-                              );
+                    child: Column(
+                      children: [
+                        Expanded(
+                            child: LazyLoadScrollView(
+                          onEndOfPage: () {
+                            provider.fetchNewsByPagination();
+                          },
+                          isLoading: provider.isLoading,
+                          scrollOffset: 50,
+                          child: SmartRefresher(
+                            controller: _refreshController,
+                            enablePullUp: false,
+                            reverse: false,
+                            enableTwoLevel: false,
+                            enablePullDown: true,
+                            onRefresh: () {
+                              provider.onRefresh(_refreshController);
                             },
-                            separatorBuilder: (ctx, index) {
-                              return Container(
-                                margin: EdgeInsets.symmetric(vertical: 8),
-                                height: 1,
-                                width: MediaQuery.of(context).size.width,
-                                color: Colors.grey,
-                              );
-                            },
-                            itemCount:
-                                _topNewsProvider.newsItemList.length + 1),
-                      ),
+                            child: ListView.separated(
+                                itemBuilder: (ctx, index) {
+                                  if (index ==
+                                      _topNewsProvider.newsItemList.length) {
+                                    return provider.isLoading
+                                        ? Center(
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 4, horizontal: 4),
+                                              height: 30,
+                                              width: 30,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                              ),
+                                            ),
+                                          )
+                                        : Container();
+                                  }
+                                  if (index == 0 || index % 4 == 0) {
+                                    return createSlidable(
+                                      provider.newsItemList[index],
+                                      context,
+                                      child: ColumnNewsListWidget(
+                                        newsItem: provider.newsItemList[index],
+                                        callback: () {
+                                          Navigator.pushNamed(context,
+                                              AppRoutes.NewsDetailsPage,
+                                              arguments:
+                                                  provider.newsItemList[index]);
+                                        },
+                                      ),
+                                    );
+                                  }
+                                  return createSlidable(
+                                    provider.newsItemList[index],
+                                    context,
+                                    child: NewsRowListWidget(
+                                      newsItem: provider.newsItemList[index],
+                                      callback: () {
+                                        Navigator.pushNamed(
+                                            context, AppRoutes.NewsDetailsPage,
+                                            arguments:
+                                                provider.newsItemList[index]);
+                                      },
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (ctx, index) {
+                                  return Container(
+                                    margin: EdgeInsets.symmetric(vertical: 8),
+                                    height: 1,
+                                    width: MediaQuery.of(context).size.width,
+                                    color: Colors.grey,
+                                  );
+                                },
+                                itemCount:
+                                    _topNewsProvider.newsItemList.length + 1),
+                          ),
+                        )),
+                        provider.isBannerAdReady
+                            ? adBannerWidget(provider)
+                            : Container()
+                      ],
                     ));
           },
         ),
       ),
     );
+  }
+
+  Container adBannerWidget(TopNewsProvider provider) {
+    return AdHelper.isAdEnabled()
+        ? Container(
+            width: provider.bannerAd.size.width.toDouble(),
+            height: provider.bannerAd.size.height.toDouble(),
+            child: AdWidget(ad: provider.bannerAd),
+          )
+        : Container();
   }
 
   Widget newsRowShimmer() {
@@ -222,13 +240,15 @@ class _TopNewsPageState extends State<TopNewsPage> {
               onPressed: _topNewsProvider.savingNews
                   ? null
                   : (ctx) {
-                if(_topNewsProvider.isNewsBookmarked(newsItem.id)){
-                  _topNewsProvider.removeBookmarkNews(newsItem);
-                }else {
-                  _topNewsProvider.bookmarkNews(newsItem);
-                }
+                      if (_topNewsProvider.isNewsBookmarked(newsItem.id)) {
+                        _topNewsProvider.removeBookmarkNews(newsItem);
+                      } else {
+                        _topNewsProvider.bookmarkNews(newsItem);
+                      }
                     },
-              icon: _topNewsProvider.isNewsBookmarked(newsItem.id)?Icons.bookmark:Icons.bookmark_border,
+              icon: _topNewsProvider.isNewsBookmarked(newsItem.id)
+                  ? Icons.bookmark
+                  : Icons.bookmark_border,
               label: 'बुकमार्क करें',
               backgroundColor: Theme.of(context).canvasColor,
             ),
@@ -256,8 +276,10 @@ class _TopNewsPageState extends State<TopNewsPage> {
   @override
   void dispose() {
     print("Disposing top news page");
+    _topNewsProvider.bannerAd.dispose();
     BroadcastEvents().unsubscribe(NewsReceivedEvent, handler: fetchNews);
-    BroadcastEvents().unsubscribe(NewsBookmarkRemove, handler: onBookmarkRemovedEvent);
+    BroadcastEvents()
+        .unsubscribe(NewsBookmarkRemove, handler: onBookmarkRemovedEvent);
     BroadcastEvents().unsubscribe(NewsBookmarked, handler: onBookmarkedEvent);
     super.dispose();
   }
