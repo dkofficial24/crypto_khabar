@@ -18,7 +18,6 @@ class ArticlePage extends StatefulWidget {
 class _ArticlePageState extends State<ArticlePage> {
   ArticleProvider _provider;
 
-
   @override
   void initState() {
     _provider = ArticleProvider();
@@ -42,46 +41,14 @@ class _ArticlePageState extends State<ArticlePage> {
                   onEndOfPage: () {
                     provider.fetchNewsByPagination();
                   },
-                  child: ListView.separated(
-                      itemCount: provider.articleList.length,
-
-                      separatorBuilder: (ctx,index){
-                        return Container(
-                          key: Key(index.toString()),
-                          margin: EdgeInsets.symmetric(vertical: 8),
-                          height: 1,
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.grey,
-                        );
-                      },
-
-                      itemBuilder: (context, index) {
-                        ExpandableController _expandedController = ExpandableController();
-                        Article article = provider.articleList[index];
-                        return ExpandablePanel(controller: _expandedController,
-                          key: Key(index.toString()),
-                          header: Text(article.title,
-                              style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
-                          expanded: Column(
-                            children: [
-                              MarkdownView(article.detail,ScrollController()),
-                              SizedBox(height: 4),
-                              (article.source !=null && article.source.isNotEmpty) ?Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, AppRoutes.WebViewPage,
-                                          arguments: article.source);
-                                    },
-                                    icon: Icon(Icons.open_in_browser),
-                                  ),
-                                ],
-                              ):Container()
-                            ],
-                          ),
-                        );
+                  child: GridView.builder(
+                      itemCount: _provider.articleList.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,childAspectRatio: 1/1.5,
+                        crossAxisSpacing: 4,mainAxisSpacing: 4
+                      ),
+                      itemBuilder: (ctx, index) {
+                        return getGridItem(_provider.articleList[index]);
                       }),
                 ),
               );
@@ -91,5 +58,81 @@ class _ArticlePageState extends State<ArticlePage> {
       ),
     );
   }
-}
 
+  Widget getGridItem(Article article) {
+    return InkWell(
+      onTap: (){
+        Navigator.pushNamed(context, AppRoutes.ArticleDetailPage,arguments: article);
+      },
+      child: Container(
+        color: Theme.of(context).secondaryHeaderColor,
+        height:120,
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Image.network(
+                article?.imgUrl ?? "",
+                fit: BoxFit.cover,
+                errorBuilder: (ctx, obj, stack) {
+                  return Container(
+                      child: Image.asset(
+                        "assets/images/placeholder.png",
+                        fit: BoxFit.cover,
+                      ));
+                },
+              ),
+            ),
+            SizedBox(height: 8),
+            Flexible(
+              child: Text(
+                article.title,
+                softWrap: true,
+                maxLines: 4,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(height:8),
+            Text(
+              article.detail,
+              maxLines: 3,overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 14),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  ListView getListView(ArticleProvider provider, BuildContext context) {
+    return ListView.separated(
+        itemCount: provider.articleList.length,
+        separatorBuilder: (ctx, index) {
+          return Container(
+            key: Key(index.toString()),
+            margin: EdgeInsets.symmetric(vertical: 8),
+            height: 1,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.grey,
+          );
+        },
+        itemBuilder: (context, index) {
+          ExpandableController _expandedController = ExpandableController();
+          Article article = provider.articleList[index];
+          return Container(
+            child: Column(
+              children: [
+                Text(article.title,
+                    style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
+                SizedBox(height: 8),
+                Text(article.detail,
+                    style: GoogleFonts.hind(),maxLines: 1,)
+              ],
+            ),
+          );
+
+        });
+  }
+}
