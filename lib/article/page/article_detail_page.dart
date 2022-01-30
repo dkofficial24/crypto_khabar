@@ -31,11 +31,6 @@ class DetailPageState extends State<ArticleDetailPage> {
           actions: [
             IconButton(
                 onPressed: () {
-                  saveArticle(_article);
-                },
-                icon: Icon(Icons.bookmark_border, color: Colors.white)),
-            IconButton(
-                onPressed: () {
                   shareArticle();
                 },
                 icon: Icon(Icons.share, color: Colors.white)),
@@ -48,7 +43,7 @@ class DetailPageState extends State<ArticleDetailPage> {
             shrinkWrap: true,
             children: [
               Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
                   height: MediaQuery.of(context).size.height * 0.25,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),
@@ -65,11 +60,11 @@ class DetailPageState extends State<ArticleDetailPage> {
                     ),
                   )),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),
+                padding: EdgeInsets.symmetric(vertical: 8,horizontal: 12),
                 child: Text(_article.title,
                     style: Theme.of(context).textTheme.headline6),
               ),
-              SizedBox(height: 8),
+
               MarkdownView(_article.detail, _scrollController)
             ],
           ),

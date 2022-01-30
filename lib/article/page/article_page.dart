@@ -66,13 +66,24 @@ class _ArticlePageState extends State<ArticlePage> {
       },
       child: Container(
         color: Theme.of(context).secondaryHeaderColor,
-        height:150,
+        height:120,
         padding: EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.asset(
-              "assets/images/bitcoin.jpeg",
+            ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Image.network(
+                article?.imgUrl ?? "",
+                fit: BoxFit.cover,
+                errorBuilder: (ctx, obj, stack) {
+                  return Container(
+                      child: Image.asset(
+                        "assets/images/placeholder.png",
+                        fit: BoxFit.cover,
+                      ));
+                },
+              ),
             ),
             SizedBox(height: 8),
             Flexible(
@@ -82,6 +93,12 @@ class _ArticlePageState extends State<ArticlePage> {
                 maxLines: 4,
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
+            ),
+            SizedBox(height:8),
+            Text(
+              article.detail,
+              maxLines: 3,overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 14),
             )
           ],
         ),
@@ -105,33 +122,17 @@ class _ArticlePageState extends State<ArticlePage> {
           ExpandableController _expandedController = ExpandableController();
           Article article = provider.articleList[index];
           return Container(
-            child: Text(article.title,
-                style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
+            child: Column(
+              children: [
+                Text(article.title,
+                    style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
+                SizedBox(height: 8),
+                Text(article.detail,
+                    style: GoogleFonts.hind(),maxLines: 1,)
+              ],
+            ),
           );
-          // return ExpandablePanel(controller: _expandedController,
-          //   key: Key(index.toString()),
-          //   header: Text(article.title,
-          //       style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
-          //   expanded: Column(
-          //     children: [
-          //       MarkdownView(article.detail,ScrollController()),
-          //       SizedBox(height: 4),
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.end,
-          //         children: [
-          //           IconButton(
-          //             onPressed: () {
-          //               Navigator.pushNamed(
-          //                   context, AppRoutes.WebViewPage,
-          //                   arguments: article.source);
-          //             },
-          //             icon: Icon(Icons.open_in_browser),
-          //           ),
-          //         ],
-          //       )
-          //     ],
-          //   ),
-          // );
+
         });
   }
 }
