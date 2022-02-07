@@ -28,6 +28,8 @@ class PushNotificationService {
       tokenHandler(messaging);
       // subscribe to topic on each app start-up
       FirebaseMessaging.instance.subscribeToTopic('global_notification');
+      FirebaseMessaging.instance.subscribeToTopic('alert');
+      FirebaseMessaging.instance.subscribeToTopic('article');
 
       FirebaseMessaging.instance
           .getInitialMessage()
