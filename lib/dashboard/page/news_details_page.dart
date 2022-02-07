@@ -158,26 +158,28 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
   }
 
   initAd() {
-    bannerAd = BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        onAdLoaded: (_) {
-          setState(() {
-            isBannerAdReady = true;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          setState(() {
-            isBannerAdReady = false;
-          });
-          ad.dispose();
-        },
-      ),
-    );
-    bannerAd.load();
+    if(AdHelper.isAdEnabled()) {
+      bannerAd = BannerAd(
+        adUnitId: AdHelper.bannerAdUnitId,
+        request: AdRequest(),
+        size: AdSize.banner,
+        listener: BannerAdListener(
+          onAdLoaded: (_) {
+            setState(() {
+              isBannerAdReady = true;
+            });
+          },
+          onAdFailedToLoad: (ad, err) {
+            print('Failed to load a banner ad: ${err.message}');
+            setState(() {
+              isBannerAdReady = false;
+            });
+            ad.dispose();
+          },
+        ),
+      );
+      bannerAd.load();
+    }
   }
 
   Container adBannerWidget() {

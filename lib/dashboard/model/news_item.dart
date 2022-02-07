@@ -9,6 +9,7 @@ class NewsItem {
   List<String> imgUrls;
   String category;
   String sourceLink;
+  String vdoUrl;
   bool showNotification;
 
   NewsItem(
@@ -23,6 +24,7 @@ class NewsItem {
         this.imgUrls,
         this.category,
         this.sourceLink,
+        this.vdoUrl,
         this.showNotification = true
       });
 
@@ -36,6 +38,7 @@ class NewsItem {
     imgUrl = json['imgUrl'];
     category = json['category'];
     sourceLink = json['sourceLink'];
+    vdoUrl = json['vdoUrl'];
     showNotification = json['showNotification'];
    // imgUrls = json['imgUrls']?.cast<String>();
   }
@@ -51,6 +54,7 @@ class NewsItem {
     data['imgUrl'] = this.imgUrl;
    // data['imgUrls'] = this.imgUrls;
     data['category'] = this.category;
+    data['vdoUrl'] = this.vdoUrl;
     data['sourceLink'] = this.sourceLink;
     data['showNotification'] = this.showNotification;
     return data;

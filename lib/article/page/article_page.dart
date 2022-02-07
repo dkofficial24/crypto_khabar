@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_khabar/article/model/article.dart';
 import 'package:crypto_khabar/article/provider/article_provider.dart';
 import 'package:crypto_khabar/shared/widget/markdown_common.dart';
@@ -66,38 +67,37 @@ class _ArticlePageState extends State<ArticlePage> {
       },
       child: Container(
         color: Theme.of(context).secondaryHeaderColor,
-        height:120,
+        height:125,
         padding: EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Image.network(
-                article?.imgUrl ?? "",
-                fit: BoxFit.cover,
-                errorBuilder: (ctx, obj, stack) {
-                  return Container(
+            AspectRatio(
+              aspectRatio: 1.2,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child:
+                CachedNetworkImage(
+                  imageUrl: article?.imgUrl ?? "",fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(),
+                  errorWidget: (context, url, error) => Container(
                       child: Image.asset(
                         "assets/images/placeholder.png",
                         fit: BoxFit.cover,
-                      ));
-                },
+                      )),
+                ),
               ),
             ),
             SizedBox(height: 8),
-            Flexible(
-              child: Text(
-                article.title,
-                softWrap: true,
-                maxLines: 4,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+            Text(
+              article.title,softWrap: true,textAlign: TextAlign.left,
+              //maxLines: 4,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             SizedBox(height:8),
             Text(
-              article.detail,
-              maxLines: 3,overflow: TextOverflow.ellipsis,
+              article.detail,softWrap: false,
+              maxLines: 2,overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 14),
             )
           ],
@@ -119,7 +119,6 @@ class _ArticlePageState extends State<ArticlePage> {
           );
         },
         itemBuilder: (context, index) {
-          ExpandableController _expandedController = ExpandableController();
           Article article = provider.articleList[index];
           return Container(
             child: Column(
