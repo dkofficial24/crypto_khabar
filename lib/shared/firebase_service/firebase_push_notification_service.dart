@@ -94,11 +94,13 @@ class PushNotificationService {
       LoaderController().showLoader(globalContext);
       NewsItem newsItem = await NewsFirebaseService().fetchNewsById(id);
       LoaderController().dismissLoader(globalContext);
-      Navigator.pushNamed(globalContext, AppRoutes.NewsDetailsPage,
-          arguments: newsItem);
-      FirebaseAnalytics.instance.logEvent(
-          name: "app_open_by_notification_click",
-          parameters: {"title": newsItem.title});
+      if(newsItem.category.toLowerCase().contains("news") && newsItem.details.isNotEmpty) {
+        Navigator.pushNamed(globalContext, AppRoutes.NewsDetailsPage,
+            arguments: newsItem);
+        FirebaseAnalytics.instance.logEvent(
+            name: "app_open_by_notification_click",
+            parameters: {"title": newsItem.title});
+      }
     } catch (e) {
       LoaderController().dismissLoader(globalContext);
       print("FirebasePushNotificationService fetchNewsById err:$e");

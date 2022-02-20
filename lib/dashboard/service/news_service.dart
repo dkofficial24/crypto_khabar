@@ -55,6 +55,10 @@ class NewsService {
     return newsItemList;
   }
 
+  Future<List<NewsItem>> fetchFeaturedNews()async{
+    return await NewsFirebaseService().fetchFeaturedNews();
+  }
+
   Future<bool> saveNews(NewsItem newsItem) async {
     markNewsItemSaved(newsItem.id);
     return await SavedDbService().saveNews(newsItem);
