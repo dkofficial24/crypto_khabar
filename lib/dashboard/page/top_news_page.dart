@@ -7,6 +7,7 @@ import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
 import 'package:crypto_khabar/dashboard/widget/column_news_list_widget.dart';
+import 'package:crypto_khabar/dashboard/widget/news_carousel.widget.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/shared/services/notification_service.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
@@ -88,7 +89,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
                             provider.fetchNewsByPagination();
                           },
                           isLoading: provider.isLoading,
-                          scrollOffset: 50,
+                          scrollOffset: 80,
                           child: SmartRefresher(
                             controller: _refreshController,
                             enablePullUp: false,
@@ -300,137 +301,5 @@ class _TopNewsPageState extends State<TopNewsPage> {
         .unsubscribe(NewsBookmarkRemove, handler: onBookmarkRemovedEvent);
     BroadcastEvents().unsubscribe(NewsBookmarked, handler: onBookmarkedEvent);
     super.dispose();
-  }
-}
-
-class CarouselWidget extends StatelessWidget {
-  final CarouselController _carouselController = CarouselController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<TopNewsProvider>(builder: (ctx, provider, child) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Flexible(
-            child: CarouselSlider(
-              options: CarouselOptions(
-                height: MediaQuery.of(context).size.height * 0.2,
-                viewportFraction: 0.75,
-                onPageChanged: (index, reason) {
-                  provider.updateCarouselCurrentIndex(index);
-                },
-                enlargeCenterPage: false,
-                autoPlayInterval: Duration(seconds: 8),
-                initialPage: 0,
-                enableInfiniteScroll: true,
-                aspectRatio: 16 / 9,
-                reverse: false,
-                autoPlay: false,
-              ),
-              items: provider.featuredNewsItemList.map((newsItem) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return GestureDetector(
-                      onTap: () {
-                        if (newsItem.category.toLowerCase().contains("news") &&
-                            (newsItem.details?.isNotEmpty ?? false)) {
-                          Navigator.pushNamed(
-                              context, AppRoutes.NewsDetailsPage,
-                              arguments: newsItem);
-                        } if(newsItem.category.toLowerCase().contains("app_update")){
-                          if(Platform.isAndroid) {
-                            launch(
-                                "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
-                          }
-                        }else {
-                          AppUtils.showToast("डिटेल में उपलब्ध नहीं है।");
-                        }
-                        FirebaseAnalytics.instance.logEvent(
-                            name: "carousle_click",
-                            parameters: {"category": newsItem.category});
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: MediaQuery.of(context).size.height * 0.2,
-                              width: MediaQuery.of(context).size.width * 0.65,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                  newsItem.imgUrl,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (ctx, obj, stack) {
-                                    return ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: Image.asset(
-                                          "assets/images/placeholder.png",
-                                          fit: BoxFit.cover,
-                                        ));
-                                  },
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.08,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.65,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: newsItem.title.trim().isNotEmpty
-                                          ? Colors.black38
-                                          : Colors.transparent),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Text(
-                                      newsItem.title,
-                                      style: TextStyle(color: Colors.white),
-                                      softWrap: true,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 3,
-                                    ),
-                                  )),
-                              bottom: 0,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              }).toList(),
-              carouselController: _carouselController,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children:
-                provider.featuredNewsItemList.asMap().entries.map((entry) {
-              return GestureDetector(
-                onTap: () => _carouselController.animateToPage(entry.key),
-                child: Container(
-                  width: 6.0,
-                  height: 6.0,
-                  margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black)
-                          .withOpacity(
-                              provider.carouselCurrentIndex == entry.key
-                                  ? 0.9
-                                  : 0.4)),
-                ),
-              );
-            }).toList(),
-          ),
-        ],
-      );
-    });
   }
 }

@@ -28,7 +28,7 @@ class PushNotificationService {
       tokenHandler(messaging);
       // subscribe to topic on each app start-up
       FirebaseMessaging.instance.subscribeToTopic('global_notification');
-      FirebaseMessaging.instance.subscribeToTopic('alert');
+      FirebaseMessaging.instance.subscribeToTopic('short');
       FirebaseMessaging.instance.subscribeToTopic('article');
 
       FirebaseMessaging.instance
@@ -48,7 +48,7 @@ class PushNotificationService {
         //   NotificationService().showNotification(
         //       remoteNotification.title, remoteNotification.body);
         // }
-        //BroadcastEvents().publish(NewsReceivedEvent);
+     //BroadcastEvents().publish(NewsReceivedEvent);
       });
       FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) async {
         if (remoteMessage == null) return;
@@ -77,17 +77,6 @@ class PushNotificationService {
     });
     // FirebaseMessaging.instance.onTokenRefresh.listen(saveTokenToDatabase);
   }
-
-  // Future<void> saveTokenToDatabase(String token) async {
-  //   // Assume user is logged in for this example
-  //   String userId = FirebaseAuth.instance.currentUser.uid;
-  //
-  //   await FirebaseFirestore.instance.collection('users').doc(userId).set(
-  //     {
-  //       'tokens': FieldValue.arrayUnion([token]),
-  //     },
-  //   );
-  // }
 
   Future fetchNewsById(String id) async {
     try {

@@ -12,6 +12,7 @@ class ProfileSettingProvider extends ChangeNotifier {
   double rating = -1;
   FeedbackInfo previousFeedback;
 
+
   ProfileSettingProvider() {
     init();
   }

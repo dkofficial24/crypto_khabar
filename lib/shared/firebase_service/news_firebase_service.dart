@@ -31,11 +31,11 @@ class NewsFirebaseService {
     QuerySnapshot data;
 
     if (last == null || !appendInEnd) {
-      data = await newsRef.orderBy('date', descending: true).limit(5).get();
+      data = await newsRef.orderBy('date', descending: true).limit(8).get();
     } else {
       data = await newsRef
           .orderBy("date", descending: true)
-          .limit(3)
+          .limit(6)
           .startAfterDocument(last)
           .get();
     }
@@ -54,7 +54,6 @@ class NewsFirebaseService {
     List<NewsItem> newsItemList = [];
     CollectionReference newsRef = FirebaseFirestore.instance.collection("featured_news");
     QuerySnapshot data;
-
 
     data = await newsRef.orderBy('date', descending: true).limit(5).get();
 

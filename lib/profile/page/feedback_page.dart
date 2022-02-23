@@ -15,6 +15,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController messageController = TextEditingController();
   final key = GlobalKey<FormState>();
+  bool shouldShowFeedback;
 
   @override
   void initState() {
@@ -23,9 +24,25 @@ class _FeedbackPageState extends State<FeedbackPage> {
       setState(() {
         provider.previousFeedback = feedback;
       });
+      loadStatus(feedback);
+    }).onError((error, stackTrace) {
+      setState(() {
+        shouldShowFeedback = true;
+      });
     });
     super.initState();
   }
+
+  loadStatus(FeedbackInfo info){
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(info.date);
+    DateTime current = DateTime.now();
+    int daysDiff = current.difference(dateTime).inDays;
+    shouldShowFeedback = daysDiff>15;
+    setState(() {
+
+    });
+  }
+
 
   bool isValidEmail(email) {
     return RegExp(
@@ -39,71 +56,101 @@ class _FeedbackPageState extends State<FeedbackPage> {
       nameController.text = provider.previousFeedback?.name ?? "";
       emailController.text = provider.previousFeedback.email;
     }
+
     return Scaffold(
         appBar: AppBar(
           title: Text("फीडबैक"),
         ),
-        body: SingleChildScrollView(
-          child: Form(
-            key: key,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-              child: Column(
-                children: [
-                  Text(
-                    "अपने सुझाव हमारे साथ शेयर करे",
-                    style: Theme.of(context).textTheme.subtitle2,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  buildTextFormField('नाम', nameController, 1, null),
-                  buildTextFormField("ईमेल", emailController, 1, (value) {
-                    if (value == null || value.isEmpty) {
-                      return "कृपया ईमेल डालें ";
-                    } else {
-                      bool isvalid = isValidEmail(emailController.text);
-                      if (isvalid) {
-                        return null;
-                      } else {
-                        return "सही ईमेल डालें";
-                      }
-                    }
-                  }),
-                  buildTextFormField("रिव्यु", messageController, 5,
-                      (value) {
-                    if (value == null || value.isEmpty) {
-                      return "कृपया रिव्यु लिखें";
-                    } else {
+        body: mainWidget());
+  }
+
+  Widget mainWidget(){
+    if(shouldShowFeedback == null){
+      return Center(
+          child:Text("Please wait..")
+      );
+    }
+    if(shouldShowFeedback){
+      return SingleChildScrollView(
+        child: Form(
+          key: key,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: Column(
+              children: [
+                Text(
+                  "अपने सुझाव हमारे साथ शेयर करे",
+                  style: Theme.of(context).textTheme.subtitle2,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                buildTextFormField('नाम', nameController, 1, null),
+                buildTextFormField("ईमेल", emailController, 1, (value) {
+                  if (value == null || value.isEmpty) {
+                    return "कृपया ईमेल डालें ";
+                  } else {
+                    bool isvalid = isValidEmail(emailController.text);
+                    if (isvalid) {
                       return null;
+                    } else {
+                      return "सही ईमेल डालें";
                     }
-                  }),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  ratingWidget(),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 50)),
-                    child: Text("भेजे"),
-                    onPressed: () {
-                      if (key.currentState.validate()) {
-                        FeedbackInfo feedback = FeedbackInfo(
+                  }
+                }),
+                buildTextFormField("रिव्यु", messageController, 5,
+                        (value) {
+                      if (value == null || value.isEmpty) {
+                        return "कृपया रिव्यु लिखें";
+                      } else {
+                        return null;
+                      }
+                    }),
+                SizedBox(
+                  height: 20,
+                ),
+                ratingWidget(),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      padding:
+                      EdgeInsets.symmetric(vertical: 10, horizontal: 50)),
+                  child: Text("भेजे"),
+                  onPressed: () async{
+                    if (key.currentState.validate()) {
+                      FeedbackInfo feedback = FeedbackInfo(
                           name:nameController.text,
                           email:emailController.text,
                           review: messageController.text,
-                          rating: provider.rating
-                        );
-                        provider.shareFeedback(feedback);
-                      }
-                    },
-                  )
-                ],
-              ),
+                          rating: provider.rating,
+                          date: DateTime.now().millisecondsSinceEpoch
+                      );
+                      await provider.shareFeedback(feedback);
+                      setState(() {
+                        shouldShowFeedback = false;
+                      });
+                    }
+                  },
+                )
+              ],
             ),
           ),
-        ));
+        ),
+      );
+    }
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("आपने फ़ीडबैक सबमिट कर दिया है,धन्यवाद",style: TextStyle(fontSize: 18),),
+          SizedBox(height: 24,),
+          ElevatedButton(onPressed: (){
+            Navigator.pop(context);
+          }, child: Text("Back"))
+        ],
+      ),
+    );
+
   }
 
   Widget ratingWidget() {
