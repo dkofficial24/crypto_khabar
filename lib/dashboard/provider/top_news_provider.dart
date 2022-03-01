@@ -1,9 +1,12 @@
+import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../../constants.dart';
 
 class TopNewsProvider extends ChangeNotifier {
   List<NewsItem> newsItemList = [];
@@ -23,6 +26,8 @@ class TopNewsProvider extends ChangeNotifier {
     });
     fetchFeaturedNews();
     initAd();
+
+    BroadcastEvents().subscribe(NewsFetched, loadFetchedNews);
   }
 
   initAd() {
@@ -58,6 +63,16 @@ class TopNewsProvider extends ChangeNotifier {
       });
     }
 
+    notifyListeners();
+  }
+
+  loadFetchedNews(_){
+    List<NewsItem> list = NewsService().getFetchedNews();
+    newsItemList.clear();
+    newsItemList.addAll(list);
+    newsItemList.sort((a, b) {
+      return b.date - a.date;
+    });
     notifyListeners();
   }
 

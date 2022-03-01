@@ -154,7 +154,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   }
 
   Widget ratingWidget() {
-    if(provider.previousFeedback == null || provider.previousFeedback.rating != -1){
+    if(provider.previousFeedback == null){
       return Container();
     }
     return Column(

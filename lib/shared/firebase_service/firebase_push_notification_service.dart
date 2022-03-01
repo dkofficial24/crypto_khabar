@@ -1,3 +1,4 @@
+import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/page/dashboard_page.dart';
 import 'package:crypto_khabar/shared/firebase_service/news_firebase_service.dart';
@@ -8,6 +9,8 @@ import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+
+import '../../constants.dart';
 
 class PushNotificationService {
   static final _instance = PushNotificationService._internal();
@@ -66,6 +69,8 @@ class PushNotificationService {
     setLastSharedMsg(remoteMessage.messageId);
     if (remoteMessage.data['type'] == 'news') {
       await fetchNewsById(remoteMessage.data['id']);
+    }else if (remoteMessage.data['article'] == 'news') {
+      //todo load article and open article detail page
     }
   }
 
@@ -83,6 +88,7 @@ class PushNotificationService {
       LoaderController().showLoader(globalContext);
       NewsItem newsItem = await NewsFirebaseService().fetchNewsById(id);
       LoaderController().dismissLoader(globalContext);
+      BroadcastEvents().publish(NewsReceivedEvent);
       if(newsItem.category.toLowerCase().contains("news") && newsItem.details.isNotEmpty) {
         Navigator.pushNamed(globalContext, AppRoutes.NewsDetailsPage,
             arguments: newsItem);

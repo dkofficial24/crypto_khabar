@@ -55,6 +55,10 @@ class NewsService {
     return newsItemList;
   }
 
+  List<NewsItem> getFetchedNews(){
+    return newsItemList;
+  }
+
   Future<List<NewsItem>> fetchFeaturedNews()async{
     return await NewsFirebaseService().fetchFeaturedNews();
   }

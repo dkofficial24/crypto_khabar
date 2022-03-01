@@ -95,10 +95,12 @@ class _ArticlePageState extends State<ArticlePage> {
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
             SizedBox(height:8),
-            Text(
-              article.detail,softWrap: false,
-              maxLines: 2,overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 14),
+            Expanded(
+              child: Text(
+                article.detail,softWrap: false,
+                maxLines: 2,overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 14),
+              ),
             )
           ],
         ),

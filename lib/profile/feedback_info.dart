@@ -13,7 +13,7 @@ class FeedbackInfo{
     name = map['name'] ?? "User";
     email = map['email'];
     review = map['review'] ?? "";
-    rating = map['rating'] ?? -1;
+    rating = map['rating'] ?? 5;
     date = map['date'] ;
   }
 
