@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   UserCredential _userCredential;
-
+//test naresh
   AuthService._internal();
 
   static AuthService _authService = AuthService._internal();
