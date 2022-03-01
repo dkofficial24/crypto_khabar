@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ArticlePage extends StatefulWidget {
   @override
@@ -18,10 +19,12 @@ class ArticlePage extends StatefulWidget {
 
 class _ArticlePageState extends State<ArticlePage> {
   ArticleProvider _provider;
+  RefreshController _refreshController;
 
   @override
   void initState() {
     _provider = ArticleProvider();
+    _refreshController = RefreshController(initialRefresh: false);
     super.initState();
   }
 
@@ -42,15 +45,25 @@ class _ArticlePageState extends State<ArticlePage> {
                   onEndOfPage: () {
                     provider.fetchNewsByPagination();
                   },
-                  child: GridView.builder(
-                      itemCount: _provider.articleList.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,childAspectRatio: 1/1.5,
-                        crossAxisSpacing: 4,mainAxisSpacing: 4
-                      ),
-                      itemBuilder: (ctx, index) {
-                        return getGridItem(_provider.articleList[index]);
-                      }),
+                  child: SmartRefresher(
+                    controller: _refreshController,
+                    enablePullUp: false,
+                    reverse: false,
+                    enableTwoLevel: false,
+                    enablePullDown: true,
+                    onRefresh: () {
+                      provider.onRefresh(_refreshController);
+                    },
+                    child: GridView.builder(
+                        itemCount: _provider.articleList.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,childAspectRatio: 1/1.5,
+                          crossAxisSpacing: 4,mainAxisSpacing: 4
+                        ),
+                        itemBuilder: (ctx, index) {
+                          return getGridItem(_provider.articleList[index]);
+                        }),
+                  ),
                 ),
               );
             },

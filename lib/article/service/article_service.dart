@@ -15,10 +15,16 @@ class ArticleService {
   QueryDocumentSnapshot last;
 
   List<Article> articleList = [];
-  Future<List<Article>> fetchArticleByPagination() async {
+  Future<List<Article>> fetchArticleByPagination({bool appendInEnd = true}) async {
     if (NewsService().isNetConnected) {
       List<Article> itemList =
-      await _fetchArticleByPagination();
+      await _fetchArticleByPagination(appendInEnd: appendInEnd);
+      if (appendInEnd) {
+        articleList.addAll(itemList);
+      } else {
+        articleList.setAll(0, itemList);
+      }
+      return articleList;
       articleList.addAll(itemList);
       return articleList;
     } else {
@@ -27,12 +33,12 @@ class ArticleService {
     return articleList;
   }
 
-  Future<List<Article>> _fetchArticleByPagination() async {
+  Future<List<Article>> _fetchArticleByPagination({bool appendInEnd = true}) async {
     List<Article> articleList = [];
     CollectionReference articleRef = FirebaseFirestore.instance.collection("article");
     QuerySnapshot data;
 
-    if (last == null) {
+    if (last == null  || !appendInEnd  ) {
       data = await articleRef.orderBy("date",descending: true).limit(20).get();
     } else {
       data = await articleRef
