@@ -66,7 +66,7 @@ class TopNewsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  loadFetchedNews(_){
+  loadFetchedNews(_) {
     List<NewsItem> list = NewsService().getFetchedNews();
     newsItemList.clear();
     newsItemList.addAll(list);

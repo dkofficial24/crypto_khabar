@@ -35,8 +35,13 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    _newsItem = ModalRoute.of(context).settings.arguments;
-
+    if(_newsItem == null) {
+      _newsItem = ModalRoute
+          .of(context)
+          .settings
+          .arguments;
+      incrementView(_newsItem.id);
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text("क्रिप्टो खबर"),
@@ -193,6 +198,14 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
             child: AdWidget(ad: bannerAd),
           )
         : Container();
+  }
+
+  Future incrementView(String id) async {
+    try {
+      await NewsService().incrementView(id);
+    }catch(e){
+      print("incrementView err $e");
+    }
   }
 
   @override
