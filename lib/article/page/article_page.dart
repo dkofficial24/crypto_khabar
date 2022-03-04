@@ -57,9 +57,10 @@ class _ArticlePageState extends State<ArticlePage> {
                     child: GridView.builder(
                         itemCount: _provider.articleList.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,childAspectRatio: 1/1.5,
-                          crossAxisSpacing: 4,mainAxisSpacing: 4
-                        ),
+                            crossAxisCount: 2,
+                            childAspectRatio: 1 / 1.5,
+                            crossAxisSpacing: 4,
+                            mainAxisSpacing: 4),
                         itemBuilder: (ctx, index) {
                           return getGridItem(_provider.articleList[index]);
                         }),
@@ -75,43 +76,50 @@ class _ArticlePageState extends State<ArticlePage> {
 
   Widget getGridItem(Article article) {
     return InkWell(
-      onTap: (){
-        Navigator.pushNamed(context, AppRoutes.ArticleDetailPage,arguments: article);
+      onTap: () {
+        Navigator.pushNamed(context, AppRoutes.ArticleDetailPage,
+            arguments: article);
       },
       child: Container(
         color: Theme.of(context).secondaryHeaderColor,
-        height:125,
+        height: 125,
         padding: EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AspectRatio(
               aspectRatio: 1.2,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
-                child:
-                CachedNetworkImage(
-                  imageUrl: article?.imgUrl ?? "",fit: BoxFit.cover,
+                child: CachedNetworkImage(
+                  imageUrl: article?.imgUrl ?? "",
+                  fit: BoxFit.cover,
                   placeholder: (context, url) => Container(),
                   errorWidget: (context, url, error) => Container(
                       child: Image.asset(
-                        "assets/images/placeholder.png",
-                        fit: BoxFit.cover,
-                      )),
+                    "assets/images/placeholder.png",
+                    fit: BoxFit.cover,
+                  )),
                 ),
               ),
             ),
             SizedBox(height: 8),
             Text(
-              article.title,softWrap: true,textAlign: TextAlign.left,
-              //maxLines: 4,
+              article.title,
+              softWrap: true,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height:8),
+            SizedBox(height: 8),
             Expanded(
               child: Text(
-                article.detail,softWrap: false,
-                maxLines: 2,overflow: TextOverflow.ellipsis,
+                article.detail,
+                softWrap: false,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 14),
               ),
             )
@@ -123,30 +131,33 @@ class _ArticlePageState extends State<ArticlePage> {
 
   ListView getListView(ArticleProvider provider, BuildContext context) {
     return ListView.separated(
-        itemCount: provider.articleList.length,
-        separatorBuilder: (ctx, index) {
-          return Container(
-            key: Key(index.toString()),
-            margin: EdgeInsets.symmetric(vertical: 8),
-            height: 1,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.grey,
-          );
-        },
-        itemBuilder: (context, index) {
-          Article article = provider.articleList[index];
-          return Container(
-            child: Column(
-              children: [
-                Text(article.title,
-                    style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
-                SizedBox(height: 8),
-                Text(article.detail,
-                    style: GoogleFonts.hind(),maxLines: 1,)
-              ],
-            ),
-          );
-
-        });
+      itemCount: provider.articleList.length,
+      separatorBuilder: (ctx, index) {
+        return Container(
+          key: Key(index.toString()),
+          margin: EdgeInsets.symmetric(vertical: 8),
+          height: 1,
+          width: MediaQuery.of(context).size.width,
+          color: Colors.grey,
+        );
+      },
+      itemBuilder: (context, index) {
+        Article article = provider.articleList[index];
+        return Container(
+          child: Column(
+            children: [
+              Text(article.title,
+                  style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              Text(
+                article.detail,
+                style: GoogleFonts.hind(),
+                maxLines: 1,
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 }

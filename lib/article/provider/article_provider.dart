@@ -15,11 +15,17 @@ class ArticleProvider extends ChangeNotifier {
   }
 
   Future fetchNewsByPagination({bool appendInEnd = true}) async {
-    // isLoading = true;
-    //notifyListeners();
+    isLoading = true;
+    notifyListeners();
     final articleList = await ArticleService().fetchArticleByPagination(appendInEnd: appendInEnd);
   //  if (_articleList.length != articleList.length) {
       _articleList = articleList;
+      notifyListeners();
+      if(!appendInEnd){
+        _articleList.sort((a,b){
+          return b.date -a.date;
+        });
+      }
       notifyListeners();
     //}
     //  isLoading = false;
