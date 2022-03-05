@@ -35,6 +35,8 @@ class ArticleService {
     return articleList;
   }
 
+
+
   Future<List<Article>> _fetchArticleByPagination(
       {bool appendInEnd = true}) async {
     List<Article> articleList = [];
