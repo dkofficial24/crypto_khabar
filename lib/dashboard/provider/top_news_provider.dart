@@ -1,17 +1,21 @@
+import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
-import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../constants.dart';
+
 class TopNewsProvider extends ChangeNotifier {
   List<NewsItem> newsItemList = [];
+  List<NewsItem> featuredNewsItemList = [];
   bool isLoading = false;
   bool shimmer = false;
   bool isBannerAdReady = false;
   BannerAd bannerAd;
+  int carouselCurrentIndex = 0;
 
   TopNewsProvider() {
     shimmer = true;
@@ -20,10 +24,13 @@ class TopNewsProvider extends ChangeNotifier {
       shimmer = false;
       notifyListeners();
     });
+    fetchFeaturedNews();
     initAd();
+
+    BroadcastEvents().subscribe(NewsFetched, loadFetchedNews);
   }
 
-  initAd(){
+  initAd() {
     bannerAd = BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
       request: AdRequest(),
@@ -59,9 +66,29 @@ class TopNewsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  loadFetchedNews(_){
+    List<NewsItem> list = NewsService().getFetchedNews();
+    newsItemList.clear();
+    newsItemList.addAll(list);
+    newsItemList.sort((a, b) {
+      return b.date - a.date;
+    });
+    notifyListeners();
+  }
+
   void onRefresh(RefreshController refreshController) async {
     await fetchNewsByPagination(appendInEnd: false);
+    fetchFeaturedNews();
     refreshController.refreshCompleted();
+  }
+
+  Future fetchFeaturedNews() async {
+    try {
+      featuredNewsItemList = await NewsService().fetchFeaturedNews();
+      notifyListeners();
+    } catch (e) {
+      print("$e");
+    }
   }
 
   bool savingNews = false;
@@ -100,5 +127,11 @@ class TopNewsProvider extends ChangeNotifier {
 
   bool isNewsBookmarked(String id) {
     return NewsService().isNewsBookmarked(id);
+  }
+
+  void updateCarouselCurrentIndex(int index) {
+    carouselCurrentIndex = index;
+    print("updateCarouselCurrentIndex $index");
+    notifyListeners();
   }
 }

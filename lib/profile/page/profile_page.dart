@@ -83,6 +83,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 8),
                     ProfileItem(
+                      title: "फीडबैक",
+                      iconData: Icons.feedback_outlined,
+                      callback: () async{
+                        Navigator.pushNamed(context, AppRoutes.FeedbackPage);
+                      },
+                      lastChild: Container(),
+                    ),SizedBox(height: 8),
+                    ProfileItem(
                       title: "शेयर ऐप",
                       iconData: Icons.share,
                       callback: () async{

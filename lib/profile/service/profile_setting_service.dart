@@ -1,5 +1,7 @@
 import 'package:broadcast_events/broadcast_events.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_khabar/constants.dart';
+import 'package:crypto_khabar/profile/feedback_info.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
@@ -66,5 +68,14 @@ class ProfileSettingService {
       return true;
     }
     return value == "true";
+  }
+
+  Future shareFeedback(FeedbackInfo feedback) async {
+    await FirebaseFirestore.instance
+        .collection("feedback")
+        .doc(feedback.email)
+        .set(feedback.toJson());
+
+    print('published successfully !  ${feedback.toJson()}');
   }
 }

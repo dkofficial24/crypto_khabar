@@ -1,11 +1,12 @@
 import 'dart:async';
-
+// import 'package:device_preview/device_preview.dart';
 import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:crypto_khabar/shared/page/splash_page.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -18,8 +19,18 @@ void main() async {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     await Firebase.initializeApp();
+
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-    runApp(MyApp());
+    runApp(
+
+      // DevicePreview(
+      //   enabled: true,
+      //
+      //   child: MyApp(),
+      // ),
+
+      MyApp(),
+    );
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
@@ -42,6 +53,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // builder: DevicePreview.appBuilder,
       title: AppName,
       routes: routes,
       debugShowCheckedModeBanner: false,
@@ -63,7 +75,7 @@ class _MyAppState extends State<MyApp> {
               //   // headline6: TextStyle(fontSize: 30.0, fontStyle: FontStyle.italic),
               //   // bodyText2: GoogleFonts.roboto(),
               //  ),
-              ),
+            ),
       home: SplashPage(),
     );
   }

@@ -29,6 +29,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
   void initState() {
     _scrollController = ScrollController();
     initAd();
+    FirebaseAnalytics.instance.logEvent(name: "ndp_detail_news");
     super.initState();
   }
 
@@ -60,7 +61,9 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                     String downloadLink =
                         await RemoteConfigService().getAppDownloadLink();
                     AppUtils.shareNews(_newsItem, appLink: downloadLink);
-                    FirebaseAnalytics.instance.logEvent(name: "ndp_share_news");
+                    FirebaseAnalytics.instance.logEvent(name: "ndp_share_news",parameters: {
+                      "title":"${_newsItem.title}"
+                    });
                   } catch (e) {
                     print("NewsDetailPage shareNews error:$e");
                   } finally {

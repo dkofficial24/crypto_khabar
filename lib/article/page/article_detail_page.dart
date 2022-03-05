@@ -3,6 +3,7 @@ import 'package:crypto_khabar/article/service/article_service.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/widget/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -21,6 +22,7 @@ class DetailPageState extends State<ArticleDetailPage> {
   @override
   void initState() {
     _scrollController = ScrollController();
+    FirebaseAnalytics.instance.logEvent(name: "adp_detail_article");
     super.initState();
   }
 
@@ -104,6 +106,7 @@ class DetailPageState extends State<ArticleDetailPage> {
   Future<void> shareArticle() async {
     String downloadLink = await RemoteConfigService().getAppDownloadLink();
     AppUtils.shareArticle(_article, appLink: downloadLink);
+    FirebaseAnalytics.instance.logEvent(name: "adp_share_article");
   }
 
   Future saveArticle(Article article) async {

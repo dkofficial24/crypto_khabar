@@ -1,15 +1,20 @@
+import 'dart:io';
+
 import 'package:broadcast_events/broadcast_events.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
 import 'package:crypto_khabar/dashboard/widget/column_news_list_widget.dart';
+import 'package:crypto_khabar/dashboard/widget/news_carousel.widget.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/shared/services/notification_service.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -17,6 +22,7 @@ import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TopNewsPage extends StatefulWidget {
   @override
@@ -83,7 +89,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
                             provider.fetchNewsByPagination();
                           },
                           isLoading: provider.isLoading,
-                          scrollOffset: 50,
+                          scrollOffset: 80,
                           child: SmartRefresher(
                             controller: _refreshController,
                             enablePullUp: false,
@@ -95,8 +101,17 @@ class _TopNewsPageState extends State<TopNewsPage> {
                             },
                             child: ListView.separated(
                                 itemBuilder: (ctx, index) {
+                                  int usedIndex = index - 1;
+                                  if (index == 0) {
+                                    return _topNewsProvider
+                                                .featuredNewsItemList.length >
+                                            0
+                                        ? CarouselWidget()
+                                        : Container();
+                                  }
                                   if (index ==
-                                      _topNewsProvider.newsItemList.length) {
+                                      _topNewsProvider.newsItemList.length +
+                                          1) {
                                     return provider.isLoading
                                         ? Center(
                                             child: Container(
@@ -111,36 +126,43 @@ class _TopNewsPageState extends State<TopNewsPage> {
                                           )
                                         : Container();
                                   }
-                                  if (index == 0 || index % 4 == 0) {
+                                  if ((index% 5 == 0) ||
+                                      (_topNewsProvider.featuredNewsItemList.length ==
+                                              0 &&
+                                          index == 1)) {
                                     return createSlidable(
-                                      provider.newsItemList[index],
+                                      provider.newsItemList[usedIndex],
                                       context,
                                       child: ColumnNewsListWidget(
-                                        newsItem: provider.newsItemList[index],
+                                        newsItem:
+                                            provider.newsItemList[usedIndex],
                                         callback: () {
                                           Navigator.pushNamed(context,
                                               AppRoutes.NewsDetailsPage,
-                                              arguments:
-                                                  provider.newsItemList[index]);
+                                              arguments: provider
+                                                  .newsItemList[usedIndex]);
                                         },
                                       ),
                                     );
                                   }
+
                                   return createSlidable(
-                                    provider.newsItemList[index],
+                                    provider.newsItemList[usedIndex],
                                     context,
                                     child: NewsRowListWidget(
-                                      newsItem: provider.newsItemList[index],
+                                      newsItem:
+                                          provider.newsItemList[usedIndex],
                                       callback: () {
                                         Navigator.pushNamed(
                                             context, AppRoutes.NewsDetailsPage,
-                                            arguments:
-                                                provider.newsItemList[index]);
+                                            arguments: provider
+                                                .newsItemList[usedIndex]);
                                       },
                                     ),
                                   );
                                 },
                                 separatorBuilder: (ctx, index) {
+                                  if (index == 0) return Container();
                                   return Container(
                                     margin: EdgeInsets.symmetric(vertical: 8),
                                     height: 1,
@@ -149,7 +171,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
                                   );
                                 },
                                 itemCount:
-                                    _topNewsProvider.newsItemList.length + 1),
+                                    _topNewsProvider.newsItemList.length + 2),
                           ),
                         )),
                         provider.isBannerAdReady
