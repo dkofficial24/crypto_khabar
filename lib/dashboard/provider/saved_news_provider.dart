@@ -16,11 +16,6 @@ class SavedNewsProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     newsItemList = await NewsService().getAllSavedNews();
-
-    newsItemList.sort((a,b){
-      return b.date-a.date;
-    });
-
     isLoading = false;
     notifyListeners();
   }

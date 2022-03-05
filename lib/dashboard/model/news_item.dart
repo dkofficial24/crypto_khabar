@@ -30,16 +30,16 @@ class NewsItem {
 
   NewsItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    title = json['title'];
-    details = json['details'];
-    date = json['date'];
-    author = json['author'];
-    source = json['source'];
-    imgUrl = json['imgUrl'];
+    title = json['title'] ?? "";
+    details = json['details'] ?? "";
+    date = json['date'] ?? 0;
+    author = json['author'] ?? "";
+    source = json['source'] ?? "";
+    imgUrl = json['imgUrl'] ?? "";
     category = json['category'];
-    sourceLink = json['sourceLink'];
-    vdoUrl = json['vdoUrl'];
-    showNotification = json['showNotification'];
+    sourceLink = json['sourceLink'] ?? "";
+    vdoUrl = json['vdoUrl'] ?? "";
+    showNotification = json['showNotification'] ?? true;
    // imgUrls = json['imgUrls']?.cast<String>();
   }
 
