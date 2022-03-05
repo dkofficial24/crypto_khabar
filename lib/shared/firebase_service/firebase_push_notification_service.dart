@@ -1,4 +1,5 @@
 import 'package:broadcast_events/broadcast_events.dart';
+import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/page/dashboard_page.dart';
 import 'package:crypto_khabar/shared/firebase_service/news_firebase_service.dart';
@@ -91,7 +92,9 @@ class PushNotificationService {
       BroadcastEvents().publish(NewsReceivedEvent);
       if(newsItem.category.toLowerCase().contains("news") && newsItem.details.isNotEmpty) {
         Navigator.pushNamed(globalContext, AppRoutes.NewsDetailsPage,
-            arguments: newsItem);
+            arguments: NewsDetailsArgs(
+                index:-1,
+                newsItem:newsItem));
         FirebaseAnalytics.instance.logEvent(
             name: "app_open_by_notification_click",
             parameters: {"title": newsItem.title});

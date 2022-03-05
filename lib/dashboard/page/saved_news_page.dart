@@ -1,3 +1,4 @@
+import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/provider/saved_news_provider.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
@@ -56,7 +57,10 @@ class _SavedNewsPageState extends State<SavedNewsPage> {
                         callback: () {
                           Navigator.pushNamed(
                               context, AppRoutes.NewsDetailsPage,
-                              arguments: _provider.newsItemList[index]);
+                              arguments: NewsDetailsArgs(
+                                  index:-1,
+                                  newsItem: provider
+                                      .newsItemList[index]));
                         },
                       ),
                     );
