@@ -83,8 +83,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
             child: Column(
               children: [
                 Text(
-                  "अपने सुझाव हमारे साथ शेयर करे",
-                  style: Theme.of(context).textTheme.subtitle2,
+                  "क्रिप्टो खबर ऐप्प को बेहतर बनाने के लिए सुझाव दें",
+                  style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(
                   height: 20,

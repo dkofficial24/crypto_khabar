@@ -26,7 +26,7 @@ class MarkdownView extends StatelessWidget {
       },
       imageBuilder: (Uri uri, String title, String alt) {
         return GestureDetector(
-          onTap: () {
+          onTap: (){
             Navigator.pushNamed(context, AppRoutes.ImagePreviewer,
                 arguments: uri.toString() ?? '');
           },
@@ -37,12 +37,12 @@ class MarkdownView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 child: Image.network(
                   uri.toString() ?? '',
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.cover,
                   errorBuilder: (ctx, obj, stack) {
                     return Container(
                         child: Image.asset(
                       "assets/images/placeholder.png",
-                      fit: BoxFit.fitWidth,
+                      fit: BoxFit.cover,
                     ));
                   },
                 ),
