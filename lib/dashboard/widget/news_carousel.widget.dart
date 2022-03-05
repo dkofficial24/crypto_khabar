@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
@@ -45,7 +46,9 @@ class CarouselWidget extends StatelessWidget {
                             (newsItem.details?.isNotEmpty ?? false)) {
                           Navigator.pushNamed(
                               context, AppRoutes.NewsDetailsPage,
-                              arguments: newsItem);
+                              arguments: NewsDetailsArgs(
+                                  index:-1,
+                                  newsItem: newsItem));
                         } else if (newsItem.category
                             .toLowerCase()
                             .contains("app_update")) {
@@ -57,7 +60,7 @@ class CarouselWidget extends StatelessWidget {
                             .toLowerCase()
                             .contains("short")) {
                           if (!isShortVideo(newsItem)) {
-                            AppUtils.showToast("Only headline available");
+                            AppUtils.showToast("ये केवल हैडलाइन खबर है।");
                           }
                         } else {
                           AppUtils.showToast("डिटेल में उपलब्ध नहीं है।");

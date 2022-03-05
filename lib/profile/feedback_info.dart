@@ -7,7 +7,7 @@ class FeedbackInfo{
   double rating;
   int date;
 
-  FeedbackInfo({this.name="User",@required this.email,@required this.review,this.rating=-1,@required this.date});
+  FeedbackInfo({this.name="User",@required this.email,@required this.review,this.rating=5,@required this.date});
 
   FeedbackInfo.fromJson(Map<String,dynamic> map){
     name = map['name'] ?? "User";

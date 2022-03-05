@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 class ProfileSettingProvider extends ChangeNotifier {
   bool isDarkMode = false;
   bool getNotification = false;
-  double rating = -1;
+  double rating = 5;
   FeedbackInfo previousFeedback;
 
 
@@ -51,7 +51,7 @@ class ProfileSettingProvider extends ChangeNotifier {
   Future saveUserDetails(FeedbackInfo feedback)async{
     feedback.review = "";
     await SharedPrefHelper().saveValue("userDetails", jsonEncode(feedback.toJson()));
-    print("User detail saved");
+  //  print("User detail saved");
   }
 
   Future<FeedbackInfo> getUserDetails()async{

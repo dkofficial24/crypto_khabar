@@ -1,8 +1,12 @@
 import 'package:crypto_khabar/profile/feedback_info.dart';
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
+import 'package:crypto_khabar/shared/widget/view_utils.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FeedbackPage extends StatefulWidget {
   @override
@@ -12,7 +16,7 @@ class FeedbackPage extends StatefulWidget {
 class _FeedbackPageState extends State<FeedbackPage> {
   ProfileSettingProvider provider;
   TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  //TextEditingController emailController = TextEditingController();
   TextEditingController messageController = TextEditingController();
   final key = GlobalKey<FormState>();
   bool shouldShowFeedback;
@@ -54,7 +58,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   Widget build(BuildContext context) {
     if(provider.previousFeedback != null){
       nameController.text = provider.previousFeedback?.name ?? "";
-      emailController.text = provider.previousFeedback.email;
+     // emailController.text = provider.previousFeedback.email;
     }
 
     return Scaffold(
@@ -86,18 +90,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   height: 20,
                 ),
                 buildTextFormField('नाम', nameController, 1, null),
-                buildTextFormField("ईमेल", emailController, 1, (value) {
-                  if (value == null || value.isEmpty) {
-                    return "कृपया ईमेल डालें ";
-                  } else {
-                    bool isvalid = isValidEmail(emailController.text);
-                    if (isvalid) {
-                      return null;
-                    } else {
-                      return "सही ईमेल डालें";
-                    }
-                  }
-                }),
+
                 buildTextFormField("रिव्यु", messageController, 5,
                         (value) {
                       if (value == null || value.isEmpty) {
@@ -119,15 +112,36 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     if (key.currentState.validate()) {
                       FeedbackInfo feedback = FeedbackInfo(
                           name:nameController.text,
-                          email:emailController.text,
+                          email:"",
                           review: messageController.text,
                           rating: provider.rating,
                           date: DateTime.now().millisecondsSinceEpoch
                       );
-                      await provider.shareFeedback(feedback);
-                      setState(() {
-                        shouldShowFeedback = false;
+                      await provider.shareFeedback(feedback).then((value) {
+                        if(mounted)
+                        setState(() {
+                          shouldShowFeedback = false;
+                        });
                       });
+
+                      FirebaseAnalytics.instance.logEvent(name: "feedback_shared");
+
+                      if(provider.rating >=4){
+                        showActionDialog(
+                          context,title: "रेटिंग",
+                          content: "कृपया क्रिप्टो खबर को प्ले स्टोर पर रेटिंग दें ",
+                          positiveTextButton: "अभी",
+                          negativeTextButton: "बाद में",
+                          positiveAction: (){
+                            try {
+                              launch(
+                                  "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
+                              Navigator.pop(context);
+                              FirebaseAnalytics.instance.logEvent(name: "rating_dialog");
+                            }catch(e){}
+                          },
+                        );
+                      }
                     }
                   },
                 )
@@ -142,11 +156,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("आपने फ़ीडबैक सबमिट कर दिया है,धन्यवाद",style: TextStyle(fontSize: 18),),
-          SizedBox(height: 24,),
-          ElevatedButton(onPressed: (){
-            Navigator.pop(context);
-          }, child: Text("Back"))
+          Text("आपने फ़ीडबैक सबमिट कर दिया है,धन्यवाद",style:TextStyle(fontSize: 16),),
+          // SizedBox(height: 24,),
+          // ElevatedButton(onPressed: (){
+          //   Navigator.pop(context);
+          // }, child: Text("पीछे"))
         ],
       ),
     );
@@ -154,9 +168,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   }
 
   Widget ratingWidget() {
-    if(provider.previousFeedback == null){
-      return Container();
-    }
+
     return Column(
                   children: [
                     RatingBar.builder(

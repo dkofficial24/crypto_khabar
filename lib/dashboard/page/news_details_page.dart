@@ -1,11 +1,14 @@
 import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/constants.dart';
+import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
+import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/shared/widget/markdown_common.dart';
+import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +22,13 @@ class NewsDetailsPage extends StatefulWidget {
 
 class _NewsDetailsPageState extends State<NewsDetailsPage> {
   NewsItem _newsItem;
+  NewsDetailsArgs newsDetailsArgs;
   ScrollController _scrollController;
   bool savingNews = false;
   bool removeBookmarkingNews = false;
   bool isBannerAdReady = false;
   BannerAd bannerAd;
+  List<Widget> list = [];
 
   @override
   void initState() {
@@ -33,10 +38,39 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
     super.initState();
   }
 
+  void initRelatedNews(int index) {
+    if(index == -1) return;
+    List<NewsItem> newsList = NewsService().newsItemList;
+    int currentIndex = index;
+    List nextNewsList = [];
+    int i = newsList.length - currentIndex - 1;
+    if (i > 0) {
+      i = i > 4 ? 4 : i;
+      nextNewsList =
+          newsList.getRange(currentIndex + 1, currentIndex + i).toList();
+    }
+
+    List<Widget> rowList = nextNewsList.map((e) {
+      return NewsRowListWidget(newsItem: e, callback: () {
+        Navigator.pushReplacementNamed(context,
+            AppRoutes.NewsDetailsPage,
+            arguments: NewsDetailsArgs(
+                index:-1,
+                newsItem: e));
+      });
+    }).toList();
+
+    list.addAll(rowList);
+  }
+
   @override
   Widget build(BuildContext context) {
-    _newsItem = ModalRoute.of(context).settings.arguments;
-
+    if (_newsItem == null) {
+      newsDetailsArgs = ModalRoute.of(context).settings.arguments;
+      _newsItem = newsDetailsArgs.newsItem;
+      initRelatedNews(newsDetailsArgs.index);
+      incrementView(_newsItem.id);
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text("क्रिप्टो खबर"),
@@ -55,20 +89,11 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                         : Icons.bookmark_border,
                     color: Colors.white)),
             IconButton(
-                onPressed: () async {
-                  try {
-                    LoaderController().showLoader(context);
-                    String downloadLink =
-                        await RemoteConfigService().getAppDownloadLink();
-                    AppUtils.shareNews(_newsItem, appLink: downloadLink);
-                    FirebaseAnalytics.instance.logEvent(name: "ndp_share_news",parameters: {
-                      "title":"${_newsItem.title}"
-                    });
-                  } catch (e) {
-                    print("NewsDetailPage shareNews error:$e");
-                  } finally {
-                    LoaderController().dismissLoader(context);
-                  }
+                onPressed: ()  {
+                  shareNews(context);
+                  FirebaseAnalytics.instance.logEvent(
+                      name: "ndp_share_news",
+                      parameters: {"title": "${_newsItem.title}"});
                 },
                 icon: Icon(Icons.share, color: Colors.white)),
             SizedBox(width: 8)
@@ -80,6 +105,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
             children: [
               Expanded(
                 child: ListView(
+                  shrinkWrap: true,
                   children: [
                     Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -111,6 +137,40 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                     ),
                     SizedBox(height: 8),
                     MarkdownView(_newsItem.details, _scrollController),
+                    SizedBox(height: 4),
+                    GestureDetector(
+                      onTap: (){
+                        shareNews(context);
+                        FirebaseAnalytics.instance.logEvent(
+                            name: "ndp_bttm_share_news",
+                            parameters: {"title": "${_newsItem.title}"});
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text("शेयर करें"),
+                          SizedBox(width:8),
+                          Icon(Icons.share),
+                          SizedBox(width:48),
+                        ],),
+                    ),
+                    list.length !=0?Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          SizedBox(height: 8),
+                          Text(
+                            "और खबरें",
+                            style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),
+                          ),
+                          Divider(),
+                          SizedBox(height: 8),
+                          ...list,
+                        ]),
+                      ),
+                    ):Container()
                   ],
                 ),
               ),
@@ -118,6 +178,19 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
             ],
           ),
         ));
+  }
+
+  Future<void> shareNews(BuildContext context) async {
+     try {
+      LoaderController().showLoader(context);
+      String downloadLink =
+          await RemoteConfigService().getAppDownloadLink();
+      AppUtils.shareNews(_newsItem, appLink: downloadLink);
+    } catch (e) {
+      print("NewsDetailPage shareNews error:$e");
+    } finally {
+      LoaderController().dismissLoader(context);
+    }
   }
 
   Future bookmarkNews(NewsItem newsItem) async {
@@ -161,7 +234,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
   }
 
   initAd() {
-    if(AdHelper.isAdEnabled()) {
+    if (AdHelper.isAdEnabled()) {
       bannerAd = BannerAd(
         adUnitId: AdHelper.bannerAdUnitId,
         request: AdRequest(),
@@ -193,6 +266,14 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
             child: AdWidget(ad: bannerAd),
           )
         : Container();
+  }
+
+  Future incrementView(String id) async {
+    try {
+      await NewsService().incrementView(id);
+    } catch (e) {
+ //     print("incrementView err $e");
+    }
   }
 
   @override

@@ -1,0 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class DisclaimerPage extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    String disclaimerMsg = ModalRoute.of(context).settings.arguments;
+    return Scaffold(
+      appBar: AppBar(title: Text("डिस्क्लेमर"),),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(
+          child: Text(disclaimerMsg,style:TextStyle(fontSize: 16)),
+        ),
+      ),
+    );
+  }
+}

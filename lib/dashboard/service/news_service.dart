@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/saved_db_service.dart';
@@ -95,5 +96,9 @@ class NewsService {
 
   bool isNewsBookmarked(String id) {
     return bookmarkedNewsIdSet.contains(id);
+  }
+
+  incrementView(String id)async{
+    await NewsFirebaseService().incrementView(id);
   }
 }

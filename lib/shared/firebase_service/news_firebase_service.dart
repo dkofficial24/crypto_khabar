@@ -68,4 +68,35 @@ class NewsFirebaseService {
 
     return newsItemList;
   }
+
+  incrementView (String id)async{
+    final DocumentReference ref = FirebaseFirestore.instance.collection('news_content').doc(id);
+    Future.delayed(Duration(seconds: 2)).then((value) async{
+      await getLatestViewCount(id).then((int latestCount) async{
+        if(latestCount == 0){
+          await ref.set({
+            "views":1
+          });
+        }else {
+          await ref.update({
+            'views': latestCount + 1,
+          });
+        }
+      });
+    });
+  }
+
+  Future<int> getLatestViewCount (String id) async {
+    // if(widget.article.views != null){
+    final String fieldName = 'views';
+    final DocumentReference ref = FirebaseFirestore.instance.collection('news_content').doc(id);
+    DocumentSnapshot snap = await ref.get();
+    int itemCount ;
+    try {
+       itemCount = snap[fieldName] ?? 0;
+    }catch(e){
+      itemCount = 0;
+    }
+    return itemCount;
+  }
 }

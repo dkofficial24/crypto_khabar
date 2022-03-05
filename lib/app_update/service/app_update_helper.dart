@@ -27,7 +27,7 @@ class AppUpdateHelper {
     try {
       AppUpdateConfig config = await RemoteConfigService().getAppUpdateConfig();
       if (config == null) {
-        print("AppUpdateHelper checkLatestUpdate AppUpdateConfig is null");
+        //print("AppUpdateHelper checkLatestUpdate AppUpdateConfig is null");
         return;
       }
       if (!config.shouldUpdateShowDialog) {

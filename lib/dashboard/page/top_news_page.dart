@@ -4,6 +4,7 @@ import 'package:broadcast_events/broadcast_events.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/constants.dart';
+import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
 import 'package:crypto_khabar/dashboard/widget/column_news_list_widget.dart';
@@ -139,8 +140,11 @@ class _TopNewsPageState extends State<TopNewsPage> {
                                         callback: () {
                                           Navigator.pushNamed(context,
                                               AppRoutes.NewsDetailsPage,
-                                              arguments: provider
-                                                  .newsItemList[usedIndex]);
+                                              arguments: NewsDetailsArgs(
+                                                  index: usedIndex,
+                                                  newsItem:
+                                                      provider.newsItemList[
+                                                          usedIndex]));
                                         },
                                       ),
                                     );
@@ -155,8 +159,10 @@ class _TopNewsPageState extends State<TopNewsPage> {
                                       callback: () {
                                         Navigator.pushNamed(
                                             context, AppRoutes.NewsDetailsPage,
-                                            arguments: provider
-                                                .newsItemList[usedIndex]);
+                                            arguments: NewsDetailsArgs(
+                                                index: usedIndex,
+                                                newsItem: provider
+                                                    .newsItemList[usedIndex]));
                                       },
                                     ),
                                   );
@@ -297,7 +303,6 @@ class _TopNewsPageState extends State<TopNewsPage> {
 
   @override
   void dispose() {
-    print("Disposing top news page");
     _topNewsProvider.bannerAd.dispose();
     BroadcastEvents().unsubscribe(NewsReceivedEvent, handler: fetchNews);
     BroadcastEvents()

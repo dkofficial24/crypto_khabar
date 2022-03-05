@@ -26,8 +26,8 @@ class NotificationService {
   }
 
   Future selectNotification(String payload) async {
-    print("Payloaddd  $payload");
-    print("Payloaddd  $payload");
+  //  print("Payloaddd  $payload");
+   // print("Payloaddd  $payload");
   }
 
   showNotification(String title, String body,
