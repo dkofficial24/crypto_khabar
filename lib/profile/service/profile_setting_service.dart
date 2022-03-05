@@ -81,9 +81,10 @@ class ProfileSettingService {
   }
 
   Future shareFeedback(FeedbackInfo feedback) async {
+    String time = DateTime.now().millisecondsSinceEpoch.toString();
     await FirebaseFirestore.instance
         .collection("feedback")
-        .doc(feedback.email)
+        .doc("${feedback.name}_$time")
         .set(feedback.toJson());
 
    // print('published successfully !  ${feedback.toJson()}');

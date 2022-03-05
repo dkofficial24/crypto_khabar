@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 class ProfileSettingProvider extends ChangeNotifier {
   bool isDarkMode = false;
   bool getNotification = false;
-  double rating = -1;
+  double rating = 5;
   FeedbackInfo previousFeedback;
 
 

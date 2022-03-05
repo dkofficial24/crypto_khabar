@@ -16,7 +16,7 @@ class FeedbackPage extends StatefulWidget {
 class _FeedbackPageState extends State<FeedbackPage> {
   ProfileSettingProvider provider;
   TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  //TextEditingController emailController = TextEditingController();
   TextEditingController messageController = TextEditingController();
   final key = GlobalKey<FormState>();
   bool shouldShowFeedback;
@@ -58,7 +58,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   Widget build(BuildContext context) {
     if(provider.previousFeedback != null){
       nameController.text = provider.previousFeedback?.name ?? "";
-      emailController.text = provider.previousFeedback.email;
+     // emailController.text = provider.previousFeedback.email;
     }
 
     return Scaffold(
@@ -90,18 +90,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   height: 20,
                 ),
                 buildTextFormField('नाम', nameController, 1, null),
-                buildTextFormField("ईमेल", emailController, 1, (value) {
-                  if (value == null || value.isEmpty) {
-                    return "कृपया ईमेल डालें ";
-                  } else {
-                    bool isvalid = isValidEmail(emailController.text);
-                    if (isvalid) {
-                      return null;
-                    } else {
-                      return "सही ईमेल डालें";
-                    }
-                  }
-                }),
+
                 buildTextFormField("रिव्यु", messageController, 5,
                         (value) {
                       if (value == null || value.isEmpty) {
@@ -123,28 +112,32 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     if (key.currentState.validate()) {
                       FeedbackInfo feedback = FeedbackInfo(
                           name:nameController.text,
-                          email:emailController.text,
+                          email:"",
                           review: messageController.text,
                           rating: provider.rating,
                           date: DateTime.now().millisecondsSinceEpoch
                       );
-                      await provider.shareFeedback(feedback);
-                      setState(() {
-                        shouldShowFeedback = false;
+                      await provider.shareFeedback(feedback).then((value) {
+                        if(mounted)
+                        setState(() {
+                          shouldShowFeedback = false;
+                        });
                       });
+
                       FirebaseAnalytics.instance.logEvent(name: "feedback_shared");
 
                       if(provider.rating >=4){
                         showActionDialog(
-                          context,title: "Rate Us",
-                          content: "Rate us on play store",
-                          positiveTextButton: "Yes",
-                          negativeTextButton: "No",
+                          context,title: "रेटिंग",
+                          content: "कृपया क्रिप्टो खबर को प्ले स्टोर पर रेटिंग दें ",
+                          positiveTextButton: "अभी",
+                          negativeTextButton: "बाद में",
                           positiveAction: (){
                             try {
                               launch(
                                   "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
-
+                              Navigator.pop(context);
+                              FirebaseAnalytics.instance.logEvent(name: "rating_dialog");
                             }catch(e){}
                           },
                         );
@@ -175,9 +168,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   }
 
   Widget ratingWidget() {
-    if(provider.previousFeedback == null){
-      return Container();
-    }
+
     return Column(
                   children: [
                     RatingBar.builder(
