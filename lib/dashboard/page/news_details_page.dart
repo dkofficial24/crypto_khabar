@@ -154,22 +154,20 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                           SizedBox(width:48),
                         ],),
                     ),
-                    list.length !=0?Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                          SizedBox(height: 8),
-                          Text(
-                            "और खबरें",
-                            style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),
-                          ),
-                          Divider(),
-                          SizedBox(height: 8),
-                          ...list,
-                        ]),
-                      ),
+                    list.length !=0?Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                        SizedBox(height: 8),
+                        Text(
+                          "और खबरें",
+                          style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),
+                        ),
+                        Divider(),
+                        SizedBox(height: 8),
+                        ...list,
+                      ]),
                     ):Container()
                   ],
                 ),
