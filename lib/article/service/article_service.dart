@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_khabar/article/model/article.dart';
-import 'package:crypto_khabar/dashboard/service/news_service.dart';
+import 'package:crypto_khabar/shared/firebase_service/article_firebase_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 
 class ArticleService {
@@ -13,12 +13,20 @@ class ArticleService {
   }
 
   QueryDocumentSnapshot last;
+  bool isNetConnected = true;
 
   List<Article> articleList = [];
-  Future<List<Article>> fetchArticleByPagination() async {
-    if (NewsService().isNetConnected) {
+
+  Future<List<Article>> fetchArticleByPagination({bool appendInEnd}) async {
+    if (isNetConnected) {
       List<Article> itemList =
-      await _fetchArticleByPagination();
+      await _fetchArticleByPagination(appendInEnd: appendInEnd);
+      if (appendInEnd) {
+        articleList.addAll(itemList);
+      } else {
+        articleList.setAll(0, itemList);
+      }
+      return articleList;
       articleList.addAll(itemList);
       return articleList;
     } else {
@@ -27,13 +35,17 @@ class ArticleService {
     return articleList;
   }
 
-  Future<List<Article>> _fetchArticleByPagination() async {
+
+
+  Future<List<Article>> _fetchArticleByPagination(
+      {bool appendInEnd = true}) async {
     List<Article> articleList = [];
-    CollectionReference articleRef = FirebaseFirestore.instance.collection("article");
+    CollectionReference articleRef =
+    FirebaseFirestore.instance.collection("article");
     QuerySnapshot data;
 
-    if (last == null) {
-      data = await articleRef.orderBy("date",descending: true).limit(20).get();
+    if (last == null || !appendInEnd) {
+      data = await articleRef.orderBy("date", descending: true).limit(20).get();
     } else {
       data = await articleRef
           .orderBy("date", descending: true)

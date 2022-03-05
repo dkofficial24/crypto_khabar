@@ -126,7 +126,10 @@ class _TopNewsPageState extends State<TopNewsPage> {
                                           )
                                         : Container();
                                   }
-                                  if (index % 5 == 0) {
+                                  if ((index% 5 == 0) ||
+                                      (_topNewsProvider.featuredNewsItemList.length ==
+                                              0 &&
+                                          index == 1)) {
                                     return createSlidable(
                                       provider.newsItemList[usedIndex],
                                       context,
