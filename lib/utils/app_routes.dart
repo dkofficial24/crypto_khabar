@@ -5,6 +5,7 @@ import 'package:crypto_khabar/dashboard/page/dashboard_page.dart';
 import 'package:crypto_khabar/dashboard/page/news_details_page.dart';
 import 'package:crypto_khabar/dashboard/page/saved_news_page.dart';
 import 'package:crypto_khabar/dashboard/page/top_news_page.dart';
+import 'package:crypto_khabar/profile/page/disclaimer_page.dart';
 import 'package:crypto_khabar/profile/page/feedback_page.dart';
 import 'package:crypto_khabar/shared/page/image_preview.dart';
 import 'package:crypto_khabar/shared/page/web_view_page.dart';
@@ -20,6 +21,7 @@ class AppRoutes {
   static const String WebViewPage = "WebViewPage";
   static const String ImagePreviewer = "ImagePreviewer";
   static const String FeedbackPage = "FeedbackPage";
+  static const String DisclaimerPage = "DisclaimerPage";
   }
 
 Map<String, WidgetBuilder> routes = {
@@ -32,4 +34,5 @@ Map<String, WidgetBuilder> routes = {
   AppRoutes.WebViewPage: (context) => WebViewPage(),
   AppRoutes.ImagePreviewer: (context) => ImagePreviewer(),
   AppRoutes.FeedbackPage: (context) => FeedbackPage(),
+  AppRoutes.DisclaimerPage: (context) => DisclaimerPage(),
 };

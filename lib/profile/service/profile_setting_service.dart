@@ -8,8 +8,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 class ProfileSettingService {
+  String defaultDisclaimerMsg = "क्रिप्टो खबर द्वारा दी कोई भी जानकारी निवेश सलाह, वित्तीय सलाह, व्यापारिक सलाह या किसी अन्य प्रकार की सलाह नहीं है और क्रिप्टो खबर कभी क्रिप्टोकरेंसी खरीदने और बेचने की राय नहीं देता।क्रिप्टो मार्केट उच्च जोखिमों के अधीन है इसलिए कोई भी निवेश निर्णय लेने से पहले अच्छे से जानकारी हासिल कर लें।";
+  String disclaimerMsg = "";
   ProfileSettingService._internal() {
     init();
+  }
+
+ String getDisclaimerMsg(){
+    if(disclaimerMsg == null || disclaimerMsg.isEmpty){
+      disclaimerMsg = defaultDisclaimerMsg;
+    }
+    return disclaimerMsg;
   }
 
   bool _notificationStatus;
@@ -23,6 +32,7 @@ class ProfileSettingService {
   bool get notificationStatus => _notificationStatus;
 
   init() {
+    disclaimerMsg = defaultDisclaimerMsg;
     getNotificationReceiveStatus().then((value) {
       _notificationStatus = value;
     });
@@ -76,6 +86,6 @@ class ProfileSettingService {
         .doc(feedback.email)
         .set(feedback.toJson());
 
-    print('published successfully !  ${feedback.toJson()}');
+   // print('published successfully !  ${feedback.toJson()}');
   }
 }

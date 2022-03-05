@@ -30,7 +30,7 @@ class SavedDbService{
     await openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute(
           "create table $tableName (id String primary key,title text,details text,date integer,author text,source text,imgUrl text,category text,sourceLink text)");
-      print("Table created !");
+     // print("Table created !");
     });
     NewsService().loadAllSavedNewsId();
   }
@@ -41,14 +41,14 @@ class SavedDbService{
         //database.insert(tableName, newsItem.toJson());
         database.rawInsert("insert or replace into $tableName values(?,?,?,?,?,?,?,?,?)",[newsItem.id,newsItem.title,newsItem.details,newsItem.date,newsItem.author,
           newsItem.source,newsItem.imgUrl,newsItem.category,newsItem.sourceLink,]);
-        print("SavedDbService saveNews successfully");
+       // print("SavedDbService saveNews successfully");
         FirebaseAnalytics.instance.logEvent(name: 'save_news',parameters: {
           "save_news":newsItem.title
         });
         return true;
       }
     } catch (e) {
-      print("SavedDbService saveNews $e");
+    //  print("SavedDbService saveNews $e");
     }
     return false;
   }
@@ -71,7 +71,7 @@ class SavedDbService{
 
   Future removeSavedNews(String id)async{
     await database.rawDelete("delete from $tableName where id=?",[id]);
-    print("removed Saved News !");
+  //  print("removed Saved News !");
   }
 
 

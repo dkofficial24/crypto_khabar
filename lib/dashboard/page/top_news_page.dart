@@ -303,7 +303,6 @@ class _TopNewsPageState extends State<TopNewsPage> {
 
   @override
   void dispose() {
-    print("Disposing top news page");
     _topNewsProvider.bannerAd.dispose();
     BroadcastEvents().unsubscribe(NewsReceivedEvent, handler: fetchNews);
     BroadcastEvents()

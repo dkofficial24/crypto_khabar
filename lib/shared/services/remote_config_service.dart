@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:crypto_khabar/app_update/model/app_update_config.dart';
+import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigService {
@@ -43,6 +44,8 @@ class RemoteConfigService {
       String configJson = _remoteConfig.getString("app_update_config");
       _appUpdateConfig = AppUpdateConfig.fromJson(jsonDecode(configJson));
       _isAdEnabled = _remoteConfig.getBool("is_ad_enabled");
+      String disclaimerMsg = _remoteConfig.getString("disclaimer_msg");
+      ProfileSettingService().disclaimerMsg = disclaimerMsg;
       appUpdateCompleter.complete(_appUpdateConfig);
     } catch (e) {
       appUpdateCompleter.completeError("Error while downloadUpdateConfig");

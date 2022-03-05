@@ -48,7 +48,7 @@ class DetailPageState extends State<ArticleDetailPage> {
           .arguments;
       initVideoPlayerController();
     }
-    print("Link: ${_article.imgUrl}");
+  //  print("Link: ${_article.imgUrl}");
     return Scaffold(
         appBar: AppBar(
           title: Text("आर्टिकल"),
@@ -56,6 +56,7 @@ class DetailPageState extends State<ArticleDetailPage> {
             IconButton(
                 onPressed: () {
                   shareArticle();
+                  FirebaseAnalytics.instance.logEvent(name: "adp_top_share_article");
                 },
                 icon: Icon(Icons.share, color: Colors.white)),
             SizedBox(width: 8)
@@ -94,7 +95,25 @@ class DetailPageState extends State<ArticleDetailPage> {
                       child: Text(_article.title,
                           style: Theme.of(context).textTheme.headline6),
                     ),
-                    MarkdownView(_article.detail, _scrollController)
+                    MarkdownView(_article.detail, _scrollController),
+                    SizedBox(height:4),
+                    GestureDetector(
+                      onTap: (){
+                        shareArticle();
+                        FirebaseAnalytics.instance.logEvent(name: "adp_bttm_share_article");
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text("शेयर करें"),
+                            SizedBox(width:8),
+                            Icon(Icons.share),
+                            SizedBox(width:48),
+                          ],),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -106,7 +125,6 @@ class DetailPageState extends State<ArticleDetailPage> {
   Future<void> shareArticle() async {
     String downloadLink = await RemoteConfigService().getAppDownloadLink();
     AppUtils.shareArticle(_article, appLink: downloadLink);
-    FirebaseAnalytics.instance.logEvent(name: "adp_share_article");
   }
 
   Future saveArticle(Article article) async {

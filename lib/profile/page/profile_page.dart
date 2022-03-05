@@ -1,4 +1,5 @@
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
+import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
@@ -87,6 +88,17 @@ class _ProfilePageState extends State<ProfilePage> {
                       iconData: Icons.feedback_outlined,
                       callback: () async{
                         Navigator.pushNamed(context, AppRoutes.FeedbackPage);
+                        FirebaseAnalytics.instance.logEvent(name: "feedback_page_open");
+                      },
+                      lastChild: Container(),
+                    ),SizedBox(height: 8),
+                    ProfileItem(
+                      title: "डिस्क्लेमर",
+                      iconData: Icons.info_outline_rounded,
+                      callback: () async{
+                        String disclaimer = ProfileSettingService().getDisclaimerMsg();
+                        Navigator.pushNamed(context, AppRoutes.DisclaimerPage,arguments: disclaimer);
+                        FirebaseAnalytics.instance.logEvent(name: "disclaimer_page_open");
                       },
                       lastChild: Container(),
                     ),SizedBox(height: 8),
@@ -98,6 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         String downloadLink = await RemoteConfigService().getAppDownloadLink();
                         LoaderController().dismissLoader(context);
                         Share.share(downloadLink,subject: "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करेंं");
+                        FirebaseAnalytics.instance.logEvent(name: "share_app");
                       },
                       lastChild: Container(),
                     ),

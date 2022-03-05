@@ -1,8 +1,12 @@
 import 'package:crypto_khabar/profile/feedback_info.dart';
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
+import 'package:crypto_khabar/shared/widget/view_utils.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FeedbackPage extends StatefulWidget {
   @override
@@ -128,6 +132,23 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       setState(() {
                         shouldShowFeedback = false;
                       });
+                      FirebaseAnalytics.instance.logEvent(name: "feedback_shared");
+
+                      if(provider.rating >=4){
+                        showActionDialog(
+                          context,title: "Rate Us",
+                          content: "Rate us on play store",
+                          positiveTextButton: "Yes",
+                          negativeTextButton: "No",
+                          positiveAction: (){
+                            try {
+                              launch(
+                                  "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
+
+                            }catch(e){}
+                          },
+                        );
+                      }
                     }
                   },
                 )
@@ -142,11 +163,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("आपने फ़ीडबैक सबमिट कर दिया है,धन्यवाद",style: TextStyle(fontSize: 18),),
-          SizedBox(height: 24,),
-          ElevatedButton(onPressed: (){
-            Navigator.pop(context);
-          }, child: Text("Back"))
+          Text("आपने फ़ीडबैक सबमिट कर दिया है,धन्यवाद",style:TextStyle(fontSize: 16),),
+          // SizedBox(height: 24,),
+          // ElevatedButton(onPressed: (){
+          //   Navigator.pop(context);
+          // }, child: Text("पीछे"))
         ],
       ),
     );

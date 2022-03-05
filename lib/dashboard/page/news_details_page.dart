@@ -89,20 +89,11 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                         : Icons.bookmark_border,
                     color: Colors.white)),
             IconButton(
-                onPressed: () async {
-                  try {
-                    LoaderController().showLoader(context);
-                    String downloadLink =
-                        await RemoteConfigService().getAppDownloadLink();
-                    AppUtils.shareNews(_newsItem, appLink: downloadLink);
-                    FirebaseAnalytics.instance.logEvent(
-                        name: "ndp_share_news",
-                        parameters: {"title": "${_newsItem.title}"});
-                  } catch (e) {
-                    print("NewsDetailPage shareNews error:$e");
-                  } finally {
-                    LoaderController().dismissLoader(context);
-                  }
+                onPressed: ()  {
+                  shareNews(context);
+                  FirebaseAnalytics.instance.logEvent(
+                      name: "ndp_share_news",
+                      parameters: {"title": "${_newsItem.title}"});
                 },
                 icon: Icon(Icons.share, color: Colors.white)),
             SizedBox(width: 8)
@@ -146,6 +137,23 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                     ),
                     SizedBox(height: 8),
                     MarkdownView(_newsItem.details, _scrollController),
+                    SizedBox(height: 4),
+                    GestureDetector(
+                      onTap: (){
+                        shareNews(context);
+                        FirebaseAnalytics.instance.logEvent(
+                            name: "ndp_bttm_share_news",
+                            parameters: {"title": "${_newsItem.title}"});
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text("शेयर करें"),
+                          SizedBox(width:8),
+                          Icon(Icons.share),
+                          SizedBox(width:48),
+                        ],),
+                    ),
                     list.length !=0?Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
@@ -170,6 +178,19 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
             ],
           ),
         ));
+  }
+
+  Future<void> shareNews(BuildContext context) async {
+     try {
+      LoaderController().showLoader(context);
+      String downloadLink =
+          await RemoteConfigService().getAppDownloadLink();
+      AppUtils.shareNews(_newsItem, appLink: downloadLink);
+    } catch (e) {
+      print("NewsDetailPage shareNews error:$e");
+    } finally {
+      LoaderController().dismissLoader(context);
+    }
   }
 
   Future bookmarkNews(NewsItem newsItem) async {
@@ -251,7 +272,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
     try {
       await NewsService().incrementView(id);
     } catch (e) {
-      print("incrementView err $e");
+ //     print("incrementView err $e");
     }
   }
 

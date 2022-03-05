@@ -47,7 +47,7 @@ class PushNotificationService {
 
       FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
         final remoteNotification = remoteMessage.notification;
-        print("message received...");
+      //  print("message received...");
         // if (ProfileSettingService().notificationStatus) {
         //   NotificationService().showNotification(
         //       remoteNotification.title, remoteNotification.body);
@@ -77,7 +77,7 @@ class PushNotificationService {
 
   void tokenHandler(FirebaseMessaging messaging) {
     messaging.getToken().then((value) {
-      print("Token received : $value");
+      //print("Token received : $value");
       //saveTokenToDatabase(value);
       token = value;
     });

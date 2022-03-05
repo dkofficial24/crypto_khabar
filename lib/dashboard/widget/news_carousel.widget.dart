@@ -60,7 +60,7 @@ class CarouselWidget extends StatelessWidget {
                             .toLowerCase()
                             .contains("short")) {
                           if (!isShortVideo(newsItem)) {
-                            AppUtils.showToast("Only headline available");
+                            AppUtils.showToast("ये केवल हैडलाइन खबर है।");
                           }
                         } else {
                           AppUtils.showToast("डिटेल में उपलब्ध नहीं है।");

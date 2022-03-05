@@ -131,7 +131,7 @@ class TopNewsProvider extends ChangeNotifier {
 
   void updateCarouselCurrentIndex(int index) {
     carouselCurrentIndex = index;
-    print("updateCarouselCurrentIndex $index");
+   // print("updateCarouselCurrentIndex $index");
     notifyListeners();
   }
 }
