@@ -169,6 +169,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
                                 },
                                 separatorBuilder: (ctx, index) {
                                   if (index == 0) return Container();
+                                  return Divider();
                                   return Container(
                                     margin: EdgeInsets.symmetric(vertical: 8),
                                     height: 1,

@@ -51,13 +51,19 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
     }
 
     List<Widget> rowList = nextNewsList.map((e) {
-      return NewsRowListWidget(newsItem: e, callback: () {
-        Navigator.pushReplacementNamed(context,
-            AppRoutes.NewsDetailsPage,
-            arguments: NewsDetailsArgs(
-                index:-1,
-                newsItem: e));
-      });
+      return Column(
+        children: [
+          NewsRowListWidget(newsItem: e, callback: () {
+            Navigator.pushReplacementNamed(context,
+                AppRoutes.NewsDetailsPage,
+                arguments: NewsDetailsArgs(
+                    index:-1,
+                    newsItem: e));
+          },
+          ),
+          Divider()
+        ],
+      );
     }).toList();
 
     list.addAll(rowList);
@@ -276,7 +282,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
 
   @override
   void dispose() {
-    bannerAd.dispose();
+    bannerAd?.dispose();
     super.dispose();
   }
 }
