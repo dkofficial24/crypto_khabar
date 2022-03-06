@@ -93,7 +93,7 @@ class PushNotificationService {
       if(newsItem.category.toLowerCase().contains("news") && newsItem.details.isNotEmpty) {
         Navigator.pushNamed(globalContext, AppRoutes.NewsDetailsPage,
             arguments: NewsDetailsArgs(
-                index:-1,
+                index:0,
                 newsItem:newsItem));
         FirebaseAnalytics.instance.logEvent(
             name: "app_open_by_notification_click",
@@ -114,7 +114,7 @@ class PushNotificationService {
     if (value == null) {
       return false;
     }
-
+F
     return msgId == value;
   }
 }
