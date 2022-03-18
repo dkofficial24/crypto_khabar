@@ -37,7 +37,7 @@ android {
     defaultConfig {
         applicationId "com.edgetechapps.crypto_khabar"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 30
         versionCode 2
         versionName '1.0.1'
     }
