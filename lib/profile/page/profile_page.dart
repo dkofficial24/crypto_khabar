@@ -1,3 +1,4 @@
+import 'package:crypto_khabar/market/page/market_page.dart';
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
@@ -41,7 +42,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: "डार्क थीम",
                       iconData: Icons.brightness_6_outlined,
                       callback: () {},
-                      lastChild: Switch(activeColor: Colors.blue,
+                      lastChild: Switch(
+                        activeColor: Colors.blue,
                         onChanged: (value) {
                           provider.setThemeMode(value).then((value) {
                             AppUtils.markThemeManuallySet();
@@ -85,21 +87,37 @@ class _ProfilePageState extends State<ProfilePage> {
                     ProfileItem(
                       title: "फीडबैक",
                       iconData: Icons.feedback_outlined,
-                      callback: () async{
+                      callback: () async {
                         Navigator.pushNamed(context, AppRoutes.FeedbackPage);
                       },
                       lastChild: Container(),
-                    ),SizedBox(height: 8),
+                    ),
+                    SizedBox(height: 8),
                     ProfileItem(
                       title: "शेयर ऐप",
                       iconData: Icons.share,
-                      callback: () async{
+                      callback: () async {
                         LoaderController().showLoader(context);
-                        String downloadLink = await RemoteConfigService().getAppDownloadLink();
+                        String downloadLink =
+                            await RemoteConfigService().getAppDownloadLink();
                         LoaderController().dismissLoader(context);
-                        Share.share(downloadLink,subject: "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करेंं");
+                        Share.share(downloadLink,
+                            subject:
+                                "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करेंं");
                       },
                       lastChild: Container(),
+                    ),
+                    SizedBox(height: 8),
+                    ProfileItem(
+                      title: "Market",
+                      iconData: Icons.share,
+                      callback: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MarketPage()));
+                      },
+                      lastChild: Icon(Icons.arrow_forward_ios, size: 15),
                     ),
                   ],
                 )),

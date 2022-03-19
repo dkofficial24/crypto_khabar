@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_khabar/article/model/article.dart';
-import 'package:crypto_khabar/shared/firebase_service/article_firebase_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 
 class ArticleService {
