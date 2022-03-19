@@ -54,7 +54,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
   }
 
   void onBookmarkRemovedEvent(_) {
-    if (mounted) {
+    if (mounted) {e
       setState(() {});
     }
   }

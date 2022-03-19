@@ -114,7 +114,7 @@ class PushNotificationService {
     if (value == null) {
       return false;
     }
-F
+
     return msgId == value;
   }
 }
