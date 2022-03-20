@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 BuildContext globalContext;
+
 class DashboardPage extends StatefulWidget {
   @override
   _DashboardPageState createState() => _DashboardPageState();
@@ -70,6 +71,17 @@ class _DashboardPageState extends State<DashboardPage> {
   void onTabSelect(int index) {
     setState(() {
       _selectedIndex = index;
+      String tabName = "";
+      if (_selectedIndex == 0) {
+        tabName = "tab_home";
+      } else if (_selectedIndex == 1) {
+        tabName = "tab_learn";
+      } else if (_selectedIndex == 2) {
+        tabName = "tab_market";
+      } else if (_selectedIndex == 3) {
+        tabName = "tab_setting";
+      }
+      FirebaseAnalytics.instance.logEvent(name: tabName);
     });
   }
 }
