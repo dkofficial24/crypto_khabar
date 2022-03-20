@@ -7,6 +7,7 @@ import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
@@ -17,10 +18,14 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   ProfileSettingProvider provider;
+  String version = "";
 
   @override
   void initState() {
     provider = ProfileSettingProvider();
+    PackageInfo.fromPlatform().then((value) {
+      version = value.version;
+    });
     super.initState();
   }
 
@@ -34,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
             appBar: AppBar(
               title: Text("क्रिप्टो खबर"),
             ),
-            body: Container(
+            body: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: ListView(
                   children: [
@@ -46,8 +51,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       lastChild: Switch(
                         activeColor: Colors.blue,
                         onChanged: (value) {
+                          LoaderController().showLoader(context);
                           provider.setThemeMode(value).then((value) {
                             AppUtils.markThemeManuallySet();
+                            LoaderController().dismissLoader(context);
                           });
                           FirebaseAnalytics.instance.logEvent(
                               name: 'theme_change',
@@ -56,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         value: provider.isDarkMode,
                       ),
                     ),
-                    SizedBox(height: 12),
+                    SizedBox(height: 8),
                     ProfileItem(
                       title: "बुकमार्क ख़बर",
                       iconData: Icons.bookmark_outline,
@@ -88,46 +95,45 @@ class _ProfilePageState extends State<ProfilePage> {
                     ProfileItem(
                       title: "फीडबैक",
                       iconData: Icons.feedback_outlined,
-                      callback: () async{
+                      callback: () async {
                         Navigator.pushNamed(context, AppRoutes.FeedbackPage);
-                        FirebaseAnalytics.instance.logEvent(name: "feedback_page_open");
-                      },
-                      lastChild: Container(),
-                    ),SizedBox(height: 8),
-                    ProfileItem(
-                      title: "डिस्क्लेमर",
-                      iconData: Icons.info_outline_rounded,
-                      callback: () async{
-                        String disclaimer = ProfileSettingService().getDisclaimerMsg();
-                        Navigator.pushNamed(context, AppRoutes.DisclaimerPage,arguments: disclaimer);
-                        FirebaseAnalytics.instance.logEvent(name: "disclaimer_page_open");
-                      },
-                      lastChild: Container(),
-                    ),SizedBox(height: 8),
-                    ProfileItem(
-                      title: "शेयर ऐप",
-                      iconData: Icons.share,
-                      callback: () async{
-                        LoaderController().showLoader(context);
-                        String downloadLink = await RemoteConfigService().getAppDownloadLink();
-                        LoaderController().dismissLoader(context);
-                        Share.share(downloadLink,subject: "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करेंं");
-                        FirebaseAnalytics.instance.logEvent(name: "share_app");
+                        FirebaseAnalytics.instance
+                            .logEvent(name: "feedback_page_open");
                       },
                       lastChild: Container(),
                     ),
                     SizedBox(height: 8),
                     ProfileItem(
-                      title: "Market",
+                      title: "डिस्क्लेमर",
+                      iconData: Icons.info_outline_rounded,
+                      callback: () async {
+                        String disclaimer =
+                            ProfileSettingService().getDisclaimerMsg();
+                        Navigator.pushNamed(context, AppRoutes.DisclaimerPage,
+                            arguments: disclaimer);
+                        FirebaseAnalytics.instance
+                            .logEvent(name: "disclaimer_page_open");
+                      },
+                      lastChild: Container(),
+                    ),
+                    SizedBox(height: 8),
+                    ProfileItem(
+                      title: "शेयर ऐप",
                       iconData: Icons.share,
                       callback: () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MarketPage()));
+                        LoaderController().showLoader(context);
+                        String downloadLink =
+                            await RemoteConfigService().getAppDownloadLink();
+                        LoaderController().dismissLoader(context);
+                        Share.share(downloadLink,
+                            subject:
+                                "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करेंं");
+                        FirebaseAnalytics.instance.logEvent(name: "share_app");
                       },
-                      lastChild: Icon(Icons.arrow_forward_ios, size: 15),
+                      lastChild: Container(),
                     ),
+                    SizedBox(height: 32),
+                    Center(child: Text("वर्जन: ${version ?? ""}",style: TextStyle(color: Colors.grey),))
                   ],
                 )),
           );

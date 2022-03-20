@@ -8,5 +8,3 @@ const String NewsBookmarkRemove = "NewsBookmarkRemove";
 const String NewsBookmarked = "NewsBookmarked";
 const String NewsFetched = "NewsFetched";
 
-Color bottomColor = Colors.grey[600];
-double bottomSize = 12;

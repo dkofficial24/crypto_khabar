@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/article/model/article.dart';
 import 'package:crypto_khabar/article/provider/article_provider.dart';
-import 'package:crypto_khabar/shared/widget/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
-import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -37,35 +35,47 @@ class _ArticlePageState extends State<ArticlePage> {
         builder: (ctx, child) {
           return Consumer<ArticleProvider>(
             builder: (ctx, provider, child) {
-              return Padding(
-                padding: EdgeInsets.all(16),
-                child: LazyLoadScrollView(
-                  isLoading: _provider.isLoading,
-                  scrollOffset: 50,
-                  onEndOfPage: () {
-                    provider.fetchNewsByPagination();
-                  },
-                  child: SmartRefresher(
-                    controller: _refreshController,
-                    enablePullUp: false,
-                    reverse: false,
-                    enableTwoLevel: false,
-                    enablePullDown: true,
-                    onRefresh: () {
-                      provider.onRefresh(_refreshController);
-                    },
-                    child: GridView.builder(
-                        itemCount: _provider.articleList.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 1 / 1.5,
-                            crossAxisSpacing: 4,
-                            mainAxisSpacing: 4),
-                        itemBuilder: (ctx, index) {
-                          return getGridItem(_provider.articleList[index]);
-                        }),
+              return Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                          16, 16, 16, _provider.isBannerAdReady ? 0 : 16),
+                      child: LazyLoadScrollView(
+                        isLoading: _provider.isLoading,
+                        scrollOffset: 50,
+                        onEndOfPage: () {
+                          provider.fetchNewsByPagination();
+                        },
+                        child: SmartRefresher(
+                          controller: _refreshController,
+                          enablePullUp: false,
+                          reverse: false,
+                          enableTwoLevel: false,
+                          enablePullDown: true,
+                          onRefresh: () {
+                            provider.onRefresh(_refreshController);
+                          },
+                          child: GridView.builder(
+                              itemCount: _provider.articleList.length,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 1 / 1.5,
+                                      crossAxisSpacing: 4,
+                                      mainAxisSpacing: 4),
+                              itemBuilder: (ctx, index) {
+                                return getGridItem(
+                                    _provider.articleList[index]);
+                              }),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  provider.isBannerAdReady
+                      ? adBannerWidget(provider)
+                      : Container()
+                ],
               );
             },
           );
@@ -159,5 +169,15 @@ class _ArticlePageState extends State<ArticlePage> {
         );
       },
     );
+  }
+
+  Container adBannerWidget(ArticleProvider provider) {
+    return AdHelper.isAdEnabled()
+        ? Container(
+            width: provider.bannerAd.size.width.toDouble(),
+            height: provider.bannerAd.size.height.toDouble(),
+            child: AdWidget(ad: provider.bannerAd),
+          )
+        : Container();
   }
 }

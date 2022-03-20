@@ -100,4 +100,36 @@ class NewsFirebaseService {
     }
     return itemCount;
   }
+
+  incrementShareCount (String id)async{
+    final DocumentReference ref = FirebaseFirestore.instance.collection('news_share_counter').doc(id);
+    Future.delayed(Duration(seconds: 2)).then((value) async{
+      await getIncrementShareCount(id).then((int latestCount) async{
+        if(latestCount == 0){
+          await ref.set({
+            "share":1
+          });
+        }else {
+          await ref.update({
+            'share': latestCount + 1,
+          });
+        }
+      });
+    });
+  }
+
+  Future<int> getIncrementShareCount (String id) async {
+    // if(widget.article.views != null){
+    final String fieldName = 'share';
+    final DocumentReference ref = FirebaseFirestore.instance.collection('news_share_counter').doc(id);
+    DocumentSnapshot snap = await ref.get();
+    int itemCount ;
+    try {
+      itemCount = snap[fieldName] ?? 0;
+    }catch(e){
+      itemCount = 0;
+    }
+    return itemCount;
+  }
+
 }

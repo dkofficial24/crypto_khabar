@@ -2,6 +2,7 @@ import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/page/dashboard_page.dart';
+import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/shared/firebase_service/news_firebase_service.dart';
 import 'package:crypto_khabar/shared/services/notification_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
@@ -87,13 +88,13 @@ class PushNotificationService {
   Future fetchNewsById(String id) async {
     try {
       LoaderController().showLoader(globalContext);
-      NewsItem newsItem = await NewsFirebaseService().fetchNewsById(id);
+      NewsItem newsItem = await NewsService().fetchNewsById(id);
       LoaderController().dismissLoader(globalContext);
       BroadcastEvents().publish(NewsReceivedEvent);
       if(newsItem.category.toLowerCase().contains("news") && newsItem.details.isNotEmpty) {
         Navigator.pushNamed(globalContext, AppRoutes.NewsDetailsPage,
             arguments: NewsDetailsArgs(
-                index:-1,
+                index:0,
                 newsItem:newsItem));
         FirebaseAnalytics.instance.logEvent(
             name: "app_open_by_notification_click",

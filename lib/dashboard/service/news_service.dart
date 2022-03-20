@@ -23,16 +23,18 @@ class NewsService {
 
   List<NewsItem> newsItemList = [];
   StreamSubscription subscription;
-  bool isNetConnected = true;
+  bool _isNetConnected = true;
+
+  bool get netConnectionStatus => _isNetConnected;
 
   void init() {
     subscription = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
       if (result != ConnectivityResult.none) {
-        isNetConnected = true;
+        _isNetConnected = true;
       } else {
-        isNetConnected = false;
+        _isNetConnected = false;
       }
     });
     PushNotificationService();
@@ -41,7 +43,7 @@ class NewsService {
 
   Future<List<NewsItem>> fetchNewsByPagination(
       {bool appendInEnd = true}) async {
-    if (isNetConnected) {
+    if (_isNetConnected) {
       List<NewsItem> itemList = await NewsFirebaseService()
           .fetchNewsByPagination(appendInEnd: appendInEnd);
       if (appendInEnd) {
@@ -49,18 +51,34 @@ class NewsService {
       } else {
         newsItemList.setAll(0, itemList);
       }
+      removeDuplicateNews();
       return newsItemList;
     } else {
-      AppUtils.showToast("Internet not available");
+      AppUtils.showToast("इंटरनेट उपलब्ध नहीं है।");
     }
+
     return newsItemList;
   }
 
-  List<NewsItem> getFetchedNews(){
+  removeDuplicateNews() {
+    List<String> idCache = [];
+    List<NewsItem> _newsItemList = [];
+
+    newsItemList.forEach((element) {
+      if (!idCache.contains(element.id)) {
+        idCache.add(element.id);
+        _newsItemList.add(element);
+      }
+    });
+    newsItemList.clear();
+    newsItemList = _newsItemList;
+  }
+
+  List<NewsItem> getFetchedNews() {
     return newsItemList;
   }
 
-  Future<List<NewsItem>> fetchFeaturedNews()async{
+  Future<List<NewsItem>> fetchFeaturedNews() async {
     return await NewsFirebaseService().fetchFeaturedNews();
   }
 
@@ -98,7 +116,17 @@ class NewsService {
     return bookmarkedNewsIdSet.contains(id);
   }
 
-  incrementView(String id)async{
+  incrementView(String id) async {
     await NewsFirebaseService().incrementView(id);
+  }
+
+  incrementShareCount(String id) async {
+    await NewsFirebaseService().incrementShareCount(id);
+  }
+
+  Future<NewsItem> fetchNewsById(String id) async {
+    final newsItem = await NewsFirebaseService().fetchNewsById(id);
+    newsItemList.insert(0, newsItem);
+    return newsItem;
   }
 }

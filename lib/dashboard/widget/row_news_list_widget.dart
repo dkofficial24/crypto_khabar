@@ -46,14 +46,17 @@ class NewsRowListWidget extends StatelessWidget {
               child: Container(
                   margin: EdgeInsets.symmetric(vertical: 8),
                   height: 60,
+                  width: 70,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: AppUtils.isValidUrl(newsItem.imgUrl)
                         ? Image.network(
                             newsItem.imgUrl,
-                            fit: BoxFit.fitHeight,
+                            fit: BoxFit.cover,
                             errorBuilder: (ctx, obj, stack) {
                               return Container(
+                                  height: 60,
+                                  width: 70,
                                   child: Image.asset(
                                 "assets/images/placeholder.png",
                                 fit: BoxFit.fitHeight,
@@ -61,6 +64,8 @@ class NewsRowListWidget extends StatelessWidget {
                             },
                           )
                         : Container(
+                        height: 60,
+                        width: 70,
                             child: Image.asset(
                             "assets/images/placeholder.png",
                             fit: BoxFit.fitHeight,

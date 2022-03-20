@@ -1,6 +1,7 @@
 import 'package:crypto_khabar/article/page/article_page.dart';
 import 'package:crypto_khabar/dashboard/page/top_news_page.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
+import 'package:crypto_khabar/market/page/market_page.dart';
 import 'package:crypto_khabar/profile/page/profile_page.dart';
 import 'package:crypto_khabar/app_update/service/app_update_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -19,6 +20,7 @@ class _DashboardPageState extends State<DashboardPage> {
   List<Widget> tabPage = [
     TopNewsPage(),
     ArticlePage(),
+    MarketPage(),
     ProfilePage(),
   ];
 
@@ -41,6 +43,7 @@ class _DashboardPageState extends State<DashboardPage> {
       body: IndexedStack(index: _selectedIndex, children: tabPage),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.fixed,
         onTap: onTabSelect,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -50,6 +53,10 @@ class _DashboardPageState extends State<DashboardPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
             label: 'सीखें',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'मार्केट',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.build),
