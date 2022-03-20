@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_khabar/article/model/article.dart';
+import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 
 class ArticleService {
@@ -10,14 +11,12 @@ class ArticleService {
   factory ArticleService() {
     return _instance;
   }
-
   QueryDocumentSnapshot last;
-  bool isNetConnected = true;
 
   List<Article> articleList = [];
 
   Future<List<Article>> fetchArticleByPagination({bool appendInEnd}) async {
-    if (isNetConnected) {
+    if (NewsService().netConnectionStatus) {
       List<Article> itemList =
       await _fetchArticleByPagination(appendInEnd: appendInEnd);
       if (appendInEnd) {
@@ -29,7 +28,7 @@ class ArticleService {
       articleList.addAll(itemList);
       return articleList;
     } else {
-      AppUtils.showToast("Internet not available");
+      AppUtils.showToast("इंटरनेट उपलब्ध नहीं है।");
     }
     return articleList;
   }

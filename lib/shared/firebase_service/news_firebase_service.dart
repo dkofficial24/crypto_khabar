@@ -12,6 +12,7 @@ class NewsFirebaseService {
   }
 
   QueryDocumentSnapshot last;
+  QueryDocumentSnapshot featuredLast;
 
   Future<NewsItem> fetchNewsById(String id) async {
     CollectionReference newsRef = FirebaseFirestore.instance.collection("news");
@@ -52,13 +53,13 @@ class NewsFirebaseService {
 
   Future<List<NewsItem>> fetchFeaturedNews() async {
     List<NewsItem> newsItemList = [];
-    CollectionReference newsRef = FirebaseFirestore.instance.collection("featured_news");
+    CollectionReference newsRef = FirebaseFirestore.instance.collection("feature_news");
     QuerySnapshot data;
 
     data = await newsRef.orderBy('date', descending: true).limit(5).get();
 
     if (data != null && data.docs.length > 0) {
-      last = data.docs[data.docs.length - 1];
+      featuredLast = data.docs[data.docs.length - 1];
       data.docs.forEach((element) {
         if (element.exists) {
           newsItemList.add(NewsItem.fromJson(element.data()));
@@ -99,4 +100,36 @@ class NewsFirebaseService {
     }
     return itemCount;
   }
+
+  incrementShareCount (String id)async{
+    final DocumentReference ref = FirebaseFirestore.instance.collection('news_share_counter').doc(id);
+    Future.delayed(Duration(seconds: 2)).then((value) async{
+      await getIncrementShareCount(id).then((int latestCount) async{
+        if(latestCount == 0){
+          await ref.set({
+            "share":1
+          });
+        }else {
+          await ref.update({
+            'share': latestCount + 1,
+          });
+        }
+      });
+    });
+  }
+
+  Future<int> getIncrementShareCount (String id) async {
+    // if(widget.article.views != null){
+    final String fieldName = 'share';
+    final DocumentReference ref = FirebaseFirestore.instance.collection('news_share_counter').doc(id);
+    DocumentSnapshot snap = await ref.get();
+    int itemCount ;
+    try {
+      itemCount = snap[fieldName] ?? 0;
+    }catch(e){
+      itemCount = 0;
+    }
+    return itemCount;
+  }
+
 }

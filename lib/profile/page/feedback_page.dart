@@ -5,7 +5,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FeedbackPage extends StatefulWidget {
@@ -89,8 +88,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 SizedBox(
                   height: 20,
                 ),
-                buildTextFormField('नाम', nameController, 1, null),
-
                 buildTextFormField("रिव्यु", messageController, 5,
                         (value) {
                       if (value == null || value.isEmpty) {
@@ -111,7 +108,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   onPressed: () async{
                     if (key.currentState.validate()) {
                       FeedbackInfo feedback = FeedbackInfo(
-                          name:nameController.text,
+                          name:"User",
                           email:"",
                           review: messageController.text,
                           rating: provider.rating,
@@ -157,10 +154,6 @@ class _FeedbackPageState extends State<FeedbackPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text("आपने फ़ीडबैक सबमिट कर दिया है,धन्यवाद",style:TextStyle(fontSize: 16),),
-          // SizedBox(height: 24,),
-          // ElevatedButton(onPressed: (){
-          //   Navigator.pop(context);
-          // }, child: Text("पीछे"))
         ],
       ),
     );

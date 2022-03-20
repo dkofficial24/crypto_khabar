@@ -178,7 +178,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                   ],
                 ),
               ),
-              adBannerWidget()
+             adBannerWidget()
             ],
           ),
         ));
@@ -247,6 +247,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
           onAdLoaded: (_) {
             setState(() {
               isBannerAdReady = true;
+              FirebaseAnalytics.instance.logEvent(name: 'ndp_ad_ready');
             });
           },
           onAdFailedToLoad: (ad, err) {

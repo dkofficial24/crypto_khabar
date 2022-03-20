@@ -2,6 +2,7 @@ import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -39,6 +40,7 @@ class TopNewsProvider extends ChangeNotifier {
         onAdLoaded: (_) {
           isBannerAdReady = true;
           notifyListeners();
+          FirebaseAnalytics.instance.logEvent(name: 'tnp_ad_ready');
         },
         onAdFailedToLoad: (ad, err) {
           print('Failed to load a banner ad: ${err.message}');
