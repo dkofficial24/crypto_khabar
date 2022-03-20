@@ -1,3 +1,4 @@
+import 'package:crypto_khabar/market/page/market_page.dart';
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
 import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
@@ -42,7 +43,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: "डार्क थीम",
                       iconData: Icons.brightness_6_outlined,
                       callback: () {},
-                      lastChild: Switch(activeColor: Colors.blue,
+                      lastChild: Switch(
+                        activeColor: Colors.blue,
                         onChanged: (value) {
                           provider.setThemeMode(value).then((value) {
                             AppUtils.markThemeManuallySet();
@@ -113,6 +115,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         FirebaseAnalytics.instance.logEvent(name: "share_app");
                       },
                       lastChild: Container(),
+                    ),
+                    SizedBox(height: 8),
+                    ProfileItem(
+                      title: "Market",
+                      iconData: Icons.share,
+                      callback: () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MarketPage()));
+                      },
+                      lastChild: Icon(Icons.arrow_forward_ios, size: 15),
                     ),
                   ],
                 )),
