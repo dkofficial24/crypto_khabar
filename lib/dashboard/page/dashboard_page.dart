@@ -71,5 +71,20 @@ class _DashboardPageState extends State<DashboardPage> {
     setState(() {
       _selectedIndex = index;
     });
+    uploadTabAnalytics(index);
+  }
+
+  void uploadTabAnalytics(int index) {
+    String tabName = "";
+    if (index == 0) {
+      tabName = "tab_home";
+    } else if (index == 1) {
+      tabName = "tab_learn";
+    } else if (index == 2) {
+      tabName = "tab_market";
+    } else if (index == 3) {
+      tabName = "tab_setting";
+    }
+    FirebaseAnalytics.instance.logEvent(name: tabName);
   }
 }
