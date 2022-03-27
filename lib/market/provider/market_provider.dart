@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:crypto_khabar/ad/service/ad_helper.dart';
+import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,10 +34,13 @@ class MarketProvider extends ChangeNotifier {
 
   void initFetchDataTimer() {
     timer = Timer.periodic(Duration(seconds: 30), (timer) {
+      if(isAppInBackground)return;
       print("Fetching market data");
-      fetchMarketByPagination().then((value) {
-        notifyListeners();
-      });
+      try {
+        fetchMarketByPagination().then((value) {
+          notifyListeners();
+        });
+      }catch(e){}
     });
   }
 

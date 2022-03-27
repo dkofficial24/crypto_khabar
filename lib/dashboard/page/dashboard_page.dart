@@ -52,7 +52,7 @@ class _DashboardPageState extends State<DashboardPage> {
             label: 'होम',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book),
+            icon: Icon(Icons.local_library),
             label: 'सीखें',
           ),
           BottomNavigationBarItem(
@@ -83,5 +83,20 @@ class _DashboardPageState extends State<DashboardPage> {
       }
       FirebaseAnalytics.instance.logEvent(name: tabName);
     });
+    uploadTabAnalytics(index);
+  }
+
+  void uploadTabAnalytics(int index) {
+    String tabName = "";
+    if (index == 0) {
+      tabName = "tab_home";
+    } else if (index == 1) {
+      tabName = "tab_learn";
+    } else if (index == 2) {
+      tabName = "tab_market";
+    } else if (index == 3) {
+      tabName = "tab_setting";
+    }
+    FirebaseAnalytics.instance.logEvent(name: tabName);
   }
 }

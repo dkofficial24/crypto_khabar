@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/constants.dart';
@@ -22,17 +20,29 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 
+
 class TopNewsPage extends StatefulWidget {
   @override
   _TopNewsPageState createState() => _TopNewsPageState();
 }
 
-class _TopNewsPageState extends State<TopNewsPage> {
+class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
   TopNewsProvider _topNewsProvider;
   RefreshController _refreshController;
 
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.resumed){
+       isAppInBackground = false;
+    }else{
+      isAppInBackground = true;
+    }
+  }
+
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
     _topNewsProvider = TopNewsProvider();
     _refreshController = RefreshController(initialRefresh: false);
     init();
@@ -301,6 +311,7 @@ class _TopNewsPageState extends State<TopNewsPage> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _topNewsProvider.bannerAd.dispose();
     BroadcastEvents().unsubscribe(NewsReceivedEvent, handler: fetchNews);
     BroadcastEvents()

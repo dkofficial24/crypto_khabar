@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+bool isAppInBackground = true;
+
 const String AppName = "Crypto App";
 
 const String ThemeChange = "ThemeChange";
