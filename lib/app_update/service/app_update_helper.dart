@@ -43,7 +43,7 @@ class AppUpdateHelper {
       bool shouldUpdate = appCurrentVersion < latestVersion;
 
       if (shouldUpdate && globalContext != null) {
-        await Future.delayed(Duration(seconds: 3));
+        await Future.delayed(Duration(seconds: 5));
         if (await shouldShowUpdateDialog()) {
           showUpdateDialog(globalContext,
               title: config?.title ?? DefaultTitle,
