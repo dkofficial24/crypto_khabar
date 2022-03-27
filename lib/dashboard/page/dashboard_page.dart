@@ -51,7 +51,7 @@ class _DashboardPageState extends State<DashboardPage> {
             label: 'होम',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book),
+            icon: Icon(Icons.local_library),
             label: 'सीखें',
           ),
           BottomNavigationBarItem(

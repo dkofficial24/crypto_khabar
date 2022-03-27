@@ -49,15 +49,16 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
       nextNewsList =
           newsList.getRange(currentIndex + 1, currentIndex + i).toList();
     }
-
+    int count = 0;
     List<Widget> rowList = nextNewsList.map((e) {
+      count++;
       return Column(
         children: [
           NewsRowListWidget(newsItem: e, callback: () {
             Navigator.pushReplacementNamed(context,
                 AppRoutes.NewsDetailsPage,
                 arguments: NewsDetailsArgs(
-                    index:-1,
+                    index:index+count,
                     newsItem: e));
           },
           ),

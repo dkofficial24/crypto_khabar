@@ -7,25 +7,26 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 
 class AppUtils {
+  static bool get isAppInBackground => null;
+
   static String formatDate(int date) {
     final DateFormat formatter = DateFormat('MMM-dd,yyyy hh:mm a');
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
   }
 
   static void showToast(String msg) {
+    if (isAppInBackground) return;
     Fluttertoast.showToast(msg: msg);
   }
 
-  static void shareNews(NewsItem newsItem,{String appLink=''}) {
-    String detail =
-        "${newsItem.title} \n\n $appLink";
+  static void shareNews(NewsItem newsItem, {String appLink = ''}) {
+    String detail = "${newsItem.title} \n\n $appLink";
     Share.share(detail, subject: newsItem.title);
     NewsService().incrementShareCount(newsItem.id);
   }
 
-  static void shareArticle(Article article,{String appLink=''}) {
-    String detail =
-        "${article.title} \n '$appLink";
+  static void shareArticle(Article article, {String appLink = ''}) {
+    String detail = "${article.title} \n '$appLink";
     Share.share(detail, subject: article.title);
   }
 
@@ -41,8 +42,8 @@ class AppUtils {
     await SharedPrefHelper().saveValue("isThemeManuallySetKey", true);
   }
 
-  static bool isValidUrl(String url){
-    if(url == null || url.isEmpty){
+  static bool isValidUrl(String url) {
+    if (url == null || url.isEmpty) {
       return false;
     }
     return Uri.tryParse(url)?.hasAbsolutePath ?? false;
