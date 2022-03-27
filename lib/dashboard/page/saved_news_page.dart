@@ -54,7 +54,7 @@ class _SavedNewsPageState extends State<SavedNewsPage> {
                       },
                       child: NewsRowListWidget(
                         newsItem: _provider.newsItemList[index],
-                        callback: () {
+                        callback: (_) {
                           Navigator.pushNamed(
                               context, AppRoutes.NewsDetailsPage,
                               arguments: NewsDetailsArgs(

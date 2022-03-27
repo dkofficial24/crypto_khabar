@@ -163,7 +163,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
                                     child: NewsRowListWidget(
                                       newsItem:
                                           provider.newsItemList[usedIndex],
-                                      callback: () {
+                                      callback: (_) {
                                         Navigator.pushNamed(
                                             context, AppRoutes.NewsDetailsPage,
                                             arguments: NewsDetailsArgs(
