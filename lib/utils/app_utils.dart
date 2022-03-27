@@ -1,4 +1,5 @@
 import 'package:crypto_khabar/article/model/article.dart';
+import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
@@ -7,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:share/share.dart';
 
 class AppUtils {
-  static bool get isAppInBackground => null;
 
   static String formatDate(int date) {
     final DateFormat formatter = DateFormat('MMM-dd,yyyy hh:mm a');
