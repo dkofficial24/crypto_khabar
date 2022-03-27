@@ -100,7 +100,6 @@ class AppUpdateHelper {
   }
 
   Future<bool> shouldShowUpdateDialog() async {
-    return true;
     int lastUpdateCheckTime = await getUpdateCheckLaterTime();
     if (lastUpdateCheckTime == -1) {
       return true;
