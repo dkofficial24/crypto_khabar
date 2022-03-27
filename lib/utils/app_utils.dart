@@ -14,6 +14,11 @@ class AppUtils {
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
   }
 
+  static String formatOnlyDate(int date) {
+    final DateFormat formatter = DateFormat('MMM-dd,yyyy');
+    return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
+  }
+
   static void showToast(String msg) {
     if (isAppInBackground) return;
     Fluttertoast.showToast(msg: msg);

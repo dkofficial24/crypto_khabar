@@ -54,13 +54,14 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
       count++;
       return Column(
         children: [
-          NewsRowListWidget(newsItem: e, callback: () {
+          NewsRowListWidget(newsItem: e, callback: (clickedIndex) {
+            if(index == -1)return;
             Navigator.pushReplacementNamed(context,
                 AppRoutes.NewsDetailsPage,
                 arguments: NewsDetailsArgs(
-                    index:index+count,
+                    index:clickedIndex,
                     newsItem: e));
-          },
+          },index: index+count,
           ),
           Divider()
         ],

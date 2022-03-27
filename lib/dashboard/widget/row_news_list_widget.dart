@@ -6,13 +6,16 @@ import 'package:flutter/material.dart';
 class NewsRowListWidget extends StatelessWidget {
   final NewsItem newsItem;
   final Function callback;
+  final int index;
 
-  const NewsRowListWidget({@required this.newsItem, @required this.callback});
+  const NewsRowListWidget({@required this.newsItem, @required this.callback, this.index = -1});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: callback,
+      onTap: (){
+        callback(index);
+      },
       child: Container(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
