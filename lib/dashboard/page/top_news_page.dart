@@ -50,6 +50,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
   }
 
   Future init() async {
+    isAppInBackground = false;
     NotificationService();
     BroadcastEvents().subscribe(NewsReceivedEvent, fetchNews);
     BroadcastEvents().subscribe(NewsBookmarkRemove, onBookmarkRemovedEvent);
