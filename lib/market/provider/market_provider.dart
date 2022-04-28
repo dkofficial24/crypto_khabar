@@ -5,6 +5,7 @@ import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -20,6 +21,7 @@ class MarketProvider extends ChangeNotifier {
 
   SortMarket currentSortFilter = SortMarket.Rank;
   String marketFilterName = "रैंक";
+  IconData filterIconData = Icons.arrow_circle_up;
 
   MarketProvider() {
     shimmer = true;
@@ -87,12 +89,15 @@ class MarketProvider extends ChangeNotifier {
     if (currentSortFilter == SortMarket.Rank) {
       currentSortFilter = SortMarket.Gainer;
       marketFilterName = "लाभ";
+      filterIconData = Icons.add;
     } else if (currentSortFilter == SortMarket.Gainer) {
       currentSortFilter = SortMarket.Loser;
       marketFilterName = "हानि";
+      filterIconData = Icons.remove;
     } else {
       currentSortFilter = SortMarket.Rank;
       marketFilterName = "रैंक";
+      filterIconData = Icons.arrow_circle_up;
     }
     sortMarketData();
     notifyListeners();

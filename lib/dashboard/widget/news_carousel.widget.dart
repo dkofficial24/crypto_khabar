@@ -60,10 +60,12 @@ class CarouselWidget extends StatelessWidget {
                             .toLowerCase()
                             .contains("short")) {
                           if (!isShortVideo(newsItem)) {
-                            AppUtils.showToast("ये केवल हैडलाइन खबर है।");
+                            if(newsItem.sourceLink!=null) {
+                              launch(newsItem.sourceLink);
+                            }
                           }
                         } else {
-                          AppUtils.showToast("डिटेल में उपलब्ध नहीं है।");
+                         // AppUtils.showToast("डिटेल में उपलब्ध नहीं है।");
                         }
                         FirebaseAnalytics.instance.logEvent(
                             name: "carousle_click",

@@ -121,8 +121,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: "शेयर ऐप",
                       iconData: Icons.share,
                       callback: () async {
-                        ProfileSettingService().incrementUserCount();
-                        return;
                         LoaderController().showLoader(context);
                         String downloadLink =
                             await RemoteConfigService().getAppDownloadLink();

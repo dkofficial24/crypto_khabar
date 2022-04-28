@@ -1,7 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/saved_db_service.dart';
 import 'package:crypto_khabar/shared/firebase_service/firebase_push_notification_service.dart';
@@ -41,8 +40,21 @@ class NewsService {
     SavedDbService();
   }
 
+  Future<bool> checkConnectivity() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    }
+    return false;
+  }
+
   Future<List<NewsItem>> fetchNewsByPagination(
       {bool appendInEnd = true}) async {
+    if(!_isNetConnected){
+      _isNetConnected = await checkConnectivity();
+    }
     if (_isNetConnected) {
       List<NewsItem> itemList = await NewsFirebaseService()
           .fetchNewsByPagination(appendInEnd: appendInEnd);

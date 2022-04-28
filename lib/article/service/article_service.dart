@@ -25,8 +25,6 @@ class ArticleService {
         articleList.setAll(0, itemList);
       }
       return articleList;
-      articleList.addAll(itemList);
-      return articleList;
     } else {
       AppUtils.showToast("इंटरनेट उपलब्ध नहीं है।");
     }

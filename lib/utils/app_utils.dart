@@ -3,6 +3,8 @@ import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
@@ -14,9 +16,19 @@ class AppUtils {
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
   }
 
+  static String chartHorizontalTime(int date) {
+    final DateFormat formatter = DateFormat('MMM-dd hh');
+    return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
+  }
+
   static String formatOnlyDate(int date) {
     final DateFormat formatter = DateFormat('MMM-dd,yyyy');
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
+  }
+
+  static String formatDateTime(DateTime date) {
+    final DateFormat formatter = DateFormat('MMM-dd,yyyy');
+    return formatter.format(date);
   }
 
   static void showToast(String msg) {
@@ -61,5 +73,9 @@ class AppUtils {
       name: "",
     ).format(num);
     return _formattedNumber;
+  }
+
+  static bool isDarkTheme(BuildContext context){
+    return Theme.of(context).brightness == Brightness.dark;
   }
 }
