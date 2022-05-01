@@ -108,8 +108,13 @@ class _MarketDetailState extends State<MarketDetailPage> {
                                       ..strokeCap = StrokeCap.round
                                       ..color = Colors.orange,
                                   ],
-                                 // priceGridLineColor: AppUtils.isDarkTheme(context)?Colors.white:Colors.black,
-                                  priceLabelStyle: TextStyle(fontSize: 8,color:AppUtils.isDarkTheme(context)?Colors.white:Colors.black,),
+                                  // priceGridLineColor: AppUtils.isDarkTheme(context)?Colors.white:Colors.black,
+                                  priceLabelStyle: TextStyle(
+                                    fontSize: 8,
+                                    color: AppUtils.isDarkTheme(context)
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                                   timeLabelStyle:
                                       TextStyle(color: Colors.blue[200]),
                                   selectionHighlightColor:
@@ -180,7 +185,7 @@ class _MarketDetailState extends State<MarketDetailPage> {
                               name: "24 घंटे में बदलाव",
                               value: marketItem.priceChangePercentage24h != null
                                   ? "${marketItem.priceChangePercentage24h}%"
-                                  : "-"),
+                                  : "-",valueColor: marketItem.priceChangePercentage24h>0?Colors.green:Colors.red),
                           MarketInfoWidget(
                               name: "24 घंटे में उच्च स्तर",
                               value: marketItem.high24h != null
@@ -246,9 +251,13 @@ class MarketInfoWidget extends StatelessWidget {
   final String name;
   final String value;
   final bool isLastItem;
+  final Color valueColor;
 
   MarketInfoWidget(
-      {@required this.name, @required this.value, this.isLastItem = false});
+      {@required this.name,
+      @required this.value,
+      this.isLastItem = false,
+      this.valueColor});
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +265,16 @@ class MarketInfoWidget extends StatelessWidget {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [Text(name), Text(value)],
+          children: [
+            Text(name),
+            Text(value,
+                style: TextStyle(
+                    color: valueColor == null
+                        ? AppUtils.isDarkTheme(context)
+                            ? Colors.white
+                            : Colors.black
+                        : valueColor))
+          ],
         ),
         SizedBox(height: 8),
         !isLastItem ? Divider() : Container(),

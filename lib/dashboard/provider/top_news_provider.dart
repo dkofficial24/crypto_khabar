@@ -1,10 +1,7 @@
 import 'package:broadcast_events/broadcast_events.dart';
-import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../constants.dart';
@@ -14,8 +11,6 @@ class TopNewsProvider extends ChangeNotifier {
   List<NewsItem> featuredNewsItemList = [];
   bool isLoading = false;
   bool shimmer = false;
-  bool isBannerAdReady = false;
-  BannerAd bannerAd;
   int carouselCurrentIndex = 0;
 
   TopNewsProvider() {
@@ -26,31 +21,7 @@ class TopNewsProvider extends ChangeNotifier {
       notifyListeners();
     });
     fetchFeaturedNews();
-    initAd();
-
     BroadcastEvents().subscribe(NewsFetched, loadFetchedNews);
-  }
-
-  initAd() {
-    bannerAd = BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        onAdLoaded: (_) {
-          isBannerAdReady = true;
-          notifyListeners();
-          FirebaseAnalytics.instance.logEvent(name: 'tnp_ad_ready');
-        },
-        onAdFailedToLoad: (ad, err) {
-          print('Failed to load a banner ad: ${err.message}');
-          isBannerAdReady = false;
-          notifyListeners();
-          ad.dispose();
-        },
-      ),
-    );
-    bannerAd.load();
   }
 
   Future fetchNewsByPagination({bool appendInEnd = true}) async {
@@ -133,7 +104,6 @@ class TopNewsProvider extends ChangeNotifier {
 
   void updateCarouselCurrentIndex(int index) {
     carouselCurrentIndex = index;
-   // print("updateCarouselCurrentIndex $index");
     notifyListeners();
   }
 }

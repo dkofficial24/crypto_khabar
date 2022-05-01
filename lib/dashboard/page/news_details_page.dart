@@ -1,11 +1,11 @@
 import 'package:broadcast_events/broadcast_events.dart';
-import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
+import 'package:crypto_khabar/shared/widget/banner_ad.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/shared/widget/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
@@ -13,7 +13,6 @@ import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class NewsDetailsPage extends StatefulWidget {
   @override
@@ -26,14 +25,11 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
   ScrollController _scrollController;
   bool savingNews = false;
   bool removeBookmarkingNews = false;
-  bool isBannerAdReady = false;
-  BannerAd bannerAd;
   List<Widget> list = [];
 
   @override
   void initState() {
     _scrollController = ScrollController();
-    initAd();
     FirebaseAnalytics.instance.logEvent(name: "ndp_detail_news");
     super.initState();
   }
@@ -180,7 +176,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                   ],
                 ),
               ),
-             adBannerWidget()
+              BannerAdWidget()
             ],
           ),
         ));
@@ -239,42 +235,6 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
     return NewsService().isNewsBookmarked(id);
   }
 
-  initAd() {
-    if (AdHelper.isAdEnabled()) {
-      bannerAd = BannerAd(
-        adUnitId: AdHelper.bannerAdUnitId,
-        request: AdRequest(),
-        size: AdSize.banner,
-        listener: BannerAdListener(
-          onAdLoaded: (_) {
-            setState(() {
-              isBannerAdReady = true;
-              FirebaseAnalytics.instance.logEvent(name: 'ndp_ad_ready');
-            });
-          },
-          onAdFailedToLoad: (ad, err) {
-            print('Failed to load a banner ad: ${err.message}');
-            setState(() {
-              isBannerAdReady = false;
-            });
-            ad.dispose();
-          },
-        ),
-      );
-      bannerAd.load();
-    }
-  }
-
-  Container adBannerWidget() {
-    return AdHelper.isAdEnabled() && isBannerAdReady
-        ? Container(
-            width: bannerAd.size.width.toDouble(),
-            height: bannerAd.size.height.toDouble(),
-            child: AdWidget(ad: bannerAd),
-          )
-        : Container();
-  }
-
   Future incrementView(String id) async {
     try {
       await NewsService().incrementView(id);
@@ -285,7 +245,6 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
 
   @override
   void dispose() {
-    bannerAd?.dispose();
     super.dispose();
   }
 }

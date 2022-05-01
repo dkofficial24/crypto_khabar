@@ -1,5 +1,4 @@
 import 'package:broadcast_events/broadcast_events.dart';
-import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
@@ -9,12 +8,12 @@ import 'package:crypto_khabar/dashboard/widget/news_carousel.widget.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/shared/services/notification_service.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
+import 'package:crypto_khabar/shared/widget/banner_ad.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -189,9 +188,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
                                     _topNewsProvider.newsItemList.length + 2),
                           ),
                         )),
-                        provider.isBannerAdReady
-                            ? adBannerWidget(provider)
-                            : Container()
+                        BannerAdWidget()
                       ],
                     ));
           },
@@ -200,15 +197,6 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
     );
   }
 
-  Container adBannerWidget(TopNewsProvider provider) {
-    return AdHelper.isAdEnabled()
-        ? Container(
-            width: provider.bannerAd.size.width.toDouble(),
-            height: provider.bannerAd.size.height.toDouble(),
-            child: AdWidget(ad: provider.bannerAd),
-          )
-        : Container();
-  }
 
   Widget newsRowShimmer() {
     return Padding(
@@ -313,7 +301,6 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _topNewsProvider.bannerAd.dispose();
     BroadcastEvents().unsubscribe(NewsReceivedEvent, handler: fetchNews);
     BroadcastEvents()
         .unsubscribe(NewsBookmarkRemove, handler: onBookmarkRemovedEvent);

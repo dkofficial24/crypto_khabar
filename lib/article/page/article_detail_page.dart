@@ -1,6 +1,7 @@
 import 'package:crypto_khabar/article/model/article.dart';
 import 'package:crypto_khabar/article/service/article_service.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
+import 'package:crypto_khabar/shared/widget/banner_ad.dart';
 import 'package:crypto_khabar/shared/widget/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -117,6 +118,7 @@ class DetailPageState extends State<ArticleDetailPage> {
                   ],
                 ),
               ),
+              BannerAdWidget()
             ],
           ),
         ));

@@ -86,14 +86,10 @@ class _MarketPageState extends State<MarketPage> {
                               double topPadding = index == 0 ? 16 : 8;
                               return InkWell(
                                 onTap: () {
-                                  // AppUtils.showToast(
-                                  // "मार्केट डिटेल अगले वर्जन में आ रहा है।");
                                   Navigator.pushNamed(
                                       context, AppRoutes.MarketDetailPage,
                                       arguments: marketProvider
                                           .marketItemList[index]);
-                                  FirebaseAnalytics.instance
-                                      .logEvent(name: "tap_market_tap");
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.fromLTRB(
