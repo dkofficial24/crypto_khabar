@@ -75,7 +75,9 @@ class MarketItemWidget extends StatelessWidget {
                     children: [
                       Container(
                         alignment: Alignment.center,
-                        width: 18,
+                        constraints: BoxConstraints(
+                          minWidth: 18
+                        ),
                         height: 18,
                         padding:
                         EdgeInsets.symmetric(
@@ -115,7 +117,7 @@ class MarketItemWidget extends StatelessWidget {
                                 0
                                 ? Colors.green
                                 : Colors.red,
-                            fontSize: fontSize),
+                            fontSize: fontSize,fontWeight: FontWeight.bold),
                       ),
                     ],
                   )

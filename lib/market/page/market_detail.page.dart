@@ -1,12 +1,14 @@
-import 'dart:convert';
-
+import 'dart:async';
 import 'package:crypto_khabar/market/model/market_model.dart';
+import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:interactive_chart/interactive_chart.dart';
 import 'package:intl/intl.dart';
+
+import '../../constants.dart';
 
 class MarketDetailPage extends StatefulWidget {
   @override
@@ -16,6 +18,8 @@ class MarketDetailPage extends StatefulWidget {
 class _MarketDetailState extends State<MarketDetailPage> {
   List<CandleData> _data = [];
   MarketItem marketItem;
+  Timer timer;
+  MarketService _marketService;
 
   final formatter = NumberFormat.currency(
     locale: 'HI',
@@ -39,7 +43,25 @@ class _MarketDetailState extends State<MarketDetailPage> {
   void initState() {
     formatter.minimumFractionDigits = 0;
     formatter.maximumFractionDigits = 7;
+    _marketService = MarketService();
+    initFetchDataTimer();
     super.initState();
+  }
+
+  void initFetchDataTimer() {
+    timer = Timer.periodic(Duration(seconds: 30), (timer) {
+      if(isAppInBackground)return;
+      print("Loading market item");
+      try {
+        List<MarketItem> list = _marketService.getMarketData();
+        MarketItem item = list.where((element) => element.symbol ==  marketItem.symbol).first;
+        if(item !=null){
+          setState(() {
+            marketItem = item;
+          });
+        }
+      }catch(e){}
+    });
   }
 
   @override
@@ -244,6 +266,14 @@ class _MarketDetailState extends State<MarketDetailPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    if (timer != null && timer.isActive) {
+      timer.cancel();
+    }
+    super.dispose();
   }
 }
 
