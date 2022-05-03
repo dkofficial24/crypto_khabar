@@ -24,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     provider = ProfileSettingProvider();
     PackageInfo.fromPlatform().then((value) {
-      WidgetsFlutterBinding().addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         setState(() {
           version = value.version;
         });
