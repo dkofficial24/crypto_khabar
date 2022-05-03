@@ -24,7 +24,11 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     provider = ProfileSettingProvider();
     PackageInfo.fromPlatform().then((value) {
-      version = value.version;
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        setState(() {
+          version = value.version;
+        });
+      });
     });
     super.initState();
   }

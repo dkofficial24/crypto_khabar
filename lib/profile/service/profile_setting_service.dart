@@ -1,5 +1,6 @@
 import 'package:broadcast_events/broadcast_events.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crypto_khabar/auth/model/user.dart';
 import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/profile/feedback_info.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
@@ -40,7 +41,8 @@ class ProfileSettingService {
       SharedPrefHelper().getValue("user_id").then((userId) {
         if (userId == null) {
           String uid = Uuid().v4();
-          SharedPrefHelper().saveValue("user_id", uid);
+          User user = User(uid: uid,joiningDate: DateTime.now().millisecondsSinceEpoch);
+          SharedPrefHelper().saveValue("user_id", user.toJson());
           FirebaseAnalytics.instance.logEvent(name: "new_user");
           incrementUserCount();
         }
