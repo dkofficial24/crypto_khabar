@@ -1,5 +1,7 @@
 import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/provider/market_provider.dart';
+import 'package:crypto_khabar/market/widget/crypto_search.dart';
+import 'package:crypto_khabar/market/widget/market_item.widget.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -19,16 +21,15 @@ class MarketPage extends StatefulWidget {
 }
 
 class _MarketPageState extends State<MarketPage> {
-  final double fontSize = 12;
-  final Color bottomColor = Colors.grey;
   final formatter = NumberFormat.currency(
     locale: 'HI',
     name: "",
     symbol: '₹ ',
     decimalDigits: 6,
   );
-  final ScrollController _scrollController = ScrollController();
   static const double rowGap = 8;
+
+  final ScrollController _scrollController = ScrollController();
   MarketProvider marketProvider;
   RefreshController _refreshController;
 
@@ -51,6 +52,17 @@ class _MarketPageState extends State<MarketPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("क्रिप्टो खबर"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: CryptoSearchDelegate(),
+              );
+            },
+          ),
+        ],
       ),
       body: ChangeNotifierProvider<MarketProvider>(
           create: (ctx) => marketProvider,
@@ -84,136 +96,11 @@ class _MarketPageState extends State<MarketPage> {
                                   ? 16
                                   : 8;
                               double topPadding = index == 0 ? 16 : 8;
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, AppRoutes.MarketDetailPage,
-                                      arguments: marketProvider
-                                          .marketItemList[index]);
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                      16, topPadding, 16, bottomPadding),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.fromLTRB(
-                                                    0, 4, 2, 4),
-                                            child: Image.network(
-                                              item.image,
-                                              width: 25,
-                                              height: 25,
-                                              errorBuilder:
-                                                  (ctx, obj, stack) {
-                                                return ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            16),
-                                                    child: Image.asset(
-                                                      "assets/images/placeholder.png",
-                                                      fit: BoxFit.cover,
-                                                      width: 25,
-                                                      height: 25,
-                                                    ));
-                                              },
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              item.name,
-                                              style: const TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.w600),
-                                            ),
-                                            const SizedBox(height: rowGap),
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  alignment: Alignment.center,
-                                                  width: 18,
-                                                  height: 18,
-                                                  padding:
-                                                      EdgeInsets.symmetric(
-                                                          horizontal: 2),
-                                                  decoration: BoxDecoration(
-                                                      color: Theme.of(context)
-                                                          .secondaryHeaderColor,
-                                                      borderRadius:
-                                                          BorderRadius
-                                                              .circular(2)),
-                                                  child: Center(
-                                                    child: Text(
-                                                      item.marketCapRank
-                                                          .toString(),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: fontSize),
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(width: 4),
-                                                Text(
-                                                  item.symbol,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      color: bottomColor,
-                                                      fontSize: fontSize),
-                                                ),
-                                                const SizedBox(width: 4),
-                                                const SizedBox(width: 4),
-                                                Text(
-                                                  "${item.priceChangePercentage24h.toStringAsFixed(2)}\u{0025}",
-                                                  style: TextStyle(
-                                                      color:
-                                                          item.priceChangePercentage24h >=
-                                                                  0
-                                                              ? Colors.green
-                                                              : Colors.red,
-                                                      fontSize: fontSize),
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "${formatter.format(item.currentPrice)}",
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          const SizedBox(height: rowGap),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                  "मार्केट कैप ${AppUtils.currencyFormat(item.marketCap)}",
-                                                  style: TextStyle(
-                                                      color: bottomColor,
-                                                      fontSize: fontSize)),
-                                              const SizedBox(width: 2),
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              return MarketItemWidget(
+                                marketItem: item,
+                                formatter: formatter,
+                                topPadding: topPadding,
+                                bottomPadding: bottomPadding,
                               );
                             },
                             separatorBuilder: (ctx, index) {
@@ -249,7 +136,12 @@ class _MarketPageState extends State<MarketPage> {
                                 children: [
                                   Text("बदलें"),
                                   SizedBox(width: 4),
-                                  Icon(provider.filterIconData,size: 15,color:Theme.of(context).brightness == Brightness.light?Colors.black:Colors.white),
+                                  Icon(provider.filterIconData,
+                                      size: 15,
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.light
+                                          ? Colors.black
+                                          : Colors.white),
                                 ],
                               )
                             ],

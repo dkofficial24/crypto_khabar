@@ -11,9 +11,7 @@ class MarketFirebaseService {
     return _marketFirebaseService;
   }
 
-  QueryDocumentSnapshot last;
-
-  Future<List<MarketItem>> fetchMarketByPagination(
+  Future<List<MarketItem>> fetchAllMarketData(
       {bool appendInEnd = true}) async {
     DocumentSnapshot docRef = await FirebaseFirestore.instance
         .collection("exchange")

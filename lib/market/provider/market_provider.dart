@@ -26,7 +26,7 @@ class MarketProvider extends ChangeNotifier {
   MarketProvider() {
     shimmer = true;
     notifyListeners();
-    fetchMarketByPagination().then((value) {
+    fetchAllMarketData().then((value) {
       shimmer = false;
       notifyListeners();
     });
@@ -39,7 +39,7 @@ class MarketProvider extends ChangeNotifier {
       if(isAppInBackground)return;
       print("Fetching market data");
       try {
-        fetchMarketByPagination().then((value) {
+        fetchAllMarketData().then((value) {
           notifyListeners();
         });
       }catch(e){}
@@ -103,18 +103,18 @@ class MarketProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future fetchMarketByPagination({bool appendInEnd = true}) async {
+  Future fetchAllMarketData({bool appendInEnd = true}) async {
     isLoading = true;
     notifyListeners();
     marketItemList =
-        await MarketService().fetchMarketByPagination(appendInEnd: appendInEnd);
+        await MarketService().fetchAllMarketData(appendInEnd: appendInEnd);
     sortMarketData();
     isLoading = false;
     notifyListeners();
   }
 
   void onRefresh(RefreshController refreshController) async {
-    await fetchMarketByPagination(appendInEnd: false);
+    await fetchAllMarketData(appendInEnd: false);
     refreshController.refreshCompleted();
   }
 
