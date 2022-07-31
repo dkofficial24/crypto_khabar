@@ -24,7 +24,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
       return AdHelper.isAdEnabled() && isBannerAdReady
           ? Container(
         width: bannerAd.size.width.toDouble(),
-        height: bannerAd.size.height.toDouble(),
+        height: bannerAd.size.height.toDouble()+4,
         child: AdWidget(ad: bannerAd),
       )
           : Container();

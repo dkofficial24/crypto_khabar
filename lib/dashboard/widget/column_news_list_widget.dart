@@ -34,9 +34,14 @@ class ColumnNewsListWidget extends StatelessWidget {
                         ));
                   },
                 ):Container(
-                    child: Image.asset(
-                      "assets/images/placeholder.png",
-                      fit: BoxFit.cover,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Image.asset(
+                          "assets/images/placeholder.png",
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     )),
               ),
             ),
