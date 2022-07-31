@@ -19,22 +19,20 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 
-
 class TopNewsPage extends StatefulWidget {
   @override
   _TopNewsPageState createState() => _TopNewsPageState();
 }
 
-class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
+class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
   TopNewsProvider _topNewsProvider;
   RefreshController _refreshController;
 
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if(state == AppLifecycleState.resumed){
-       isAppInBackground = false;
-    }else{
+    if (state == AppLifecycleState.resumed) {
+      isAppInBackground = false;
+    } else {
       isAppInBackground = true;
     }
   }
@@ -88,7 +86,9 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
             return _topNewsProvider.shimmer
                 ? newsRowShimmer()
                 : Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        EdgeInsets.only(right: 16, left: 16, top: 8, bottom: 0),
+                    //padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Column(
                       children: [
                         Expanded(
@@ -134,8 +134,9 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
                                           )
                                         : Container();
                                   }
-                                  if ((index% 5 == 0) ||
-                                      (_topNewsProvider.featuredNewsItemList.length ==
+                                  if ((index % 5 == 0) ||
+                                      (_topNewsProvider.featuredNewsItemList
+                                                  .length ==
                                               0 &&
                                           index == 1)) {
                                     return createSlidable(
@@ -188,6 +189,11 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
                                     _topNewsProvider.newsItemList.length + 2),
                           ),
                         )),
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: Colors.grey.withOpacity(0.1),
+                        ),
                         BannerAdWidget()
                       ],
                     ));
@@ -196,7 +202,6 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver{
       ),
     );
   }
-
 
   Widget newsRowShimmer() {
     return Padding(

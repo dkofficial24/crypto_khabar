@@ -39,7 +39,7 @@ class _ArticlePageState extends State<ArticlePage> {
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(
-                          16, 16, 16, 16),
+                          16, 16, 16, 4),
                       child: LazyLoadScrollView(
                         isLoading: _provider.isLoading,
                         scrollOffset: 50,
@@ -71,6 +71,7 @@ class _ArticlePageState extends State<ArticlePage> {
                       ),
                     ),
                   ),
+                  Divider(height: 1,thickness: 1,color: Colors.grey.withOpacity(0.1),),
                   BannerAdWidget()
                 ],
               );

@@ -104,7 +104,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
           ],
         ),
         body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+          margin: EdgeInsets.only(left: 4,right: 4,top: 12,bottom: 4),
           child: Column(
             children: [
               Expanded(
@@ -176,6 +176,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                   ],
                 ),
               ),
+              Divider(height: 1,thickness: 1,color: Colors.grey.withOpacity(0.1),),
               BannerAdWidget()
             ],
           ),
