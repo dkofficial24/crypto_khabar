@@ -38,17 +38,11 @@ android {
         applicationId "com.edgetechapps.crypto_khabar"
         minSdkVersion 21
         targetSdkVersion 31
-        versionCode 13
-        versionName "1.1.3"
+        versionCode 15
+        versionName "1.1.5"
     }
 
     buildTypes {
-        debug {
-            applicationIdSuffix ".debug"
-            minifyEnabled false
-            shrinkResources false
-        }
-
         release {
             minifyEnabled true
             // Signing with the debug keys for now, so `flutter run --release` works.

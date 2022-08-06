@@ -80,6 +80,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "क्रिप्टो खबर ऐप्प को बेहतर बनाने के लिए सुझाव दें",
@@ -100,47 +101,50 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   height: 20,
                 ),
                 ratingWidget(),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      padding:
-                      EdgeInsets.symmetric(vertical: 10, horizontal: 50)),
-                  child: Text("भेजे"),
-                  onPressed: () async{
-                    if (key.currentState.validate()) {
-                      FeedbackInfo feedback = FeedbackInfo(
-                          name:"User",
-                          email:"",
-                          review: messageController.text,
-                          rating: provider.rating,
-                          date: DateTime.now().millisecondsSinceEpoch
-                      );
-                      await provider.shareFeedback(feedback).then((value) {
-                        if(mounted)
-                        setState(() {
-                          shouldShowFeedback = false;
-                        });
-                      });
-
-                      FirebaseAnalytics.instance.logEvent(name: "feedback_shared");
-
-                      if(provider.rating >=4){
-                        showActionDialog(
-                          context,title: "रेटिंग",
-                          content: "कृपया क्रिप्टो खबर को प्ले स्टोर पर रेटिंग दें ",
-                          positiveTextButton: "अभी",
-                          negativeTextButton: "बाद में",
-                          positiveAction: (){
-                            try {
-                              launch(
-                                  "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
-                              Navigator.pop(context);
-                              FirebaseAnalytics.instance.logEvent(name: "rating_dialog");
-                            }catch(e){}
-                          },
+                SizedBox(height: 44,),
+                Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        padding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 50)),
+                    child: Text("भेजे"),
+                    onPressed: () async{
+                      if (key.currentState.validate()) {
+                        FeedbackInfo feedback = FeedbackInfo(
+                            name:"User",
+                            email:"",
+                            review: messageController.text,
+                            rating: provider.rating,
+                            date: DateTime.now().millisecondsSinceEpoch
                         );
+                        await provider.shareFeedback(feedback).then((value) {
+                          if(mounted)
+                          setState(() {
+                            shouldShowFeedback = false;
+                          });
+                        });
+
+                        FirebaseAnalytics.instance.logEvent(name: "feedback_shared");
+
+                        if(provider.rating >=4){
+                          showActionDialog(
+                            context,title: "रेटिंग",
+                            content: "कृपया क्रिप्टो खबर को प्ले स्टोर पर रेटिंग दें ",
+                            positiveTextButton: "अभी",
+                            negativeTextButton: "बाद में",
+                            positiveAction: (){
+                              try {
+                                launch(
+                                    "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
+                                Navigator.pop(context);
+                                FirebaseAnalytics.instance.logEvent(name: "rating_dialog");
+                              }catch(e){}
+                            },
+                          );
+                        }
                       }
-                    }
-                  },
+                    },
+                  ),
                 )
               ],
             ),
