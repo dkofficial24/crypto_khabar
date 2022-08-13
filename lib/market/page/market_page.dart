@@ -98,6 +98,11 @@ class _MarketPageState extends State<MarketPage> {
                                 formatter: formatter,
                                 topPadding: topPadding,
                                 bottomPadding: bottomPadding,
+                                onMarketItemClick: (){
+                                  if(mounted) {
+                                    marketProvider.fetchAllMarketData();
+                                  }
+                                },
                               ),
                             ),
                           );

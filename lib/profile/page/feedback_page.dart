@@ -91,7 +91,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 buildTextFormField("रिव्यु", messageController, 5,
                         (value) {
                       if (value == null || value.isEmpty) {
-                        return "कृपया रिव्यु लिखें";
+                        return "कृप्या रिव्यु लिखें";
                       } else {
                         return null;
                       }

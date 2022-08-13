@@ -67,6 +67,11 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
                             formatter: formatter,
                             topPadding: topPadding,
                             bottomPadding: bottomPadding,
+                            onMarketItemClick: (){
+                              if(mounted) {
+                                marketProvider.fetchAllMarketData();
+                              }
+                            },
                           ),
                         );
                       },
