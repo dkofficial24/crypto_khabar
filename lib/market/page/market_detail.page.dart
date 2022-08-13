@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
@@ -50,17 +51,18 @@ class _MarketDetailState extends State<MarketDetailPage> {
 
   void initFetchDataTimer() {
     timer = Timer.periodic(Duration(seconds: 30), (timer) {
-      if(isAppInBackground)return;
+      if (isAppInBackground) return;
       print("Loading market item");
       try {
         List<MarketItem> list = _marketService.getMarketData();
-        MarketItem item = list.where((element) => element.symbol ==  marketItem.symbol).first;
-        if(item !=null){
+        MarketItem item =
+            list.where((element) => element.symbol == marketItem.symbol).first;
+        if (item != null) {
           setState(() {
             marketItem = item;
           });
         }
-      }catch(e){}
+      } catch (e) {}
     });
   }
 
@@ -97,6 +99,22 @@ class _MarketDetailState extends State<MarketDetailPage> {
               ),
               SizedBox(width: 8),
               Text(marketItem.name),
+              Spacer(),
+              IconButton(
+                  onPressed: () {
+                    if (marketItem.isFavorite) {
+                      marketItem.isFavorite = false;
+                      _marketService.removeCoinFromFavorite(marketItem);
+                      AppUtils.showToast("कॉइन फेवरेट लिस्ट से हटा दिया गया");
+                    } else {
+                      _marketService.markCoinAsFavorite(marketItem);
+                      AppUtils.showToast("कॉइन फेवरेट लिस्ट में जोड़ दिया गया");
+                      marketItem.isFavorite = true;
+                    }
+                    setState(() {});
+                  },
+                  icon: Icon(
+                      marketItem.isFavorite ? Icons.star : Icons.star_border))
             ],
           ),
         ),
@@ -207,7 +225,11 @@ class _MarketDetailState extends State<MarketDetailPage> {
                               name: "24 घंटे में बदलाव",
                               value: marketItem.priceChangePercentage24h != null
                                   ? "${marketItem.priceChangePercentage24h}%"
-                                  : "-",valueColor: marketItem.priceChangePercentage24h>0?Colors.green:Colors.red),
+                                  : "-",
+                              valueColor:
+                                  marketItem.priceChangePercentage24h > 0
+                                      ? Colors.green
+                                      : Colors.red),
                           MarketInfoWidget(
                               name: "24 घंटे में उच्च स्तर",
                               value: marketItem.high24h != null

@@ -1,10 +1,8 @@
 import 'package:crypto_khabar/market/model/market_model.dart';
-import 'package:crypto_khabar/market/provider/market_provider.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class MarketItemWidget extends StatelessWidget {
   final MarketItem marketItem;
@@ -13,19 +11,24 @@ class MarketItemWidget extends StatelessWidget {
   final NumberFormat formatter;
   final double topPadding, bottomPadding;
   static const double rowGap = 8;
+  final Function onMarketItemClick;
 
   MarketItemWidget(
       {@required this.marketItem,
       @required this.formatter,
       this.topPadding = 8,
-      this.bottomPadding = 8});
+      this.bottomPadding = 8,
+      this.onMarketItemClick});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, AppRoutes.MarketDetailPage,
+      onTap: () async {
+        await Navigator.pushNamed(context, AppRoutes.MarketDetailPage,
             arguments: marketItem);
+        if (onMarketItemClick != null) {
+          onMarketItemClick();
+        }
       },
       child: Padding(
         padding: EdgeInsets.fromLTRB(16, topPadding, 16, bottomPadding),

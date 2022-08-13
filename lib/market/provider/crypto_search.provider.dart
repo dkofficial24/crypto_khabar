@@ -22,12 +22,12 @@ class CryptoSearchProvider {
 
   Future markCoinFavorite(MarketItem favoriteCoin) async {
     marketService.markCoinAsFavorite(favoriteCoin);
-    AppUtils.showToast("Coin added as favorite");
+    AppUtils.showToast("कॉइन फेवरेट लिस्ट में जोड़ दिया गया");
   }
 
   Future removeCoinFromFavorite(MarketItem marketItem) async {
     marketService.removeCoinFromFavorite(marketItem);
-    AppUtils.showToast("Coin removed from favorite");
+    AppUtils.showToast("कॉइन फेवरेट लिस्ट से हटा दिया गया");
   }
 
   List<MarketItem> searchCrypto(String input) {

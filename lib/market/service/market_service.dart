@@ -51,11 +51,13 @@ class MarketService {
   }
 
   refreshFavoriteData() {
-    favoriteCoinInfoList.forEach((item) {
-      MarketItem marketItem = _marketItemList
-          .firstWhere((element) => item.symbol == element.symbol);
-      marketItem.isFavorite = true;
-    });
+    try {
+      favoriteCoinInfoList.forEach((item) {
+        MarketItem marketItem = _marketItemList
+            .firstWhere((element) => item.symbol == element.symbol);
+        marketItem.isFavorite = true;
+      });
+    }catch(e){}
   }
 
   Future loadFavoriteCoinsData() async {

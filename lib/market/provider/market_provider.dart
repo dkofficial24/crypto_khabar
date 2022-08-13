@@ -150,14 +150,14 @@ class MarketProvider extends ChangeNotifier {
   Future markCoinFavorite(MarketItem favoriteCoin) async {
     marketService.markCoinAsFavorite(favoriteCoin);
     favoriteCoinsData = marketService.getFavoriteCoinData();
-    AppUtils.showToast("Coin added as favorite");
+    AppUtils.showToast("कॉइन फेवरेट लिस्ट में जोड़ दिया गया");
     notifyListeners();
   }
 
   Future removeCoinFromFavorite(MarketItem marketItem) async {
     marketService.removeCoinFromFavorite(marketItem);
     favoriteCoinsData = marketService.getFavoriteCoinData();
-    AppUtils.showToast("Coin removed from favorite");
+    AppUtils.showToast("कॉइन फेवरेट लिस्ट से हटा दिया गया");
     notifyListeners();
   }
 
