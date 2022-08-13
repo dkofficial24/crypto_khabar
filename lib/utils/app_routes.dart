@@ -6,6 +6,7 @@ import 'package:crypto_khabar/dashboard/page/news_details_page.dart';
 import 'package:crypto_khabar/dashboard/page/saved_news_page.dart';
 import 'package:crypto_khabar/dashboard/page/top_news_page.dart';
 import 'package:crypto_khabar/market/page/market_detail.page.dart';
+import 'package:crypto_khabar/market/page/market_tab_screen.dart';
 import 'package:crypto_khabar/profile/page/disclaimer_page.dart';
 import 'package:crypto_khabar/profile/page/feedback_page.dart';
 import 'package:crypto_khabar/shared/page/image_preview.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
   static const String FeedbackPage = "FeedbackPage";
   static const String DisclaimerPage = "DisclaimerPage";
   static const String MarketDetailPage = "MarketDetailPage";
+  static const String MarketTabScreen = "MarketTabScreen";
   }
 
 Map<String, WidgetBuilder> routes = {
@@ -38,4 +40,5 @@ Map<String, WidgetBuilder> routes = {
   AppRoutes.FeedbackPage: (context) => FeedbackPage(),
   AppRoutes.DisclaimerPage: (context) => DisclaimerPage(),
   AppRoutes.MarketDetailPage: (context) => MarketDetailPage(),
+  AppRoutes.MarketTabScreen: (context) => MarketTabScreen(),
 };
