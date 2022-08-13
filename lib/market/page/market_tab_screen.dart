@@ -41,11 +41,12 @@ class _MarketTabScreenState extends State<MarketTabScreen> {
             actions: [
               IconButton(
                 icon: Icon(Icons.search),
-                onPressed: () {
-                  showSearch(
+                onPressed: () async {
+                  await showSearch(
                     context: context,
                     delegate: CryptoSearchDelegate(),
                   );
+                  _marketProvider.fetchAllMarketData();
                 },
               ),
             ],
@@ -61,10 +62,7 @@ class _MarketTabScreenState extends State<MarketTabScreen> {
             ),
           ),
           body: TabBarView(
-            children: [
-              MarketPage(),
-              FavoriteCoinWidget()
-            ],
+            children: [MarketPage(), FavoriteCoinWidget()],
           ),
         ),
       ),

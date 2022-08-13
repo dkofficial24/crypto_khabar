@@ -73,11 +73,33 @@ class _MarketPageState extends State<MarketPage> {
                               ? 16
                               : 8;
                           double topPadding = index == 0 ? 16 : 8;
-                          return MarketItemWidget(
-                            marketItem: item,
-                            formatter: formatter,
-                            topPadding: topPadding,
-                            bottomPadding: bottomPadding,
+                          return InkWell(
+                            onLongPress: (){
+                              if (item.isFavorite) {
+                                item.isFavorite = false;
+                                marketProvider.removeCoinFromFavorite(item);
+                              } else {
+                                item.isFavorite = true;
+                                marketProvider.markCoinFavorite(item);
+                              }
+                            },
+                            child: InkWell(
+                              onLongPress: (){
+                                if (item.isFavorite) {
+                                  item.isFavorite = false;
+                                  marketProvider.removeCoinFromFavorite(item);
+                                } else {
+                                  item.isFavorite = true;
+                                  marketProvider.markCoinFavorite(item);
+                                }
+                              },
+                              child: MarketItemWidget(
+                                marketItem: item,
+                                formatter: formatter,
+                                topPadding: topPadding,
+                                bottomPadding: bottomPadding,
+                              ),
+                            ),
                           );
                         },
                         separatorBuilder: (ctx, index) {

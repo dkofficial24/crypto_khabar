@@ -30,7 +30,6 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,11 +52,22 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
                                 ? 16
                                 : 8;
                         double topPadding = index == 0 ? 16 : 8;
-                        return MarketItemWidget(
-                          marketItem: item,
-                          formatter: formatter,
-                          topPadding: topPadding,
-                          bottomPadding: bottomPadding,
+                        return InkWell(
+                          onLongPress: () {
+                            if (item.isFavorite) {
+                              item.isFavorite = false;
+                              marketProvider.removeCoinFromFavorite(item);
+                            } else {
+                              item.isFavorite = true;
+                              marketProvider.markCoinFavorite(item);
+                            }
+                          },
+                          child: MarketItemWidget(
+                            marketItem: item,
+                            formatter: formatter,
+                            topPadding: topPadding,
+                            bottomPadding: bottomPadding,
+                          ),
                         );
                       },
                       separatorBuilder: (ctx, index) {
@@ -84,7 +94,8 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(6.0),
-                            child: Text("${marketProvider.marketFilterName} अनुसार"),
+                            child: Text(
+                                "${marketProvider.marketFilterName} अनुसार"),
                           ),
                           Row(
                             children: [
