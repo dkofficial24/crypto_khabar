@@ -37,7 +37,7 @@ class NewsService {
       }
     });
     PushNotificationService();
-    SavedDbService();
+    NewsDbService();
   }
 
   Future<bool> checkConnectivity() async {
@@ -96,16 +96,16 @@ class NewsService {
 
   Future<bool> saveNews(NewsItem newsItem) async {
     markNewsItemSaved(newsItem.id);
-    return await SavedDbService().saveNews(newsItem);
+    return await NewsDbService().saveNews(newsItem);
   }
 
   Future<List<NewsItem>> getAllSavedNews() async {
-    return await SavedDbService().getAllSavedNews();
+    return await NewsDbService().getAllSavedNews();
   }
 
   Future removeSavedNews(String id) async {
     removeNewsItemFromBookmark(id);
-    await SavedDbService().removeSavedNews(id);
+    await NewsDbService().removeSavedNews(id);
   }
 
   Future loadAllSavedNewsId() async {

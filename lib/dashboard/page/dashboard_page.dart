@@ -2,6 +2,7 @@ import 'package:crypto_khabar/article/page/article_page.dart';
 import 'package:crypto_khabar/dashboard/page/top_news_page.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/market/page/market_page.dart';
+import 'package:crypto_khabar/market/page/market_tab_screen.dart';
 import 'package:crypto_khabar/profile/page/profile_page.dart';
 import 'package:crypto_khabar/app_update/service/app_update_helper.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -21,7 +22,7 @@ class _DashboardPageState extends State<DashboardPage> {
   List<Widget> tabPage = [
     TopNewsPage(),
     ArticlePage(),
-    MarketPage(),
+    MarketTabScreen(),
     ProfilePage(),
   ];
 
