@@ -51,15 +51,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    packagingOptions {
-        jniLibs {
-            excludes += ['lib/armeabi/**']
-        }
-        resources {
-            excludes += ['lib/armeabi/**']
-        }
-    }
-
 }
 
 flutter {
