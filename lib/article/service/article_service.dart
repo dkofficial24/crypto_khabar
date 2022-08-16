@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_khabar/article/model/article.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 
 class ArticleService {
   static final ArticleService _instance = ArticleService._();
@@ -26,7 +27,7 @@ class ArticleService {
       }
       return articleList;
     } else {
-      AppUtils.showToast("इंटरनेट उपलब्ध नहीं है।");
+      AppUtils.showToast(StringConst.noInternet);
     }
     return articleList;
   }

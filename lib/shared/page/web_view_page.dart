@@ -1,3 +1,4 @@
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -22,7 +23,7 @@ class WebViewPageState extends State<WebViewPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text("Crypto News"),),
+      appBar: AppBar(title: Text(StringConst.appName),),
       body: Center(
         child: IndexedStack(
           index:index,

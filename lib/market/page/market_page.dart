@@ -2,6 +2,7 @@ import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/provider/market_provider.dart';
 import 'package:crypto_khabar/market/widget/market_item.widget.dart';
 import 'package:crypto_khabar/market/widget/market_shimmer_widget.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -134,11 +135,11 @@ class _MarketPageState extends State<MarketPage> {
                           Padding(
                             padding: const EdgeInsets.all(6.0),
                             child:
-                                Text("${marketProvider.marketFilterName} अनुसार"),
+                                Text("${marketProvider.marketFilterName} ${StringConst.accordingToFilter}"),
                           ),
                           Row(
                             children: [
-                              Text("बदलें"),
+                              Text(StringConst.changeFilter),
                               SizedBox(width: 4),
                               Icon(marketProvider.filterIconData,
                                   size: 15,

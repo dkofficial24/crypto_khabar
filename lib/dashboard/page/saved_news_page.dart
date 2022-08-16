@@ -2,6 +2,7 @@ import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/provider/saved_news_provider.dart';
 import 'package:crypto_khabar/dashboard/widget/row_news_list_widget.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,12 +27,12 @@ class _SavedNewsPageState extends State<SavedNewsPage> {
       create: (ctx) => _provider,
       child: Scaffold(
         appBar: AppBar(
-          title: Text("बुकमार्क ख़बर"),
+          title: Text(StringConst.bookmarkNews),
         ),
         body: Consumer<SavedNewsProvider>(
           builder: (context, provider, child) {
             if(_provider.newsItemList.length == 0){
-              return Center(child: Text("कोई भी खबर बुकमार्क नहीं है। "),);
+              return Center(child: Text(StringConst.noBookmarkedNews),);
             }
 
             return Padding(

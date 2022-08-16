@@ -1,3 +1,4 @@
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/material.dart';
 
 class LoaderController {
@@ -12,7 +13,7 @@ class LoaderController {
   bool isShowingLoader = false;
 
   void showLoader(BuildContext context,
-      {String title = "Please wait...",
+      {String title = StringConst.pleaseWait,
       String desc = '',
       bool isDismissible = false}) {
     if (isShowingLoader) return;

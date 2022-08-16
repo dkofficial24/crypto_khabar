@@ -3,6 +3,7 @@ import 'package:crypto_khabar/article/model/article.dart';
 import 'package:crypto_khabar/article/provider/article_provider.dart';
 import 'package:crypto_khabar/shared/widget/banner_ad.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
@@ -28,7 +29,7 @@ class _ArticlePageState extends State<ArticlePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("क्रिप्टो खबर")),
+      appBar: AppBar(title: Text(StringConst.appName)),
       body: ChangeNotifierProvider<ArticleProvider>(
         create: (context) => _provider,
         builder: (ctx, child) {

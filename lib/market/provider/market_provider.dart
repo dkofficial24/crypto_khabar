@@ -6,6 +6,7 @@ import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/service/market_db_service.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -24,7 +25,7 @@ class MarketProvider extends ChangeNotifier {
   MarketService marketService;
 
   SortMarket currentSortFilter = SortMarket.Rank;
-  String marketFilterName = "रैंक";
+  String marketFilterName = StringConst.rank;
   IconData filterIconData = Icons.arrow_circle_up;
   MarketDbService marketDbService;
 
@@ -114,15 +115,15 @@ class MarketProvider extends ChangeNotifier {
   selectSortingFilter() {
     if (currentSortFilter == SortMarket.Rank) {
       currentSortFilter = SortMarket.Gainer;
-      marketFilterName = "लाभ";
+      marketFilterName = StringConst.profit;
       filterIconData = Icons.add;
     } else if (currentSortFilter == SortMarket.Gainer) {
       currentSortFilter = SortMarket.Loser;
-      marketFilterName = "हानि";
+      marketFilterName = StringConst.loss;
       filterIconData = Icons.remove;
     } else {
       currentSortFilter = SortMarket.Rank;
-      marketFilterName = "रैंक";
+      marketFilterName = StringConst.rank;
       filterIconData = Icons.arrow_circle_up;
     }
     sortMarketData();
@@ -147,17 +148,17 @@ class MarketProvider extends ChangeNotifier {
     refreshController.refreshCompleted();
   }
 
-  Future markCoinFavorite(MarketItem favoriteCoin) async {
-    marketService.markCoinAsFavorite(favoriteCoin);
+  Future markCoinFavorite(MarketItem marketItem) async {
+    marketService.markCoinAsFavorite(marketItem);
     favoriteCoinsData = marketService.getFavoriteCoinData();
-    AppUtils.showToast("कॉइन फेवरेट लिस्ट में जोड़ दिया गया");
+    AppUtils.showToast("${marketItem.name} ${StringConst.favCoinAddMsg}");
     notifyListeners();
   }
 
   Future removeCoinFromFavorite(MarketItem marketItem) async {
     marketService.removeCoinFromFavorite(marketItem);
     favoriteCoinsData = marketService.getFavoriteCoinData();
-    AppUtils.showToast("कॉइन फेवरेट लिस्ट से हटा दिया गया");
+    AppUtils.showToast("${marketItem.name} ${StringConst.favCoinRemoveMsg}");
     notifyListeners();
   }
 
