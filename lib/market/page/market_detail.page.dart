@@ -50,17 +50,18 @@ class _MarketDetailState extends State<MarketDetailPage> {
 
   void initFetchDataTimer() {
     timer = Timer.periodic(Duration(seconds: 30), (timer) {
-      if(isAppInBackground)return;
+      if (isAppInBackground) return;
       print("Loading market item");
       try {
         List<MarketItem> list = _marketService.getMarketData();
-        MarketItem item = list.where((element) => element.symbol ==  marketItem.symbol).first;
-        if(item !=null){
+        MarketItem item =
+            list.where((element) => element.symbol == marketItem.symbol).first;
+        if (item != null) {
           setState(() {
             marketItem = item;
           });
         }
-      }catch(e){}
+      } catch (e) {}
     });
   }
 
@@ -97,6 +98,22 @@ class _MarketDetailState extends State<MarketDetailPage> {
               ),
               SizedBox(width: 8),
               Text(marketItem.name),
+              Spacer(),
+              IconButton(
+                  onPressed: () {
+                    if (marketItem.isFavorite) {
+                      marketItem.isFavorite = false;
+                      _marketService.removeCoinFromFavorite(marketItem);
+                      AppUtils.showToast("कॉइन फेवरेट लिस्ट से हटा दिया गया");
+                    } else {
+                      _marketService.markCoinAsFavorite(marketItem);
+                      AppUtils.showToast("कॉइन फेवरेट लिस्ट में जोड़ दिया गया");
+                      marketItem.isFavorite = true;
+                    }
+                    setState(() {});
+                  },
+                  icon: Icon(
+                      marketItem.isFavorite ? Icons.star : Icons.star_border))
             ],
           ),
         ),

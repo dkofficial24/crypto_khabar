@@ -25,6 +25,7 @@ class MarketItem {
   String atlDate;
   Map<String, dynamic> roi;
   String lastUpdated;
+  bool isFavorite = false;
 
   MarketItem(
       {this.id,

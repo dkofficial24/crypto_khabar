@@ -4,17 +4,17 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class SavedDbService{
+class NewsDbService{
 
-  static SavedDbService _instance;
+  static NewsDbService _instance;
 
-  SavedDbService._internal() {
+  NewsDbService._internal() {
     init();
   }
 
-  factory SavedDbService() {
+  factory NewsDbService() {
     if (_instance == null) {
-      _instance = SavedDbService._internal();
+      _instance = NewsDbService._internal();
     }
     return _instance;
   }

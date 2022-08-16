@@ -47,8 +47,19 @@ class CryptoSearchDelegate extends SearchDelegate {
       if(items.length>0) {
         return ListView.separated(
             itemBuilder: (context, index) {
-              return MarketItemWidget(
-                  marketItem: items[index], formatter: provider.formatter);
+              return InkWell(
+                onLongPress: (){
+                  if (items[index].isFavorite) {
+                    items[index].isFavorite = false;
+                    provider.removeCoinFromFavorite(items[index]);
+                  } else {
+                    items[index].isFavorite = true;
+                    provider.markCoinFavorite(items[index]);
+                  }
+                },
+                child: MarketItemWidget(
+                    marketItem: items[index], formatter: provider.formatter),
+              );
             }, separatorBuilder: (context, index) {
           return Divider();
         },
