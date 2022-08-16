@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -59,7 +60,7 @@ class AppUpdateWidget extends StatelessWidget {
                             "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
                       }
                     },
-                    child: Text("अपडेट करें")),
+                    child: Text(StringConst.doUpdate)),
               )
             ],
           ),

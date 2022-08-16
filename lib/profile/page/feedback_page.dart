@@ -1,6 +1,7 @@
 import 'package:crypto_khabar/profile/feedback_info.dart';
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
 import 'package:crypto_khabar/shared/widget/view_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("फीडबैक"),
+          title: Text(StringConst.feedback),
         ),
         body: mainWidget());
   }
@@ -70,7 +71,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   Widget mainWidget(){
     if(shouldShowFeedback == null){
       return Center(
-          child:Text("Please wait..")
+          child:Text(StringConst.pleaseWait)
       );
     }
     if(shouldShowFeedback){
@@ -83,16 +84,16 @@ class _FeedbackPageState extends State<FeedbackPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "क्रिप्टो खबर ऐप्प को बेहतर बनाने के लिए सुझाव दें",
+                  StringConst.feedbackTitle,
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                buildTextFormField("रिव्यु", messageController, 5,
+                buildTextFormField(StringConst.feedbackReview, messageController, 5,
                         (value) {
                       if (value == null || value.isEmpty) {
-                        return "कृप्या रिव्यु लिखें";
+                        return StringConst.writeFeedbackReview;
                       } else {
                         return null;
                       }
@@ -107,7 +108,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     style: ElevatedButton.styleFrom(
                         padding:
                         EdgeInsets.symmetric(vertical: 10, horizontal: 50)),
-                    child: Text("भेजे"),
+                    child: Text(StringConst.sendFeedbackReview),
                     onPressed: () async{
                       if (key.currentState.validate()) {
                         FeedbackInfo feedback = FeedbackInfo(
@@ -128,10 +129,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
                         if(provider.rating >=4){
                           showActionDialog(
-                            context,title: "रेटिंग",
-                            content: "कृपया क्रिप्टो खबर को प्ले स्टोर पर रेटिंग दें ",
-                            positiveTextButton: "अभी",
-                            negativeTextButton: "बाद में",
+                            context,title: StringConst.feedbackReviewRating,
+                            content: StringConst.askForRatingMsg,
+                            positiveTextButton: StringConst.now,
+                            negativeTextButton: StringConst.later,
                             positiveAction: (){
                               try {
                                 launch(
@@ -157,7 +158,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("आपने फ़ीडबैक सबमिट कर दिया है,धन्यवाद",style:TextStyle(fontSize: 16),),
+          Text(StringConst.feedbackThanksMsg,style:TextStyle(fontSize: 16),),
         ],
       ),
     );

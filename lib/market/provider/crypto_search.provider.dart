@@ -1,6 +1,7 @@
 import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:intl/intl.dart';
 
 class CryptoSearchProvider {
@@ -22,12 +23,12 @@ class CryptoSearchProvider {
 
   Future markCoinFavorite(MarketItem favoriteCoin) async {
     marketService.markCoinAsFavorite(favoriteCoin);
-    AppUtils.showToast("कॉइन फेवरेट लिस्ट में जोड़ दिया गया");
+    AppUtils.showToast("${favoriteCoin.name} ${StringConst.favCoinAddMsg}");
   }
 
   Future removeCoinFromFavorite(MarketItem marketItem) async {
     marketService.removeCoinFromFavorite(marketItem);
-    AppUtils.showToast("कॉइन फेवरेट लिस्ट से हटा दिया गया");
+    AppUtils.showToast("${marketItem.name} ${StringConst.favCoinRemoveMsg}");
   }
 
   List<MarketItem> searchCrypto(String input) {

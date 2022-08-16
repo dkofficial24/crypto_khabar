@@ -10,6 +10,7 @@ import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/shared/widget/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,7 +78,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
     }
     return Scaffold(
         appBar: AppBar(
-          title: Text("क्रिप्टो खबर"),
+          title: Text(StringConst.appName),
           actions: [
             IconButton(
                 onPressed: () {
@@ -152,7 +153,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text("शेयर करें"),
+                          Text(StringConst.doShare),
                           SizedBox(width:8),
                           Icon(Icons.share),
                           SizedBox(width:48),
@@ -165,7 +166,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                           children: [
                         SizedBox(height: 8),
                         Text(
-                          "और खबरें",
+                          StringConst.moreNews,
                           style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),
                         ),
                         Divider(),

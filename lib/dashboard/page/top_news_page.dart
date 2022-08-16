@@ -12,6 +12,7 @@ import 'package:crypto_khabar/shared/widget/banner_ad.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
@@ -74,7 +75,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("क्रिप्टो खबर"),
+        title: Text(StringConst.appName),
       ),
       // drawer: Drawer(
       //   child: DrawerMenuWidget(),
@@ -279,7 +280,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
               icon: _topNewsProvider.isNewsBookmarked(newsItem.id)
                   ? Icons.bookmark
                   : Icons.bookmark_border,
-              label: 'बुकमार्क करें',
+              label: StringConst.doBookmarkNews,
               backgroundColor: Theme.of(context).canvasColor,
             ),
             SlidableAction(
@@ -288,7 +289,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
               },
               backgroundColor: Theme.of(context).canvasColor,
               icon: Icons.share,
-              label: 'शेयर',
+              label: StringConst.share,
             ),
           ],
         ),

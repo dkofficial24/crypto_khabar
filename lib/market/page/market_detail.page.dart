@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -104,10 +105,10 @@ class _MarketDetailState extends State<MarketDetailPage> {
                     if (marketItem.isFavorite) {
                       marketItem.isFavorite = false;
                       _marketService.removeCoinFromFavorite(marketItem);
-                      AppUtils.showToast("कॉइन फेवरेट लिस्ट से हटा दिया गया");
+                      AppUtils.showToast("${marketItem.name} ${StringConst.favCoinRemoveMsg}");
                     } else {
                       _marketService.markCoinAsFavorite(marketItem);
-                      AppUtils.showToast("कॉइन फेवरेट लिस्ट में जोड़ दिया गया");
+                      AppUtils.showToast("${marketItem.name} ${StringConst.favCoinAddMsg}");
                       marketItem.isFavorite = true;
                     }
                     setState(() {});
@@ -204,69 +205,69 @@ class _MarketDetailState extends State<MarketDetailPage> {
                       child: Column(
                         children: [
                           MarketInfoWidget(
-                              name: "रैंक",
+                              name: StringConst.rank,
                               value: marketItem.marketCapRank.toString()),
-                          MarketInfoWidget(name: "नाम", value: marketItem.name),
+                          MarketInfoWidget(name: StringConst.coinName, value: marketItem.name),
                           MarketInfoWidget(
-                              name: "मौजूदा कीमत",
+                              name: StringConst.coinCurrentValue,
                               value: marketItem.currentPrice != null
                                   ? "${formatter.format(marketItem.currentPrice)}"
                                   : "-"),
                           MarketInfoWidget(
-                              name: "मार्केट कैप",
+                              name: StringConst.coinMarketCap,
                               value: marketItem.marketCap != null
                                   ? formatter.format(marketItem.marketCap)
                                   : "-"),
                           MarketInfoWidget(
-                              name: "चिह्न",
+                              name: StringConst.coinSign,
                               value: marketItem.symbol.toUpperCase()),
                           MarketInfoWidget(
-                              name: "24 घंटे में बदलाव",
+                              name: StringConst.coinChangeIn24Hrs,
                               value: marketItem.priceChangePercentage24h != null
                                   ? "${marketItem.priceChangePercentage24h}%"
                                   : "-",valueColor: marketItem.priceChangePercentage24h>0?Colors.green:Colors.red),
                           MarketInfoWidget(
-                              name: "24 घंटे में उच्च स्तर",
+                              name: StringConst.coinHighLevelIn24Hrs,
                               value: marketItem.high24h != null
                                   ? "${formatter.format(marketItem.high24h)}"
                                   : "-"),
                           MarketInfoWidget(
-                              name: "24 घंटे में कम स्तर",
+                              name: StringConst.coinLowLevelIn24Hrs,
                               value: marketItem.low24h != null
                                   ? "${formatter.format(marketItem.low24h)}"
                                   : "-"),
                           MarketInfoWidget(
-                              name: "सबसे उच्च स्तर पर",
+                              name: StringConst.coinHighestLevel,
                               value: marketItem.ath != null
                                   ? "${formatter.format(marketItem.ath)}"
                                   : "-"),
                           MarketInfoWidget(
-                              name: "सबसे उच्च स्तर की तारीख",
+                              name: StringConst.coinHighestLevelDate,
                               value: marketItem.athDate != null
                                   ? "${AppUtils.formatDateTime(DateTime.parse(marketItem.athDate))}"
                                   : "-"),
                           MarketInfoWidget(
-                              name: "सबसे कम स्तर पर",
+                              name: StringConst.coinLowestLevel,
                               value: marketItem.atl != null
                                   ? "${formatter.format(marketItem.atl)}"
                                   : "-"),
                           MarketInfoWidget(
-                              name: "सबसे कम स्तर की तारीख",
+                              name: StringConst.coinLowestLevelDate,
                               value: marketItem.atlDate != null
                                   ? "${AppUtils.formatDateTime(DateTime.parse(marketItem.atlDate))}"
                                   : "-"),
                           MarketInfoWidget(
-                              name: "सर्क्युलेटिंग आपूर्ति",
+                              name:  StringConst.circulatingSupply,
                               value: marketItem.circulatingSupply != null
                                   ? "${marketItem.circulatingSupply}"
                                   : "-"),
                           MarketInfoWidget(
-                              name: "कुल आपूर्ति",
+                              name: StringConst.totalSupply,
                               value: marketItem.totalSupply != null
                                   ? "${marketItem.totalSupply}"
                                   : "-"),
                           MarketInfoWidget(
-                              name: "कुल मात्रा",
+                              name: StringConst.totalQuantity,
                               value: marketItem.totalVolume != null
                                   ? "${marketItem.totalVolume}"
                                   : "-",

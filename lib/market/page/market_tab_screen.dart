@@ -4,6 +4,7 @@ import 'package:crypto_khabar/market/service/market_db_service.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/market/widget/crypto_search.dart';
 import 'package:crypto_khabar/market/widget/favorite_coin_widget.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +38,7 @@ class _MarketTabScreenState extends State<MarketTabScreen> {
         create: (ctx) => _marketProvider,
         child: Scaffold(
           appBar: AppBar(
-            title: Text("क्रिप्टो खबर"),
+            title: Text(StringConst.appName),
             actions: [
               IconButton(
                 icon: Icon(Icons.search),

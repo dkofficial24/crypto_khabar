@@ -1,6 +1,7 @@
 import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -120,7 +121,7 @@ class MarketItemWidget extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                        "मार्केट कैप ${AppUtils.currencyFormat(marketItem.marketCap)}",
+                        "${StringConst.coinMarketCap} ${AppUtils.currencyFormat(marketItem.marketCap)}",
                         style:
                             TextStyle(color: bottomColor, fontSize: fontSize)),
                     const SizedBox(width: 2),

@@ -6,6 +6,7 @@ import 'package:crypto_khabar/dashboard/service/saved_db_service.dart';
 import 'package:crypto_khabar/shared/firebase_service/firebase_push_notification_service.dart';
 import 'package:crypto_khabar/shared/firebase_service/news_firebase_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 
 class NewsService {
   NewsService._internal() {
@@ -66,7 +67,7 @@ class NewsService {
       removeDuplicateNews();
       return newsItemList;
     } else {
-      AppUtils.showToast("इंटरनेट उपलब्ध नहीं है।");
+      AppUtils.showToast(StringConst.noInternet);
     }
 
     return newsItemList;

@@ -5,6 +5,7 @@ import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -41,7 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (ctx, provider, child) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("क्रिप्टो खबर"),
+              title: Text(StringConst.appName),
             ),
             body: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -49,7 +50,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     SizedBox(height: 12),
                     ProfileItem(
-                      title: "डार्क थीम",
+                      title: StringConst.darkTheme,
                       iconData: Icons.brightness_6_outlined,
                       callback: () {},
                       lastChild: Switch(
@@ -69,7 +70,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 8),
                     ProfileItem(
-                      title: "बुकमार्क ख़बर",
+                      title: StringConst.bookmarkNews,
                       iconData: Icons.bookmark_outline,
                       callback: () {
                         Navigator.pushNamed(context, AppRoutes.SavedNewsPage);
@@ -81,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 8),
                     ProfileItem(
-                      title: "नोटिफिकेशन्स",
+                      title: StringConst.notifications,
                       iconData: Icons.notifications_outlined,
                       callback: () {},
                       lastChild: Switch(
@@ -97,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 8),
                     ProfileItem(
-                      title: "फीडबैक",
+                      title: StringConst.feedback,
                       iconData: Icons.feedback_outlined,
                       callback: () async {
                         Navigator.pushNamed(context, AppRoutes.FeedbackPage);
@@ -108,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 8),
                     ProfileItem(
-                      title: "डिस्क्लेमर",
+                      title: StringConst.disclaimer,
                       iconData: Icons.info_outline_rounded,
                       callback: () async {
                         String disclaimer =
@@ -122,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 8),
                     ProfileItem(
-                      title: "शेयर ऐप",
+                      title: StringConst.shareApp,
                       iconData: Icons.share,
                       callback: () async {
                         LoaderController().showLoader(context);
@@ -131,13 +132,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         LoaderController().dismissLoader(context);
                         Share.share(downloadLink,
                             subject:
-                                "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करेंं");
+                                StringConst.shareAppMsg);
                         FirebaseAnalytics.instance.logEvent(name: "share_app");
                       },
                       lastChild: Container(),
                     ),
                     SizedBox(height: 32),
-                    Center(child: Text("वर्जन: ${version ?? ""}",style: TextStyle(color: Colors.grey),))
+                    Center(child: Text("${StringConst.appVersion} ${version ?? ""}",style: TextStyle(color: Colors.grey),))
                   ],
                 )),
           );

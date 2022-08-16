@@ -1,10 +1,10 @@
 import 'package:crypto_khabar/article/page/article_page.dart';
 import 'package:crypto_khabar/dashboard/page/top_news_page.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
-import 'package:crypto_khabar/market/page/market_page.dart';
 import 'package:crypto_khabar/market/page/market_tab_screen.dart';
 import 'package:crypto_khabar/profile/page/profile_page.dart';
 import 'package:crypto_khabar/app_update/service/app_update_helper.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -50,19 +50,19 @@ class _DashboardPageState extends State<DashboardPage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'होम',
+            label: StringConst.homeTab,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.local_library),
-            label: 'सीखें',
+            label: StringConst.learnTab,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
-            label: 'मार्केट',
+            label: StringConst.marketTab,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.build),
-            label: 'सेटिंग',
+            label: StringConst.settingTab,
           ),
         ],
       ),
