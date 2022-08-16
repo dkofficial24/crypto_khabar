@@ -28,7 +28,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 31
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -37,9 +37,9 @@ android {
     defaultConfig {
         applicationId "com.edgetechapps.crypto_khabar"
         minSdkVersion 21
-        targetSdkVersion 32
-        versionCode 15
-        versionName "1.1.5"
+        targetSdkVersion 31
+        versionCode 16
+        versionName "1.1.6"
     }
 
     buildTypes {
@@ -51,6 +51,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        jniLibs {
+            excludes += ['lib/armeabi/**']
+        }
+        resources {
+            excludes += ['lib/armeabi/**']
+        }
+    }
+
 }
 
 flutter {
@@ -61,5 +70,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-messaging:23.0.7'
+    implementation 'com.google.firebase:firebase-messaging:20.1.0'
 }
