@@ -34,7 +34,7 @@ class _DashboardPageState extends State<DashboardPage> {
     FirebaseAnalytics.instance.logEvent(name: 'dashboard');
 
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      AppUpdateHelper().checkLatestUpdate();
+      AppUpdateHelper().checkForUpdate(globalContext);
     });
 
     super.initState();

@@ -3,7 +3,10 @@ import 'package:crypto_khabar/dashboard/page/dashboard_page.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
 import 'package:crypto_khabar/shared/widget/view_utils.dart';
+import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,6 +25,7 @@ class AppUpdateHelper {
 
   static const String DefaultUpdateButtonText = "अपडेट";
   static const String DefaultIgnoreButtonTxt = "बाद में";
+  AppUpdateInfo _updateInfo;
 
   Future checkLatestUpdate() async {
     try {
@@ -121,5 +125,36 @@ class AppUpdateHelper {
       return -1;
     }
     return int.parse(value);
+  }
+
+  Future<void> checkForUpdate(BuildContext context) async {
+    InAppUpdate.checkForUpdate().then((info) {
+      _updateInfo = info;
+
+      if (_updateInfo?.updateAvailability ==
+          UpdateAvailability.updateAvailable) {
+        if (_updateInfo.immediateUpdateAllowed) {
+          InAppUpdate.performImmediateUpdate().catchError((e) {
+            AppUtils.showSnack(context, e.toString());
+          });
+        } else if (_updateInfo.flexibleUpdateAllowed) {
+          InAppUpdate.startFlexibleUpdate().then((_) {
+
+          }).catchError((e) {
+            AppUtils.showSnack(context, e.toString());
+          });
+        }
+      }
+    }).catchError((e) {
+      AppUtils.showSnack(context, e.toString());
+    });
+  }
+
+  void downloadFlexibleUpdate(BuildContext context){
+    InAppUpdate.completeFlexibleUpdate().then((_) {
+      AppUtils.showSnack(context,"Success!");
+    }).catchError((e) {
+      AppUtils.showSnack(context,e.toString());
+    });
   }
 }
