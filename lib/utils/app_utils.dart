@@ -3,15 +3,12 @@ import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
-
 class AppUtils {
-
   static String formatDate(int date) {
     final DateFormat formatter = DateFormat('MMM-dd,yyyy hh:mm a');
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
@@ -76,7 +73,22 @@ class AppUtils {
     return _formattedNumber;
   }
 
-  static bool isDarkTheme(BuildContext context){
+  static bool isDarkTheme(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark;
+  }
+
+  static void showSnack(BuildContext context, String text,
+      {Function action, String actionText}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        action: action != null
+            ? SnackBarAction(
+                onPressed: action,
+                label: actionText ?? "",
+              )
+            : null,
+      ),
+    );
   }
 }
