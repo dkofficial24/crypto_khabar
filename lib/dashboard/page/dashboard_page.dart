@@ -1,11 +1,9 @@
+import 'package:crypto_khabar/app_update/service/app_update_helper.dart';
 import 'package:crypto_khabar/article/page/article_page.dart';
 import 'package:crypto_khabar/dashboard/page/top_news_page.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/market/page/market_tab_screen.dart';
-import 'package:crypto_khabar/market/page/market_page.dart';
-import 'package:crypto_khabar/market/page/market_tab_screen.dart';
 import 'package:crypto_khabar/profile/page/profile_page.dart';
-import 'package:crypto_khabar/app_update/service/app_update_helper.dart';
 import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
     FirebaseAnalytics.instance.logEvent(name: 'dashboard');
 
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      AppUpdateHelper().checkForUpdate(globalContext);
+      AppUpdateHelper().checkLatestUpdate(globalContext);
     });
 
     super.initState();

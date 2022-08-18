@@ -59,6 +59,16 @@ class StringConst {
   static const String articleBookmarked = "आर्टिकल बुकमार्क हो गयीं है";
   static const String article = "आर्टिकल";
 
+  static const String updateAppTitle = "अपडेट अलर्ट";
+  static const String updateAppBtn = "अपडेट";
+  static const String updateAppLaterBtn = "बाद में";
+  static const String updateFailMsg = "अपडेट फ़ैल। Play Store से अपडेट करें";
+  static const String appRestartMsg = "ऐप को रीस्टार्ट करें";
+  static const String appInstalledMsg = "अपडेट इनस्टॉल हो चुका हैं";
+  static const String appNewVersionMsg = "ऐप का नया वर्जन प्ले स्टोर पर उपलब्ध है।";
+  static const String appUpdateSuccessMsg = "ऐप सफलतापूर्वक अपडेट हो गयी है";
+
+
 
 
 
