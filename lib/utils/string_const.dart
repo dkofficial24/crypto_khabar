@@ -59,6 +59,7 @@ class StringConst {
   static const String articleBookmarked = "आर्टिकल बुकमार्क हो गयीं है";
   static const String article = "आर्टिकल";
 
+  static const String favCoinGuideMsg = "कॉइन को फेवरेट लिस्ट में जोड़ने या हटाने के लिए कॉइन को long press करें";
 
 
 

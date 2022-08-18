@@ -7,6 +7,7 @@ import 'package:crypto_khabar/market/service/market_db_service.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:crypto_khabar/utils/string_const.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -153,6 +154,8 @@ class MarketProvider extends ChangeNotifier {
     favoriteCoinsData = marketService.getFavoriteCoinData();
     AppUtils.showToast("${marketItem.name} ${StringConst.favCoinAddMsg}");
     notifyListeners();
+    FirebaseAnalytics.instance
+        .logEvent(name: "mp_coin_added_fav");
   }
 
   Future removeCoinFromFavorite(MarketItem marketItem) async {
@@ -160,6 +163,8 @@ class MarketProvider extends ChangeNotifier {
     favoriteCoinsData = marketService.getFavoriteCoinData();
     AppUtils.showToast("${marketItem.name} ${StringConst.favCoinRemoveMsg}");
     notifyListeners();
+    FirebaseAnalytics.instance
+        .logEvent(name: "mp_coin_removed_fav");
   }
 
   void dispose() {

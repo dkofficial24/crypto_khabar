@@ -101,7 +101,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 SizedBox(
                   height: 20,
                 ),
-                ratingWidget(),
+                Center(child: ratingWidget()),
                 SizedBox(height: 44,),
                 Center(
                   child: ElevatedButton(
@@ -168,6 +168,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
   Widget ratingWidget() {
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     RatingBar.builder(
                       initialRating: 5,

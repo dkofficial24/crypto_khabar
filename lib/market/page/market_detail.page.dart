@@ -104,6 +104,8 @@ class _MarketDetailState extends State<MarketDetailPage> {
               IconButton(
                   onPressed: () {
                     if (marketItem.isFavorite) {
+                      FirebaseAnalytics.instance
+                          .logEvent(name: "mdp_coin_added_fav");
                       marketItem.isFavorite = false;
                       _marketService.removeCoinFromFavorite(marketItem);
                       AppUtils.showToast("${marketItem.name} ${StringConst.favCoinRemoveMsg}");
@@ -111,6 +113,8 @@ class _MarketDetailState extends State<MarketDetailPage> {
                       _marketService.markCoinAsFavorite(marketItem);
                       AppUtils.showToast("${marketItem.name} ${StringConst.favCoinAddMsg}");
                       marketItem.isFavorite = true;
+                      FirebaseAnalytics.instance
+                          .logEvent(name: "mdp_coin_removed_fav");
                     }
                     setState(() {});
                   },

@@ -35,6 +35,14 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<MarketProvider>(builder: (context, marketProvider, child) {
+        if(marketProvider.favoriteCoinsData.length == 0 && !marketProvider.shimmer){
+          return Center(child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(StringConst.favCoinGuideMsg,textAlign: TextAlign.center,style: TextStyle(
+              fontSize: 16,
+            )),
+          ),);
+        }
         return marketProvider.shimmer
             ? MarketShimmerWidget()
             : Column(
