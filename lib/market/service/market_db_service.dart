@@ -42,7 +42,7 @@ class MarketDbService {
         database.rawInsert("insert or replace into $tableName values(?,?)",
             [favoriteCoin.id, favoriteCoin.symbol]);
         FirebaseAnalytics.instance.logEvent(
-            name: 'fav_coin', parameters: {"fav_coin": favoriteCoin.symbol});
+            name: 'fav_coin_${favoriteCoin.symbol}');
         return true;
       }
     } catch (e) {

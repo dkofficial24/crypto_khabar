@@ -80,6 +80,7 @@ class _MarketTabScreenState extends State<MarketTabScreen>
               SizedBox(width: 4,)
             ],
             bottom: TabBar(
+              controller: tabController,
               tabs: [
                 Tab(
                   icon: Icon(Icons.auto_graph),
