@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:crypto_khabar/app_update/model/app_update_config.dart';
 import 'package:crypto_khabar/dashboard/page/dashboard_page.dart';
+import 'package:crypto_khabar/flavor_setting.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
 import 'package:crypto_khabar/shared/widget/view_utils.dart';
@@ -30,33 +31,37 @@ class AppUpdateHelper {
   static const String DefaultIgnoreButtonTxt = StringConst.updateAppLaterBtn;
 
   Future checkLatestUpdate(BuildContext context) async {
-    try {
-      AppUpdateConfig config = await RemoteConfigService().getAppUpdateConfig();
-      if (config == null) {
-        return;
-      }
-      if (!config.shouldUpdateShowDialog) {
-        return;
-      }
-
-      PackageInfo packageInfo = await PackageInfo.fromPlatform();
-
-      int appCurrentVersion = _extractVersionFromString(packageInfo.version);
-      int minimumVersion = _extractVersionFromString(config.minimumVersion);
-      int latestVersion = _extractVersionFromString(config.latestVersion);
-
-      bool isForceUpdate = appCurrentVersion < minimumVersion;
-      bool shouldUpdate = appCurrentVersion < latestVersion;
-
-      if (Platform.isAndroid && !isForceUpdate) {
-        _checkForInAppUpdate(context, config);
-      } else {
-        if (shouldUpdate && globalContext != null) {
-          await _doTraditionalUpdate(config, isForceUpdate, appCurrentVersion);
+    if (FlavorSetting().isProdEnvironment()) {
+      try {
+        AppUpdateConfig config =
+            await RemoteConfigService().getAppUpdateConfig();
+        if (config == null) {
+          return;
         }
+        if (!config.shouldUpdateShowDialog) {
+          return;
+        }
+
+        PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+        int appCurrentVersion = _extractVersionFromString(packageInfo.version);
+        int minimumVersion = _extractVersionFromString(config.minimumVersion);
+        int latestVersion = _extractVersionFromString(config.latestVersion);
+
+        bool isForceUpdate = appCurrentVersion < minimumVersion;
+        bool shouldUpdate = appCurrentVersion < latestVersion;
+
+        if (Platform.isAndroid && !isForceUpdate) {
+          _checkForInAppUpdate(context, config);
+        } else {
+          if (shouldUpdate && globalContext != null) {
+            await _doTraditionalUpdate(
+                config, isForceUpdate, appCurrentVersion);
+          }
+        }
+      } catch (e) {
+        print("AppUpdateHelper checkLatestUpdate err:$e");
       }
-    } catch (e) {
-      print("AppUpdateHelper checkLatestUpdate err:$e");
     }
   }
 

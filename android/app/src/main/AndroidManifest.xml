@@ -3,7 +3,7 @@
     package="com.edgetechapps.crypto_khabar">
     <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
     <application
-        android:label="क्रिप्टो खबर"
+        android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="com.edgetechapps.crypto_khabar.MainActivity"
