@@ -29,9 +29,9 @@ class AppUtils {
     return formatter.format(date);
   }
 
-  static void showToast(String msg) {
+  static void showToast(String msg, {Toast toastLength = Toast.LENGTH_SHORT}) {
     if (isAppInBackground) return;
-    Fluttertoast.showToast(msg: msg);
+    Fluttertoast.showToast(msg: msg, toastLength: toastLength);
   }
 
   static void shareNews(NewsItem newsItem, {String appLink = ''}) {
@@ -77,17 +77,30 @@ class AppUtils {
     return Theme.of(context).brightness == Brightness.dark;
   }
 
-  static void showSnack(BuildContext context, String text,
-      {Function action, String actionText}) {
+  static const Duration _snackBarDisplayDuration = Duration(milliseconds: 4000);
+
+  static void showSnackBar(BuildContext context, String text,
+      {Function action,
+      String actionText = "Dismiss",
+      Duration duration = _snackBarDisplayDuration,
+      Color backgroundColor = Colors.black,
+      Color textColor,
+      SnackBarBehavior behavior = SnackBarBehavior.fixed}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(text),
-        action: action != null
-            ? SnackBarAction(
-                onPressed: action,
-                label: actionText ?? "",
-              )
-            : null,
+        backgroundColor: backgroundColor,
+        behavior: behavior,
+        action: SnackBarAction(
+          onPressed: action != null
+              ? action
+              : () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+          label: actionText,
+          textColor: Colors.white,
+        ),
+        duration: duration,
       ),
     );
   }
