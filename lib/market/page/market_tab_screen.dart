@@ -57,7 +57,7 @@ class _MarketTabScreenState extends State<MarketTabScreen>
               IconButton(
                 icon: Icon(Icons.info),
                 onPressed: () async {
-                  AppUtils.showSnack(context, StringConst.favCoinGuideMsg);
+                  AppUtils.showSnackBar(context, StringConst.favCoinGuideMsg);
                   FirebaseAnalytics.instance
                       .logEvent(name: "mts_info_abt_fav");
                 },
