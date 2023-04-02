@@ -1,4 +1,5 @@
 
+import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/provider/crypto_search.provider.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/market/widget/market_item.widget.dart';
@@ -13,7 +14,7 @@ class CryptoSearchDelegate extends SearchDelegate {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: const Icon(Icons.clear),
+        icon: Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -24,7 +25,7 @@ class CryptoSearchDelegate extends SearchDelegate {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.arrow_back),
+      icon: Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);
       },
@@ -43,8 +44,8 @@ class CryptoSearchDelegate extends SearchDelegate {
 
   Widget _searchedItem(String query){
     if(query.isNotEmpty) {
-      final items = provider.searchCrypto(query);
-      if(items.isNotEmpty) {
+      List<MarketItem> items = provider.searchCrypto(query);
+      if(items.length>0) {
         return ListView.separated(
             itemBuilder: (context, index) {
               return InkWell(
@@ -58,16 +59,16 @@ class CryptoSearchDelegate extends SearchDelegate {
                   }
                 },
                 child: MarketItemWidget(
-                    marketItem: items[index], formatter: provider.formatter,),
+                    marketItem: items[index], formatter: provider.formatter),
               );
             }, separatorBuilder: (context, index) {
-          return const Divider();
+          return Divider();
         },
-            itemCount: items.length,);
+            itemCount: items.length);
       }else{
-        return const Center(child:Text(StringConst.coinNotAvailable));
+        return Center(child:Text(StringConst.coinNotAvailable));
       }
     }
-    return const Center();
+    return Center();
   }
 }

@@ -5,20 +5,20 @@ import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:crypto_khabar/utils/string_const.dart';
 
 class ArticleService {
+  static final ArticleService _instance = ArticleService._();
+
+  ArticleService._();
 
   factory ArticleService() {
     return _instance;
   }
-
-  ArticleService._();
-  static final ArticleService _instance = ArticleService._();
   QueryDocumentSnapshot last;
 
   List<Article> articleList = [];
 
   Future<List<Article>> fetchArticleByPagination({bool appendInEnd}) async {
     if (NewsService().netConnectionStatus) {
-      final itemList =
+      List<Article> itemList =
       await _fetchArticleByPagination(appendInEnd: appendInEnd);
       if (appendInEnd) {
         articleList.addAll(itemList);
@@ -33,28 +33,28 @@ class ArticleService {
   }
 
   Future<List<Article>> _fetchArticleByPagination(
-      {bool appendInEnd = true,}) async {
-    final articleList = <Article>[];
-    final CollectionReference articleRef =
-    FirebaseFirestore.instance.collection('article');
+      {bool appendInEnd = true}) async {
+    List<Article> articleList = [];
+    CollectionReference articleRef =
+    FirebaseFirestore.instance.collection("article");
     QuerySnapshot data;
 
     if (last == null || !appendInEnd) {
-      data = await articleRef.orderBy('date', descending: true).limit(20).get();
+      data = await articleRef.orderBy("date", descending: true).limit(20).get();
     } else {
       data = await articleRef
-          .orderBy('date', descending: true)
+          .orderBy("date", descending: true)
           .limit(4)
           .startAfterDocument(last)
           .get();
     }
-    if (data != null && data.docs.isNotEmpty) {
+    if (data != null && data.docs.length > 0) {
       last = data.docs[data.docs.length - 1];
-      for (final element in data.docs) {
+      data.docs.forEach((element) {
         if (element.exists) {
           articleList.add(Article.fromJson(element.data()));
         }
-      }
+      });
     }
 
     return articleList;

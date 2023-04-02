@@ -9,11 +9,11 @@ class ImagePreviewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String url = ModalRoute.of(context).settings.arguments;
+    String url = ModalRoute.of(context).settings.arguments;
 
     return Container(
         child: PhotoView(
       imageProvider: CachedNetworkImageProvider(url),
-    ),);
+    ));
   }
 }

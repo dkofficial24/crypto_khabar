@@ -1,11 +1,17 @@
 import 'package:broadcast_events/broadcast_events.dart';
-import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../constants.dart';
+
 class TopNewsProvider extends ChangeNotifier {
+  List<NewsItem> newsItemList = [];
+  List<NewsItem> featuredNewsItemList = [];
+  bool isLoading = false;
+  bool shimmer = false;
+  int carouselCurrentIndex = 0;
 
   TopNewsProvider() {
     shimmer = true;
@@ -17,11 +23,6 @@ class TopNewsProvider extends ChangeNotifier {
     fetchFeaturedNews();
     BroadcastEvents().subscribe(NewsFetched, loadFetchedNews);
   }
-  List<NewsItem> newsItemList = [];
-  List<NewsItem> featuredNewsItemList = [];
-  bool isLoading = false;
-  bool shimmer = false;
-  int carouselCurrentIndex = 0;
 
   Future fetchNewsByPagination({bool appendInEnd = true}) async {
     isLoading = true;
@@ -39,7 +40,7 @@ class TopNewsProvider extends ChangeNotifier {
   }
 
   loadFetchedNews(_) {
-    final list = NewsService().getFetchedNews();
+    List<NewsItem> list = NewsService().getFetchedNews();
     newsItemList.clear();
     newsItemList.addAll(list);
     newsItemList.sort((a, b) {
@@ -48,9 +49,9 @@ class TopNewsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onRefresh(RefreshController refreshController) async {
+  void onRefresh(RefreshController refreshController) async {
     await fetchNewsByPagination(appendInEnd: false);
-    await fetchFeaturedNews();
+    fetchFeaturedNews();
     refreshController.refreshCompleted();
   }
 
@@ -59,7 +60,7 @@ class TopNewsProvider extends ChangeNotifier {
       featuredNewsItemList = await NewsService().fetchFeaturedNews();
       notifyListeners();
     } catch (e) {
-      print('$e');
+      print("$e");
     }
   }
 
@@ -71,12 +72,12 @@ class TopNewsProvider extends ChangeNotifier {
       savingNews = true;
       notifyListeners();
       try {
-        final status = await NewsService().saveNews(newsItem);
+        bool status = await NewsService().saveNews(newsItem);
         if (status) {
           //AppUtils.showToast("बुकमार्क हो गयी");
         }
       } catch (e) {
-        print('ERROR:$e');
+        print("ERROR:$e");
       }
       savingNews = false;
       notifyListeners();
@@ -90,7 +91,7 @@ class TopNewsProvider extends ChangeNotifier {
       try {
         await NewsService().removeSavedNews(newsItem.id);
       } catch (e) {
-        print('ERROR:$e');
+        print("ERROR:$e");
       }
       removingBookmarkNews = false;
       notifyListeners();

@@ -27,31 +27,31 @@ class _SavedNewsPageState extends State<SavedNewsPage> {
       create: (ctx) => _provider,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(StringConst.bookmarkNews),
+          title: Text(StringConst.bookmarkNews),
         ),
         body: Consumer<SavedNewsProvider>(
           builder: (context, provider, child) {
-            if(_provider.newsItemList.isEmpty){
-              return const Center(child: Text(StringConst.noBookmarkedNews),);
+            if(_provider.newsItemList.length == 0){
+              return Center(child: Text(StringConst.noBookmarkedNews),);
             }
 
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: ListView.separated(
                   itemBuilder: (ctx, index) {
                     return Dismissible(
                       key: UniqueKey(),
                       background: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        margin: EdgeInsets.symmetric(vertical: 8),
                         color: Colors.red,
-                        child: const Icon(Icons.delete,color: Colors.red,),
+                        child: Icon(Icons.delete,color: Colors.red,),
                       ),
                       onDismissed: (_) async {
                         await _provider
                             .removeSavedNews(_provider.newsItemList[index].id);
                         _provider.newsItemList.removeAt(index);
                         setState(() {});
-                        await FirebaseAnalytics.instance.logEvent(name: 'removeSavedNews');
+                        FirebaseAnalytics.instance.logEvent(name: "removeSavedNews");
                       },
                       child: NewsRowListWidget(
                         newsItem: _provider.newsItemList[index],
@@ -61,20 +61,20 @@ class _SavedNewsPageState extends State<SavedNewsPage> {
                               arguments: NewsDetailsArgs(
                                   index:-1,
                                   newsItem: provider
-                                      .newsItemList[index],),);
+                                      .newsItemList[index]));
                         },
                       ),
                     );
                   },
                   separatorBuilder: (ctx, index) {
                     return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      margin: EdgeInsets.symmetric(vertical: 8),
                       height: 1,
                       width: MediaQuery.of(context).size.width,
                       color: Colors.grey,
                     );
                   },
-                  itemCount: _provider.newsItemList.length,),
+                  itemCount: _provider.newsItemList.length),
             );
           },
         ),

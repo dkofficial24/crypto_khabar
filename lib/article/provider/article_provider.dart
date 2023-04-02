@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ArticleProvider extends ChangeNotifier {
+  List<Article> _articleList = [];
+  List<Article> get articleList => _articleList;
+  bool isLoading = false;
 
   ArticleProvider() {
     fetchNewsByPagination();
   }
-  List<Article> _articleList = [];
-  List<Article> get articleList => _articleList;
-  bool isLoading = false;
 
   Future fetchNewsByPagination({bool appendInEnd = true}) async {
     isLoading = true;
@@ -26,7 +26,7 @@ class ArticleProvider extends ChangeNotifier {
       notifyListeners();
   }
 
-  Future<void> onRefresh(RefreshController refreshController) async {
+  void onRefresh(RefreshController refreshController) async {
     await fetchNewsByPagination(appendInEnd: false);
     refreshController.refreshCompleted();
   }

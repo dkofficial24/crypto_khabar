@@ -5,12 +5,12 @@ import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:flutter/material.dart';
 
 class SavedNewsProvider extends ChangeNotifier {
+  List<NewsItem> newsItemList = [];
+  bool isLoading = false;
 
   SavedNewsProvider() {
     init();
   }
-  List<NewsItem> newsItemList = [];
-  bool isLoading = false;
 
   Future init() async {
     isLoading = true;

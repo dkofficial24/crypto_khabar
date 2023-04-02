@@ -11,17 +11,13 @@ import 'package:flutter/scheduler.dart';
 import 'package:uuid/uuid.dart';
 
 class ProfileSettingService {
-
-  factory ProfileSettingService() {
-    return _authService;
-  }
+  String defaultDisclaimerMsg =
+      "क्रिप्टो खबर द्वारा दी कोई भी जानकारी निवेश सलाह, वित्तीय सलाह, व्यापारिक सलाह या किसी अन्य प्रकार की सलाह नहीं है और क्रिप्टो खबर कभी क्रिप्टोकरेंसी खरीदने और बेचने की राय नहीं देता।क्रिप्टो मार्केट उच्च जोखिमों के अधीन है इसलिए कोई भी निवेश निर्णय लेने से पहले अच्छे से जानकारी हासिल कर लें।";
+  String disclaimerMsg = "";
 
   ProfileSettingService._internal() {
     init();
   }
-  String defaultDisclaimerMsg =
-      'क्रिप्टो खबर द्वारा दी कोई भी जानकारी निवेश सलाह, वित्तीय सलाह, व्यापारिक सलाह या किसी अन्य प्रकार की सलाह नहीं है और क्रिप्टो खबर कभी क्रिप्टोकरेंसी खरीदने और बेचने की राय नहीं देता।क्रिप्टो मार्केट उच्च जोखिमों के अधीन है इसलिए कोई भी निवेश निर्णय लेने से पहले अच्छे से जानकारी हासिल कर लें।';
-  String disclaimerMsg = '';
 
   String getDisclaimerMsg() {
     if (disclaimerMsg == null || disclaimerMsg.isEmpty) {
@@ -32,23 +28,27 @@ class ProfileSettingService {
 
   bool _notificationStatus;
 
-  static final ProfileSettingService _authService = ProfileSettingService._internal();
+  static ProfileSettingService _authService = ProfileSettingService._internal();
+
+  factory ProfileSettingService() {
+    return _authService;
+  }
 
   bool get notificationStatus => _notificationStatus;
 
   init() {
     try {
-      SharedPrefHelper().getValue('user_id').then((userId) {
+      SharedPrefHelper().getValue("user_id").then((userId) {
         if (userId == null) {
-          final uid = const Uuid().v4();
-          final user = User(uid: uid,joiningDate: DateTime.now().millisecondsSinceEpoch);
-          SharedPrefHelper().saveValue('user_id', user.toJson());
-          FirebaseAnalytics.instance.logEvent(name: 'new_user');
+          String uid = Uuid().v4();
+          User user = User(uid: uid,joiningDate: DateTime.now().millisecondsSinceEpoch);
+          SharedPrefHelper().saveValue("user_id", user.toJson());
+          FirebaseAnalytics.instance.logEvent(name: "new_user");
           incrementUserCount();
         }
       });
     }catch(e){
-      print('Error ProfileSettingService init $e');
+      print("Error ProfileSettingService init $e");
     }
 
     disclaimerMsg = defaultDisclaimerMsg;
@@ -59,63 +59,63 @@ class ProfileSettingService {
   }
 
   setSystemTheme() async {
-    final isManuallySet = await AppUtils.isThemeManuallySet();
+    bool isManuallySet = await AppUtils.isThemeManuallySet();
     if (isManuallySet) {
-      final isDark = await isDarkTheme();
+      bool isDark = await isDarkTheme();
       BroadcastEvents().publish<bool>(ThemeChange, arguments: isDark);
     } else {
-      final brightness = SchedulerBinding.instance.window.platformBrightness;
-      final isDarkMode = brightness == Brightness.dark;
-      await setDarkTheme(isDarkMode);
+      var brightness = SchedulerBinding.instance.window.platformBrightness;
+      bool isDarkMode = brightness == Brightness.dark;
+      setDarkTheme(isDarkMode);
     }
   }
 
   Future setDarkTheme(bool status) async {
-    final sharedPrefHelper = SharedPrefHelper();
-    await sharedPrefHelper.saveValue('isDarkTheme', status);
+    SharedPrefHelper sharedPrefHelper = SharedPrefHelper();
+    await sharedPrefHelper.saveValue("isDarkTheme", status);
     BroadcastEvents().publish<bool>(ThemeChange, arguments: status);
   }
 
   Future<bool> isDarkTheme() async {
-    final sharedPrefHelper = SharedPrefHelper();
-    final value = await sharedPrefHelper.getValue('isDarkTheme');
+    SharedPrefHelper sharedPrefHelper = SharedPrefHelper();
+    String value = await sharedPrefHelper.getValue("isDarkTheme");
     if (value == null) {
       return false;
     }
-    return value == 'true';
+    return value == "true";
   }
 
   Future setNotificationReceiveStatus(bool status) async {
-    final sharedPrefHelper = SharedPrefHelper();
-    await sharedPrefHelper.saveValue('NotificationReceiveStatus', status);
+    SharedPrefHelper sharedPrefHelper = SharedPrefHelper();
+    await sharedPrefHelper.saveValue("NotificationReceiveStatus", status);
   }
 
   Future<bool> getNotificationReceiveStatus() async {
-    final sharedPrefHelper = SharedPrefHelper();
-    final value = await sharedPrefHelper.getValue('NotificationReceiveStatus');
+    SharedPrefHelper sharedPrefHelper = SharedPrefHelper();
+    String value = await sharedPrefHelper.getValue("NotificationReceiveStatus");
     if (value == null) {
       return true;
     }
-    return value == 'true';
+    return value == "true";
   }
 
   Future shareFeedback(FeedbackInfo feedback) async {
-    final time = DateTime.now().millisecondsSinceEpoch.toString();
+    String time = DateTime.now().millisecondsSinceEpoch.toString();
     await FirebaseFirestore.instance
-        .collection('feedback')
-        .doc('${feedback.name}_$time')
+        .collection("feedback")
+        .doc("${feedback.name}_$time")
         .set(feedback.toJson());
 
     // print('published successfully !  ${feedback.toJson()}');
   }
 
   incrementUserCount() async {
-    const fieldName = 'userCount';
-    final date =
+    final String fieldName = 'userCount';
+    String date =
         AppUtils.formatOnlyDate(DateTime.now().millisecondsSinceEpoch);
     final DocumentReference ref =
         FirebaseFirestore.instance.collection('users').doc(date);
-    await Future.delayed(const Duration(seconds: 2)).then((value) async {
+    Future.delayed(Duration(seconds: 2)).then((value) async {
       await getUserCount().then((int latestCount) async {
         if (latestCount == 0) {
           await ref.set({fieldName: 1});
@@ -129,12 +129,12 @@ class ProfileSettingService {
   }
 
   Future<int> getUserCount() async {
-    const fieldName = 'userCount';
-    final date =
+    final String fieldName = 'userCount';
+    String date =
         AppUtils.formatOnlyDate(DateTime.now().millisecondsSinceEpoch);
     final DocumentReference ref =
         FirebaseFirestore.instance.collection('users').doc(date);
-    final snap = await ref.get();
+    DocumentSnapshot snap = await ref.get();
     int itemCount;
     try {
       itemCount = snap[fieldName] ?? 0;

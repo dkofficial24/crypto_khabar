@@ -1,3 +1,4 @@
+import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/provider/market_provider.dart';
 import 'package:crypto_khabar/market/widget/market_item.widget.dart';
 import 'package:crypto_khabar/market/widget/market_shimmer_widget.dart';
@@ -19,12 +20,11 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
   final ScrollController _scrollController = ScrollController();
   final formatter = NumberFormat.currency(
     locale: 'HI',
-    name: '',
+    name: "",
     symbol: '₹ ',
     decimalDigits: 6,
   );
 
-  @override
   void initState() {
     formatter.minimumFractionDigits = 0;
     formatter.maximumFractionDigits = 7;
@@ -35,16 +35,16 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<MarketProvider>(builder: (context, marketProvider, child) {
-        if(marketProvider.favoriteCoinsData.isEmpty && !marketProvider.shimmer){
-          return const Center(child: Padding(
-            padding: EdgeInsets.all(16),
+        if(marketProvider.favoriteCoinsData.length == 0 && !marketProvider.shimmer){
+          return Center(child: Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(StringConst.favCoinGuideMsg,textAlign: TextAlign.center,style: TextStyle(
               fontSize: 16,
-            ),),
+            )),
           ),);
         }
         return marketProvider.shimmer
-            ? const MarketShimmerWidget()
+            ? MarketShimmerWidget()
             : Column(
                 children: [
                   Expanded(
@@ -52,15 +52,15 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
                       controller: _scrollController,
                       itemCount: marketProvider.favoriteCoinsData.length,
                       shrinkWrap: true,
-                      physics: const ScrollPhysics(),
+                      physics: ScrollPhysics(),
                       itemBuilder: (context, index) {
-                        final item =
+                        MarketItem item =
                             marketProvider.favoriteCoinsData[index];
-                        final bottomPadding =
+                        double bottomPadding =
                             index == marketProvider.favoriteCoinsData.length - 1
                                 ? 16
                                 : 8;
-                        final topPadding = index == 0 ? 16 : 8;
+                        double topPadding = index == 0 ? 16 : 8;
                         return InkWell(
                           onLongPress: () {
                             if (item.isFavorite) {
@@ -85,42 +85,42 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
                         );
                       },
                       separatorBuilder: (ctx, index) {
-                        return const Divider();
+                        return Divider();
                       },
                     ),
                   ),
                   Container(
                     color: Theme.of(context).secondaryHeaderColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    padding: EdgeInsets.symmetric(horizontal: 40),
                     child: InkWell(
                       onTap: () async {
                         marketProvider.selectSortingFilter();
                         SchedulerBinding.instance?.addPostFrameCallback((_) {
                           _scrollController.animateTo(0,
                               duration: const Duration(milliseconds: 400),
-                              curve: Curves.fastOutSlowIn,);
+                              curve: Curves.fastOutSlowIn);
                         });
-                        await FirebaseAnalytics.instance
-                            .logEvent(name: 'tap_market_filter');
+                        FirebaseAnalytics.instance
+                            .logEvent(name: "tap_market_filter");
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(6),
+                            padding: const EdgeInsets.all(6.0),
                             child: Text(
-                                '${marketProvider.marketFilterName} ${StringConst.accordingToFilter}',),
+                                "${marketProvider.marketFilterName} ${StringConst.accordingToFilter}"),
                           ),
                           Row(
                             children: [
-                              const Text(StringConst.changeFilter),
-                              const SizedBox(width: 4),
+                              Text(StringConst.changeFilter),
+                              SizedBox(width: 4),
                               Icon(marketProvider.filterIconData,
                                   size: 15,
                                   color: Theme.of(context).brightness ==
                                           Brightness.light
                                       ? Colors.black
-                                      : Colors.white,),
+                                      : Colors.white),
                             ],
                           )
                         ],
@@ -129,7 +129,7 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
                   ),
                 ],
               );
-      },),
+      }),
     );
   }
 }

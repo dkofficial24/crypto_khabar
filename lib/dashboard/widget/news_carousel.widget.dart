@@ -5,6 +5,7 @@ import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
+import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,30 +29,36 @@ class CarouselWidget extends StatelessWidget {
                 onPageChanged: (index, reason) {
                   provider.updateCarouselCurrentIndex(index);
                 },
-                autoPlayInterval: const Duration(seconds: 8),
+                enlargeCenterPage: false,
+                autoPlayInterval: Duration(seconds: 8),
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                aspectRatio: 16 / 9,
+                reverse: false,
+                autoPlay: false,
               ),
               items: provider.featuredNewsItemList.map((newsItem) {
                 return Builder(
                   builder: (BuildContext context) {
                     return GestureDetector(
                       onTap: () {
-                        if (newsItem.category.toLowerCase().contains('news') &&
+                        if (newsItem.category.toLowerCase().contains("news") &&
                             (newsItem.details?.isNotEmpty ?? false)) {
                           Navigator.pushNamed(
                               context, AppRoutes.NewsDetailsPage,
                               arguments: NewsDetailsArgs(
                                   index:-1,
-                                  newsItem: newsItem,),);
+                                  newsItem: newsItem));
                         } else if (newsItem.category
                             .toLowerCase()
-                            .contains('app_update')) {
+                            .contains("app_update")) {
                           if (Platform.isAndroid) {
                             launch(
-                                'https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar',);
+                                "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
                           }
                         } else if (newsItem.category
                             .toLowerCase()
-                            .contains('short')) {
+                            .contains("short")) {
                           if (!isShortVideo(newsItem)) {
                             if(newsItem.sourceLink!=null) {
                               launch(newsItem.sourceLink);
@@ -61,8 +68,8 @@ class CarouselWidget extends StatelessWidget {
                          // AppUtils.showToast("डिटेल में उपलब्ध नहीं है।");
                         }
                         FirebaseAnalytics.instance.logEvent(
-                            name: 'carousle_click',
-                            parameters: {'category': newsItem.category},);
+                            name: "carousle_click",
+                            parameters: {"category": newsItem.category});
                       },
                       child: isShortVideo(newsItem)
                           ? PlayerWidget(newsItem.vdoUrl)
@@ -70,7 +77,7 @@ class CarouselWidget extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                               child: Stack(
                                 children: [
-                                  SizedBox(
+                                  Container(
                                     height: MediaQuery.of(context).size.height *
                                         0.2,
                                     width: MediaQuery.of(context).size.width *
@@ -85,15 +92,14 @@ class CarouselWidget extends StatelessWidget {
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                               child: Image.asset(
-                                                'assets/images/placeholder.png',
+                                                "assets/images/placeholder.png",
                                                 fit: BoxFit.cover,
-                                              ),);
+                                              ));
                                         },
                                       ),
                                     ),
                                   ),
                                   Positioned(
-                                    bottom: 0,
                                     child: Container(
                                         height:
                                             MediaQuery.of(context).size.height *
@@ -107,18 +113,19 @@ class CarouselWidget extends StatelessWidget {
                                             color:
                                                 newsItem.title.trim().isNotEmpty
                                                     ? Colors.black38
-                                                    : Colors.transparent,),
+                                                    : Colors.transparent),
                                         child: Padding(
-                                          padding: const EdgeInsets.all(4),
+                                          padding: const EdgeInsets.all(4.0),
                                           child: Text(
                                             newsItem.title,
                                             style:
-                                                const TextStyle(color: Colors.white),
+                                                TextStyle(color: Colors.white),
                                             softWrap: true,
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 3,
                                           ),
-                                        ),),
+                                        )),
+                                    bottom: 0,
                                   ),
                                 ],
                               ),
@@ -137,9 +144,9 @@ class CarouselWidget extends StatelessWidget {
               return GestureDetector(
                 onTap: () => _carouselController.animateToPage(entry.key),
                 child: Container(
-                  width: 6,
-                  height: 6,
-                  margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+                  width: 6.0,
+                  height: 6.0,
+                  margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 4.0),
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: (Theme.of(context).brightness == Brightness.dark
@@ -148,18 +155,18 @@ class CarouselWidget extends StatelessWidget {
                           .withOpacity(
                               provider.carouselCurrentIndex == entry.key
                                   ? 0.9
-                                  : 0.4,),),
+                                  : 0.4)),
                 ),
               );
             }).toList(),
           ),
         ],
       );
-    },);
+    });
   }
 
   bool isShortVideo(NewsItem newsItem) {
-    if (newsItem.category == 'short' &&
+    if (newsItem.category == "short" &&
         newsItem.vdoUrl != null &&
         newsItem.vdoUrl.isNotEmpty) {
       return true;
@@ -169,9 +176,9 @@ class CarouselWidget extends StatelessWidget {
 }
 
 class PlayerWidget extends StatefulWidget {
-
-  const PlayerWidget(this.videoUrl);
   final String videoUrl;
+
+  PlayerWidget(this.videoUrl);
 
   @override
   _PlayerWidgetState createState() => _PlayerWidgetState();
@@ -184,8 +191,9 @@ class _PlayerWidgetState extends State<PlayerWidget> {
   void initState() {
     _controller = YoutubePlayerController(
       initialVideoId: widget.videoUrl,
-      flags: const YoutubePlayerFlags(
+      flags: YoutubePlayerFlags(
         autoPlay: false,
+        mute: false,
       ),
     );
 
@@ -202,9 +210,9 @@ class _PlayerWidgetState extends State<PlayerWidget> {
           controller: _controller,
           showVideoProgressIndicator: true,
           bottomActions: [
-            const SizedBox(width: 14),
+            const SizedBox(width: 14.0),
             CurrentPosition(),
-            const SizedBox(width: 8),
+            const SizedBox(width: 8.0),
             ProgressBar(
               isExpanded: true,
             ),
@@ -213,7 +221,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
           ],
           progressColors: ProgressBarColors(
               handleColor: Theme.of(context).primaryColor,
-              backgroundColor: Theme.of(context).primaryColor,),
+              backgroundColor: Theme.of(context).primaryColor),
           progressIndicatorColor: Colors.amber,
           onReady: () {},onEnded: (meta){
           // _controller.reset();

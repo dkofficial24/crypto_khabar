@@ -5,7 +5,7 @@ showActionDialog(BuildContext context,
     @required String content,
     @required String positiveTextButton,
     @required String negativeTextButton,
-    @required Function positiveAction,}) {
+    @required Function positiveAction}) {
   showDialog(
       context: context,
       builder: (ctx) {
@@ -28,7 +28,7 @@ showActionDialog(BuildContext context,
             ),
           ],
         );
-      },);
+      });
 }
 
 showUpdateDialog(BuildContext context,
@@ -39,7 +39,7 @@ showUpdateDialog(BuildContext context,
     @required Function positiveAction,
     Function negativeAction,
     Function onBackPress,
-    bool forceUpdate = false,}) {
+    bool forceUpdate = false}) {
   showDialog(
       context: context,
       builder: (ctx) {
@@ -54,7 +54,9 @@ showUpdateDialog(BuildContext context,
             title: Text(title),
             content: Text(content),
             actions: [
-              if (forceUpdate) Container() else TextButton(
+              forceUpdate
+                  ? Container()
+                  : TextButton(
                       onPressed: () {
                         if (negativeAction != null) {
                           negativeAction();
@@ -70,5 +72,5 @@ showUpdateDialog(BuildContext context,
             ],
           ),
         );
-      },);
+      });
 }

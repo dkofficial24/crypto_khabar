@@ -17,7 +17,9 @@ class WebViewPageState extends State<WebViewPage> {
 
   @override
   Widget build(BuildContext context) {
-    link ??= ModalRoute.of(context).settings.arguments;
+    if (link == null) {
+      link = ModalRoute.of(context).settings.arguments;
+    }
     return Container();
     // return Scaffold(
     //   appBar: AppBar(title: Text(StringConst.appName),),

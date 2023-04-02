@@ -6,30 +6,32 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MarketDbService {
-
-  factory MarketDbService() {
-    _instance ??= MarketDbService._internal();
-    return _instance;
-  }
+  static MarketDbService _instance;
+  Completer<bool> completer = Completer<bool>();
 
   MarketDbService._internal() {
     init();
   }
-  static MarketDbService _instance;
-  Completer<bool> completer = Completer<bool>();
 
-  final String tableName = 'FavoriteCoinTable';
+  factory MarketDbService() {
+    if (_instance == null) {
+      _instance = MarketDbService._internal();
+    }
+    return _instance;
+  }
+
+  final String tableName = "FavoriteCoinTable";
   Database database;
 
   Future init() async {
-    final databasesPath = await getDatabasesPath();
-    final path = join(databasesPath, 'market_db.db');
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'market_db.db');
 
     database =
         await openDatabase(path, version: 1, onCreate: (db, version) async {
-      await db.execute('create table $tableName (id String, symbol String primary key)');
+      await db.execute("create table $tableName (id String, symbol String primary key)");
       // print("Table created !");
-    },);
+    });
     completer.complete(true);
   }
 
@@ -37,10 +39,10 @@ class MarketDbService {
     try {
       if (database != null) {
         //database.insert(tableName, newsItem.toJson());
-        await database.rawInsert('insert or replace into $tableName values(?,?)',
-            [favoriteCoin.id, favoriteCoin.symbol],);
-        await FirebaseAnalytics.instance.logEvent(
-            name: 'fav_coin_${favoriteCoin.symbol}',);
+        database.rawInsert("insert or replace into $tableName values(?,?)",
+            [favoriteCoin.id, favoriteCoin.symbol]);
+        FirebaseAnalytics.instance.logEvent(
+            name: 'fav_coin_${favoriteCoin.symbol}');
         return true;
       }
     } catch (e) {
@@ -54,21 +56,21 @@ class MarketDbService {
       await completer.future;
     }
     if (database == null) return [];
-    final List<Map<String, dynamic>> mapList =
-        await database.rawQuery('Select * from $tableName');
+    List<Map<String, dynamic>> mapList =
+        await database.rawQuery("Select * from $tableName");
 
     if (mapList == null) {
       return [];
     }
 
-    final favoriteCoins = <FavoriteCoinInfo>[];
-    for (final map in mapList) {
+    List<FavoriteCoinInfo> favoriteCoins = [];
+    mapList.forEach((map) {
       favoriteCoins.add(FavoriteCoinInfo.fromMap(map));
-    }
+    });
     return favoriteCoins;
   }
 
   Future removeCoinFromFavorite(String symbol) async {
-    await database.rawDelete('delete from $tableName where symbol=?', [symbol]);
+    await database.rawDelete("delete from $tableName where symbol=?", [symbol]);
   }
 }

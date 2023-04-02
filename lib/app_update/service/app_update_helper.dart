@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:crypto_khabar/app_update/model/app_update_config.dart';
@@ -10,31 +9,32 @@ import 'package:crypto_khabar/shared/widget/view_utils.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppUpdateHelper {
+  static final AppUpdateHelper _instance = AppUpdateHelper._();
+
   factory AppUpdateHelper() {
     return _instance;
   }
 
   AppUpdateHelper._();
 
-  static final AppUpdateHelper _instance = AppUpdateHelper._();
+  static const String DefaultTitle = StringConst.updateAppTitle;
+  static const String DefaultContent = StringConst.appNewVersionMsg;
 
-  static const String defaultTitle = StringConst.updateAppTitle;
-  static const String defaultContent = StringConst.appNewVersionMsg;
+  static const String DefaultUpdateButtonText = StringConst.updateAppBtn;
+  static const String DefaultIgnoreButtonTxt = StringConst.updateAppLaterBtn;
 
-  static const String defaultUpdateButtonText = StringConst.updateAppBtn;
-  static const String defaultIgnoreButtonTxt = StringConst.updateAppLaterBtn;
-
-  Future<void> checkLatestUpdate(BuildContext context) async {
+  Future checkLatestUpdate(BuildContext context) async {
     if (FlavorSetting().isProdEnvironment()) {
       try {
-        final config = await RemoteConfigService().getAppUpdateConfig();
+        AppUpdateConfig config =
+            await RemoteConfigService().getAppUpdateConfig();
         if (config == null) {
           return;
         }
@@ -42,90 +42,71 @@ class AppUpdateHelper {
           return;
         }
 
-        final packageInfo = await PackageInfo.fromPlatform();
+        PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
-        final appCurrentVersion =
-            _extractVersionFromString(packageInfo.version);
-        final minimumVersion = _extractVersionFromString(config.minimumVersion);
-        final latestVersion = _extractVersionFromString(config.latestVersion);
+        int appCurrentVersion = _extractVersionFromString(packageInfo.version);
+        int minimumVersion = _extractVersionFromString(config.minimumVersion);
+        int latestVersion = _extractVersionFromString(config.latestVersion);
 
-        final isForceUpdate = appCurrentVersion < minimumVersion;
-        final shouldUpdate = appCurrentVersion < latestVersion;
+        bool isForceUpdate = appCurrentVersion < minimumVersion;
+        bool shouldUpdate = appCurrentVersion < latestVersion;
 
         if (Platform.isAndroid && !isForceUpdate) {
-          await _checkForInAppUpdate(context, config);
+          _checkForInAppUpdate(context, config);
         } else {
           if (shouldUpdate && globalContext != null) {
             await _doTraditionalUpdate(
-              config,
-              isForceUpdate,
-              appCurrentVersion,
-            );
+                config, isForceUpdate, appCurrentVersion);
           }
         }
       } catch (e) {
-        if (kDebugMode) {
-          print('AppUpdateHelper checkLatestUpdate err:$e');
-        }
+        print("AppUpdateHelper checkLatestUpdate err:$e");
       }
     }
   }
 
   Future<void> _doTraditionalUpdate(
-    AppUpdateConfig config,
-    bool isForceUpdate,
-    int appCurrentVersion,
-  ) async {
-    await Future.delayed(const Duration(seconds: 5));
+      AppUpdateConfig config, bool isForceUpdate, int appCurrentVersion) async {
+    await Future.delayed(Duration(seconds: 5));
     if (await _shouldShowUpdateDialog()) {
-      showUpdateDialog(
-        globalContext,
-        title: config?.title ?? defaultTitle,
-        content: config?.content ?? defaultContent,
-        positiveTextButton: config?.positiveButton ?? defaultUpdateButtonText,
-        negativeTextButton: config?.negativeButton ?? defaultIgnoreButtonTxt,
-        forceUpdate: isForceUpdate,
-        positiveAction: () {
-          launchUrl(Uri.parse(config.appUrl));
-          FirebaseAnalytics.instance.logEvent(
-            name: 'app_update_accepted',
-            parameters: {
-              'appCurrentVersion': appCurrentVersion,
-            },
-          );
-        },
-        negativeAction: () {
+      showUpdateDialog(globalContext,
+          title: config?.title ?? DefaultTitle,
+          content: config?.content ?? DefaultContent,
+          positiveTextButton: config?.positiveButton ?? DefaultUpdateButtonText,
+          negativeTextButton: config?.negativeButton ?? DefaultIgnoreButtonTxt,
+          forceUpdate: isForceUpdate, positiveAction: () {
+        launch(config.appUrl);
+        FirebaseAnalytics.instance
+            .logEvent(name: "app_update_accepted", parameters: {
+          "appCurrentVersion": appCurrentVersion,
+        });
+      }, negativeAction: () {
+        _saveUpdateCheckLaterTime();
+        FirebaseAnalytics.instance
+            .logEvent(name: "app_update_ignored_by_button", parameters: {
+          "appCurrentVersion": appCurrentVersion,
+        });
+      }, onBackPress: (isDismiss) {
+        if (isDismiss) {
           _saveUpdateCheckLaterTime();
           FirebaseAnalytics.instance.logEvent(
-            name: 'app_update_ignored_by_button',
-            parameters: {
-              'appCurrentVersion': appCurrentVersion,
-            },
-          );
-        },
-        onBackPress: (Function isDismiss) {
-          if (isDismiss != null) {
-            _saveUpdateCheckLaterTime();
-            FirebaseAnalytics.instance.logEvent(
-              name: 'app_update_ignored_by_click_outside',
+              name: "app_update_ignored_by_click_outside",
               parameters: {
-                'appCurrentVersion': appCurrentVersion,
-              },
-            );
-          }
-        },
-      );
+                "appCurrentVersion": appCurrentVersion,
+              });
+        }
+      });
     }
   }
 
   int _extractVersionFromString(String versionStr) {
-    var currentVersion = versionStr
-        .replaceAll('.', '')
-        .replaceAll('-', '')
-        .replaceAll('-', '')
-        .replaceAll('+', '')
+    String currentVersion = versionStr
+        .replaceAll(".", "")
+        .replaceAll("-", "")
+        .replaceAll("-", "")
+        .replaceAll("+", "")
         .trim();
-    final index = currentVersion.indexOf(RegExp('[a-zA-Z]'));
+    int index = currentVersion.indexOf(RegExp(r'[a-zA-Z]'));
     if (index > 0) {
       currentVersion = currentVersion.substring(0, index);
     }
@@ -137,25 +118,23 @@ class AppUpdateHelper {
   }
 
   Future<bool> _shouldShowUpdateDialog() async {
-    final lastUpdateCheckTime = await _getUpdateCheckLaterTime();
+    int lastUpdateCheckTime = await _getUpdateCheckLaterTime();
     if (lastUpdateCheckTime == -1) {
       return true;
     }
-    final lastUpdateCheckDate =
+    DateTime lastUpdateCheckDate =
         DateTime.fromMillisecondsSinceEpoch(lastUpdateCheckTime);
-    final timeDiff = DateTime.now().difference(lastUpdateCheckDate).inHours;
+    int timeDiff = DateTime.now().difference(lastUpdateCheckDate).inHours;
     return timeDiff >= 12;
   }
 
-  Future<void> _saveUpdateCheckLaterTime() async {
+  Future _saveUpdateCheckLaterTime() async {
     await SharedPrefHelper().saveValue(
-      'updateCheckLaterTime',
-      DateTime.now().millisecondsSinceEpoch,
-    );
+        "updateCheckLaterTime", DateTime.now().millisecondsSinceEpoch);
   }
 
   Future<int> _getUpdateCheckLaterTime() async {
-    final value = await SharedPrefHelper().getValue('updateCheckLaterTime');
+    String value = await SharedPrefHelper().getValue("updateCheckLaterTime");
     if (value == null || value.isEmpty) {
       return -1;
     }
@@ -163,11 +142,8 @@ class AppUpdateHelper {
   }
 
   Future<void> _checkForInAppUpdate(
-    BuildContext context,
-    AppUpdateConfig appUpdateConfig,
-  ) async {
-    await InAppUpdate.checkForUpdate()
-        .then((AppUpdateInfo appUpdateInfo) async {
+      BuildContext context, AppUpdateConfig appUpdateConfig) async {
+    InAppUpdate.checkForUpdate().then((AppUpdateInfo appUpdateInfo) async {
       if (appUpdateInfo?.updateAvailability ==
           UpdateAvailability.updateAvailable) {
         if (await _shouldShowUpdateDialog()) {
@@ -183,7 +159,8 @@ class AppUpdateHelper {
             }
           } else {
             AppUtils.showToast(
-              'Something went wrong with the app update.Manually update from play store',
+              "Something went wrong with the app update.Manually update from play store",
+              toastLength: Toast.LENGTH_SHORT,
             );
           }
         }
@@ -200,15 +177,11 @@ class AppUpdateHelper {
   void _startFlexibleUpdate(BuildContext context) {
     InAppUpdate.startFlexibleUpdate().then((AppUpdateResult appUpdateResult) {
       if (appUpdateResult.index == AppUpdateResult.success.index) {
-        AppUtils.showSnackBar(
-          context,
-          StringConst.appInstalledMsg,
-          action: () {
-            _downloadFlexibleUpdate(context);
-          },
-          actionText: StringConst.appRestartMsg,
-          duration: const Duration(minutes: 10),
-        );
+        AppUtils.showSnackBar(context, StringConst.appInstalledMsg, action: () {
+          _downloadFlexibleUpdate(context);
+        },
+            actionText: StringConst.appRestartMsg,
+            duration: Duration(minutes: 10));
       }
     }).catchError((e) {
       AppUtils.showSnackBar(context, StringConst.updateFailMsg);

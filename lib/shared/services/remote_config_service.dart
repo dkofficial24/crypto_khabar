@@ -7,6 +7,8 @@ import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigService {
+  static final RemoteConfigService _remoteConfigService =
+      RemoteConfigService._internal();
 
   factory RemoteConfigService() {
     return _remoteConfigService;
@@ -15,8 +17,6 @@ class RemoteConfigService {
   RemoteConfigService._internal() {
     init();
   }
-  static final RemoteConfigService _remoteConfigService =
-      RemoteConfigService._internal();
 
   FirebaseRemoteConfig _remoteConfig;
   AppUpdateConfig _appUpdateConfig;
@@ -29,11 +29,11 @@ class RemoteConfigService {
       await _remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(seconds: 30),
         minimumFetchInterval: const Duration(minutes: 10),
-      ),);
+      ));
       await _remoteConfig.fetchAndActivate();
-      await downloadUpdateConfig();
+      downloadUpdateConfig();
     } catch (e) {
-      print('RemoteConfigService init err: $e');
+      print("RemoteConfigService init err: $e");
     }
   }
 
@@ -42,14 +42,14 @@ class RemoteConfigService {
       if (appUpdateCompleter.isCompleted) {
         appUpdateCompleter = Completer();
       }
-      final configJson = _remoteConfig.getString('app_update_config');
+      String configJson = _remoteConfig.getString("app_update_config");
       _appUpdateConfig = AppUpdateConfig.fromJson(jsonDecode(configJson));
-      _isAdEnabled = _remoteConfig.getBool('is_ad_enabled');
-      final disclaimerMsg = _remoteConfig.getString('disclaimer_msg');
+      _isAdEnabled = _remoteConfig.getBool("is_ad_enabled");
+      String disclaimerMsg = _remoteConfig.getString("disclaimer_msg");
       ProfileSettingService().disclaimerMsg = disclaimerMsg;
       appUpdateCompleter.complete(_appUpdateConfig);
     } catch (e) {
-      appUpdateCompleter.completeError('Error while downloadUpdateConfig');
+      appUpdateCompleter.completeError("Error while downloadUpdateConfig");
     }
   }
 
@@ -68,8 +68,8 @@ class RemoteConfigService {
     if (_appUpdateConfig == null) {
       await downloadUpdateConfig();
     }
-    var linkUrl = _appUpdateConfig.appUrl;
-    linkUrl = '$linkUrl ${StringConst.shareAppMsg}';
+    String linkUrl = _appUpdateConfig.appUrl;
+    linkUrl = linkUrl + " " + StringConst.shareAppMsg;
     return linkUrl;
   }
 }

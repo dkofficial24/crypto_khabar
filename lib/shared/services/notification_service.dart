@@ -2,26 +2,26 @@ import 'package:crypto_khabar/shared/firebase_service/firebase_push_notification
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
+  static final NotificationService _notificationService =
+      NotificationService._internal();
 
   factory NotificationService() {
     return _notificationService;
   }
 
-  NotificationService._internal();
-  static final NotificationService _notificationService =
-      NotificationService._internal();
-
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  NotificationService._internal();
+
   Future init() async {
-    const initializationSettingsAndroid =
+    final AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('mipmap/ic_launcher');
-    const initializationSettings =
+    final InitializationSettings initializationSettings =
         InitializationSettings(
-            android: initializationSettingsAndroid,);
+            android: initializationSettingsAndroid, macOS: null);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification,);
+        onSelectNotification: selectNotification);
     // showNotification("Title","Bodyyy");
   }
 
@@ -34,17 +34,17 @@ class NotificationService {
       {int id = 1001,
       String channelId = 'ChannelId',
       String channelName = 'NotificationChannel',
-      String payload,}) async {
-    const androidNotificationDetails =
+      String payload}) async {
+    AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-      'ChannelId',
-      'ChannelName',
-          'ChannelDesc',
+      "ChannelId",
+      "ChannelName",
+          "ChannelDesc",
       icon: 'mipmap/ic_launcher',
       //groupKey: "12345678",
     );
-    final notificationDetails =
-        const NotificationDetails(android: androidNotificationDetails);
+    NotificationDetails notificationDetails =
+        NotificationDetails(android: androidNotificationDetails);
 
     await flutterLocalNotificationsPlugin
         .show(id, title, body, notificationDetails, payload: payload);

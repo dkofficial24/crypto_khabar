@@ -8,19 +8,19 @@ import 'package:crypto_khabar/shared/firebase_service/market_firebase_service.da
 import 'package:crypto_khabar/utils/app_utils.dart';
 
 class MarketService {
+  MarketDbService marketDbService;
+
+  MarketService._internal() {
+    init();
+  }
+
+  static final MarketService _marketService = MarketService._internal();
 
   factory MarketService() {
     return _marketService;
   }
 
-  MarketService._internal() {
-    init();
-  }
-  MarketDbService marketDbService;
-
-  static final MarketService _marketService = MarketService._internal();
-
-  final List<MarketItem> _marketItemList = [];
+  List<MarketItem> _marketItemList = [];
   List<FavoriteCoinInfo> favoriteCoinInfoList = [];
 
   List<MarketItem> getMarketData() => _marketItemList;
@@ -33,30 +33,30 @@ class MarketService {
       marketDbService = MarketDbService();
       //loadFavoriteCoinsData();
     } catch (e) {
-      print('$e');
+      print("$e");
     }
   }
 
   Future<List<MarketItem>> fetchAllMarketData({bool appendInEnd = true}) async {
     if (NewsService().netConnectionStatus) {
-      final marketList =
+      List<MarketItem> marketList =
           await MarketFirebaseService().fetchAllMarketData();
       _marketItemList.clear();
       _marketItemList.addAll(marketList);
       return _marketItemList;
     } else {
-      AppUtils.showToast('इंटरनेट उपलब्ध नहीं है।');
+      AppUtils.showToast("इंटरनेट उपलब्ध नहीं है।");
     }
     return _marketItemList;
   }
 
   refreshFavoriteData() {
     try {
-      for (final item in favoriteCoinInfoList) {
-        final marketItem = _marketItemList
+      favoriteCoinInfoList.forEach((item) {
+        MarketItem marketItem = _marketItemList
             .firstWhere((element) => item.symbol == element.symbol);
         marketItem.isFavorite = true;
-      }
+      });
     }catch(e){}
   }
 
@@ -70,7 +70,7 @@ class MarketService {
     favoriteCoinInfoList
         .add(FavoriteCoinInfo(id: marketItem.id, symbol: marketItem.symbol));
     await marketDbService.markCoinAsFavorite(
-        FavoriteCoinInfo(id: marketItem.id, symbol: marketItem.symbol),);
+        FavoriteCoinInfo(id: marketItem.id, symbol: marketItem.symbol));
   }
 
   Future removeCoinFromFavorite(MarketItem marketItem) async {

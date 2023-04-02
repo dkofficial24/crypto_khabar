@@ -22,14 +22,14 @@ class _ArticlePageState extends State<ArticlePage> {
   @override
   void initState() {
     _provider = ArticleProvider();
-    _refreshController = RefreshController();
+    _refreshController = RefreshController(initialRefresh: false);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(StringConst.appName)),
+      appBar: AppBar(title: Text(StringConst.appName)),
       body: ChangeNotifierProvider<ArticleProvider>(
         create: (context) => _provider,
         builder: (ctx, child) {
@@ -39,8 +39,8 @@ class _ArticlePageState extends State<ArticlePage> {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                          16, 16, 16, 4,),
+                      padding: EdgeInsets.fromLTRB(
+                          16, 16, 16, 4),
                       child: LazyLoadScrollView(
                         isLoading: _provider.isLoading,
                         scrollOffset: 50,
@@ -49,22 +49,25 @@ class _ArticlePageState extends State<ArticlePage> {
                         },
                         child: SmartRefresher(
                           controller: _refreshController,
+                          enablePullUp: false,
                           reverse: false,
+                          enableTwoLevel: false,
+                          enablePullDown: true,
                           onRefresh: () {
                             provider.onRefresh(_refreshController);
                           },
                           child: GridView.builder(
                               itemCount: _provider.articleList.length,
                               gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                  SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 2,
                                       childAspectRatio: 1 / 1.5,
                                       crossAxisSpacing: 4,
-                                      mainAxisSpacing: 4,),
+                                      mainAxisSpacing: 4),
                               itemBuilder: (ctx, index) {
                                 return getGridItem(
-                                    _provider.articleList[index],);
-                              },),
+                                    _provider.articleList[index]);
+                              }),
                         ),
                       ),
                     ),
@@ -84,13 +87,14 @@ class _ArticlePageState extends State<ArticlePage> {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, AppRoutes.ArticleDetailPage,
-            arguments: article,);
+            arguments: article);
       },
       child: Container(
         color: Theme.of(context).secondaryHeaderColor,
         height: 125,
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AspectRatio(
@@ -98,34 +102,34 @@ class _ArticlePageState extends State<ArticlePage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: CachedNetworkImage(
-                  imageUrl: article?.imgUrl ?? '',
+                  imageUrl: article?.imgUrl ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(),
                   errorWidget: (context, url, error) => Container(
                       child: Image.asset(
-                    'assets/images/placeholder.png',
+                    "assets/images/placeholder.png",
                     fit: BoxFit.cover,
-                  ),),
+                  )),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               article.title,
               softWrap: true,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Expanded(
               child: Text(
                 article.detail,
                 softWrap: false,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 14),
               ),
             )
           ],
@@ -140,20 +144,20 @@ class _ArticlePageState extends State<ArticlePage> {
       separatorBuilder: (ctx, index) {
         return Container(
           key: Key(index.toString()),
-          margin: const EdgeInsets.symmetric(vertical: 8),
+          margin: EdgeInsets.symmetric(vertical: 8),
           height: 1,
           width: MediaQuery.of(context).size.width,
           color: Colors.grey,
         );
       },
       itemBuilder: (context, index) {
-        final article = provider.articleList[index];
+        Article article = provider.articleList[index];
         return Container(
           child: Column(
             children: [
               Text(article.title,
-                  style: GoogleFonts.hind(fontWeight: FontWeight.bold),),
-              const SizedBox(height: 8),
+                  style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
               Text(
                 article.detail,
                 style: GoogleFonts.hind(),
