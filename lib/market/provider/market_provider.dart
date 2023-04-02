@@ -168,6 +168,7 @@ class MarketProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    super.dispose();
     if (timer != null && timer.isActive) {
       timer.cancel();
     }

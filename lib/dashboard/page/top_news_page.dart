@@ -173,12 +173,6 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                                 separatorBuilder: (ctx, index) {
                                   if (index == 0) return Container();
                                   return const Divider();
-                                  return Container(
-                                    margin: const EdgeInsets.symmetric(vertical: 8),
-                                    height: 1,
-                                    width: MediaQuery.of(context).size.width,
-                                    color: Colors.grey,
-                                  );
                                 },
                                 itemCount:
                                     _topNewsProvider.newsItemList.length + 2,),

@@ -3,7 +3,6 @@ import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/page/dashboard_page.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
-import 'package:crypto_khabar/shared/services/notification_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
@@ -44,7 +43,6 @@ class PushNotificationService {
       });
 
       FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
-        final remoteNotification = remoteMessage.notification;
       //  print("message received...");
         // if (ProfileSettingService().notificationStatus) {
         //   NotificationService().showNotification(
@@ -87,7 +85,7 @@ class PushNotificationService {
       LoaderController().showLoader(globalContext);
       final newsItem = await NewsService().fetchNewsById(id);
       LoaderController().dismissLoader(globalContext);
-      BroadcastEvents().publish(NewsReceivedEvent);
+      BroadcastEvents().publish(NewsReceivedEvent, arguments: null);
       if(newsItem.category.toLowerCase().contains('news') && newsItem.details.isNotEmpty) {
         await Navigator.pushNamed(globalContext, AppRoutes.NewsDetailsPage,
             arguments: NewsDetailsArgs(
@@ -119,7 +117,4 @@ class PushNotificationService {
 
 Future onBackgroundMessage(RemoteMessage remoteMessage) async {
   return;
-  final remoteNotification = remoteMessage.notification;
-  NotificationService()
-      .showNotification(remoteNotification.title, remoteNotification.body);
 }

@@ -205,7 +205,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
       try {
         final status = await NewsService().saveNews(newsItem);
         if (status) {
-          BroadcastEvents().publish(NewsBookmarked);
+          BroadcastEvents().publish(NewsBookmarked, arguments: null);
         }
       } catch (e) {
         print('ERROR:$e');
@@ -223,7 +223,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
       });
       try {
         await NewsService().removeSavedNews(id);
-        BroadcastEvents().publish(NewsBookmarkRemove);
+        BroadcastEvents().publish(NewsBookmarkRemove, arguments: null);
       } catch (e) {
         print('ERROR:$e');
       }

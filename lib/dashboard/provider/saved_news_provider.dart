@@ -22,6 +22,6 @@ class SavedNewsProvider extends ChangeNotifier {
 
   Future removeSavedNews(String id) async {
     await NewsService().removeSavedNews(id);
-    BroadcastEvents().publish(NewsBookmarkRemove);
+    BroadcastEvents().publish(NewsBookmarkRemove, arguments: null);
   }
 }

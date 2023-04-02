@@ -46,15 +46,15 @@ class CarouselWidget extends StatelessWidget {
                             .toLowerCase()
                             .contains('app_update')) {
                           if (Platform.isAndroid) {
-                            launch(
-                                'https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar',);
+                            launchUrl(
+                                Uri.parse('https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar'),);
                           }
                         } else if (newsItem.category
                             .toLowerCase()
                             .contains('short')) {
                           if (!isShortVideo(newsItem)) {
                             if(newsItem.sourceLink!=null) {
-                              launch(newsItem.sourceLink);
+                              launchUrl(Uri.parse(newsItem.sourceLink));
                             }
                           }
                         } else {

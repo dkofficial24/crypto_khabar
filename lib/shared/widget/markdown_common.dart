@@ -19,7 +19,7 @@ class MarkdownView extends StatelessWidget {
       shrinkWrap: true,
       onTapLink: (txt, href, title) {
         try {
-          launch(href);
+          launchUrl(Uri.parse(href));
         } catch (e) {
           print('$e');
         }

@@ -134,8 +134,8 @@ class _FeedbackPageState extends State<FeedbackPage> {
                             negativeTextButton: StringConst.later,
                             positiveAction: (){
                               try {
-                                launch(
-                                    'https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar',);
+                                launchUrl(
+                                    Uri.parse('https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar'),);
                                 Navigator.pop(context);
                                 FirebaseAnalytics.instance.logEvent(name: 'rating_dialog');
                               }catch(e){}

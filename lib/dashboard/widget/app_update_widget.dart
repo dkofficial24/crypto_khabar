@@ -56,8 +56,8 @@ class AppUpdateWidget extends StatelessWidget {
                 child: ElevatedButton(
                     onPressed: () {
                       if (Platform.isAndroid) {
-                        launch(
-                            'https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar',);
+                        launchUrl(
+                            Uri.parse('https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar'),);
                       }
                     },
                     child: const Text(StringConst.doUpdate),),
