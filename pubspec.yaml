@@ -59,6 +59,7 @@ dependencies:
   dio: ^5.1.1
   interactive_chart: ^0.3.4
   in_app_update: ^4.0.1
+  very_good_analysis: ^3.1.0
 
 #  device_preview: any
 
@@ -86,7 +87,6 @@ flutter:
   assets:
     - assets/images/bitcoin.jpeg
     - assets/images/placeholder.png
-    - assets/images/main_login.png
     - assets/images/app_icon.png
     - google_fonts/
 
