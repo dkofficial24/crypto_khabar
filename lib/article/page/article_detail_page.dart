@@ -92,7 +92,7 @@ class DetailPageState extends State<ArticleDetailPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                       child: Text(_article.title,
-                          style: Theme.of(context).textTheme.headline6,),
+                          style: Theme.of(context).textTheme.titleLarge,),
                     ),
                     MarkdownView(_article.detail, _scrollController),
                     const SizedBox(height:4),

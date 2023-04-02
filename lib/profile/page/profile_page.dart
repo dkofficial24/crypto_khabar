@@ -189,7 +189,7 @@ class ProfileItem extends StatelessWidget {
             const SizedBox(width: 16),
             Text(
               title,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             Expanded(
               child: Container(),

@@ -134,7 +134,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                       child: Text(_newsItem.title,
                           style: GoogleFonts.hind(
                               textStyle:
-                                  Theme.of(context).textTheme.headline6,),),
+                                  Theme.of(context).textTheme.titleLarge,),),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),

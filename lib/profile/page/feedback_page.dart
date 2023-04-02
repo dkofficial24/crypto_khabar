@@ -194,7 +194,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
           children: [
             Text(
               text,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             )
           ],
         ),
