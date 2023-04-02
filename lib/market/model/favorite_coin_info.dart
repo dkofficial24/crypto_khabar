@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 
 class FavoriteCoinInfo {
-  String id;
-  String symbol;
 
   FavoriteCoinInfo({@required this.id,@required this.symbol});
 
@@ -10,11 +8,13 @@ class FavoriteCoinInfo {
     id = map['id'];
     symbol = map['symbol'];
   }
+  String id;
+  String symbol;
 
   Map<String, dynamic> toMap() {
     return {
-      "id": id,
-      "symbol": symbol,
+      'id': id,
+      'symbol': symbol,
     };
   }
 }

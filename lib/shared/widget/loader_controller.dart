@@ -2,20 +2,20 @@ import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/material.dart';
 
 class LoaderController {
-  static final LoaderController _instance = LoaderController._();
-
-  LoaderController._();
 
   factory LoaderController() {
     return _instance;
   }
+
+  LoaderController._();
+  static final LoaderController _instance = LoaderController._();
 
   bool isShowingLoader = false;
 
   void showLoader(BuildContext context,
       {String title = StringConst.pleaseWait,
       String desc = '',
-      bool isDismissible = false}) {
+      bool isDismissible = false,}) {
     if (isShowingLoader) return;
     isShowingLoader = true;
     showDialog(
@@ -26,7 +26,7 @@ class LoaderController {
             desc: desc,
             isDismissible: isDismissible,
           );
-        });
+        },);
   }
 
   void dismissLoader(BuildContext context) {
@@ -38,37 +38,37 @@ class LoaderController {
 }
 
 class _LoaderDialog extends StatelessWidget {
+
+  const _LoaderDialog({this.title, this.desc, this.isDismissible});
   final String title;
   final String desc;
   final bool isDismissible;
-
-  _LoaderDialog({this.title, this.desc, this.isDismissible});
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async => isDismissible,
         child: AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8)),),
           // backgroundColor: Colors.black87,
           content: _LoadingIndicator(title: title, desc: desc),
-        ));
+        ),);
   }
 }
 
 class _LoadingIndicator extends StatelessWidget {
-  _LoadingIndicator({this.title, this.desc});
+  const _LoadingIndicator({this.title, this.desc});
 
   final String title;
   final String desc;
 
   @override
   Widget build(BuildContext context) {
-    var displayedText = desc;
+    final displayedText = desc;
 
     return Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         // color: Colors.black87,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -77,32 +77,32 @@ class _LoadingIndicator extends StatelessWidget {
               _getLoadingIndicator(),
               _getHeading(context),
               _getText(displayedText)
-            ]));
+            ],),);
   }
 
   Padding _getLoadingIndicator() {
-    return Padding(
-        child: Container(
-            child: CircularProgressIndicator(strokeWidth: 3),
+    return const Padding(
+        padding: EdgeInsets.only(bottom: 16),
+        child: SizedBox(
             width: 32,
-            height: 32),
-        padding: EdgeInsets.only(bottom: 16));
+            height: 32,
+            child: CircularProgressIndicator(strokeWidth: 3),),);
   }
 
   Widget _getHeading(context) {
     return Padding(
+        padding: const EdgeInsets.only(bottom: 4),
         child: Text(
           title,
-          style: TextStyle(fontSize: 16),
+          style: const TextStyle(fontSize: 16),
           textAlign: TextAlign.center,
-        ),
-        padding: EdgeInsets.only(bottom: 4));
+        ),);
   }
 
   Text _getText(String displayedText) {
     return Text(
       displayedText,
-      style: TextStyle(fontSize: 14),
+      style: const TextStyle(fontSize: 14),
       textAlign: TextAlign.center,
     );
   }

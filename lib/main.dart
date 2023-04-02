@@ -1,6 +1,8 @@
 import 'dart:async';
+
 // import 'package:device_preview/device_preview.dart';
 import 'package:broadcast_events/broadcast_events.dart';
+import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/flavor_setting.dart';
 import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:crypto_khabar/shared/page/splash_page.dart';
@@ -10,15 +12,14 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'constants.dart';
 
 void main() async {
-  runZonedGuarded<Future<void>>(() async {
+  await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await FlavorSetting().setupFlavorEnvironment();
-    MobileAds.instance.initialize();
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    await MobileAds.instance.initialize();
+    await SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],);
     await Firebase.initializeApp();
 
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
@@ -31,7 +32,7 @@ void main() async {
 
       MyApp(),
     );
-  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack),);
 }
 
 class MyApp extends StatefulWidget {
@@ -60,15 +61,13 @@ class _MyAppState extends State<MyApp> {
       theme: isDarkTheme
           ? ThemeData(
               brightness: Brightness.dark,
-              iconTheme: IconThemeData(color: Colors.blue),
-              primaryColor: Colors.black,
-              accentColor: Colors.cyan[600],
+              iconTheme: const IconThemeData(color: Colors.blue),
+              primaryColor: Colors.black, colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.cyan[600]),
             )
           : ThemeData(
               brightness: Brightness.light,
               primaryColor: Colors.lightBlue[800],
-              accentColor: Colors.cyan[600],
-              iconTheme: IconThemeData(color: Colors.lightBlue[800]),
+              iconTheme: IconThemeData(color: Colors.lightBlue[800]), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Colors.cyan[600]),
               // // fontFamily: 'Georgia',
               //  textTheme: TextTheme(
               //  //  headline1: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),

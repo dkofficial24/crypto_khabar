@@ -31,23 +31,23 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
   @override
   void initState() {
     _scrollController = ScrollController();
-    FirebaseAnalytics.instance.logEvent(name: "ndp_detail_news");
+    FirebaseAnalytics.instance.logEvent(name: 'ndp_detail_news');
     super.initState();
   }
 
   void initRelatedNews(int index) {
     if(index == -1) return;
-    List<NewsItem> newsList = NewsService().newsItemList;
-    int currentIndex = index;
-    List nextNewsList = [];
-    int i = newsList.length - currentIndex - 1;
+    final newsList = NewsService().newsItemList;
+    final currentIndex = index;
+    var nextNewsList = [];
+    var i = newsList.length - currentIndex - 1;
     if (i > 0) {
       i = i > 4 ? 4 : i;
       nextNewsList =
           newsList.getRange(currentIndex + 1, currentIndex + i).toList();
     }
-    int count = 0;
-    List<Widget> rowList = nextNewsList.map((e) {
+    var count = 0;
+    final List<Widget> rowList = nextNewsList.map((e) {
       count++;
       return Column(
         children: [
@@ -57,10 +57,10 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                 AppRoutes.NewsDetailsPage,
                 arguments: NewsDetailsArgs(
                     index:clickedIndex,
-                    newsItem: e));
+                    newsItem: e,),);
           },index: index+count,
           ),
-          Divider()
+          const Divider()
         ],
       );
     }).toList();
@@ -78,7 +78,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
     }
     return Scaffold(
         appBar: AppBar(
-          title: Text(StringConst.appName),
+          title: const Text(StringConst.appName),
           actions: [
             IconButton(
                 onPressed: () {
@@ -92,20 +92,20 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                     isNewsBookmarked(_newsItem.id)
                         ? Icons.bookmark
                         : Icons.bookmark_border,
-                    color: Colors.white)),
+                    color: Colors.white,),),
             IconButton(
                 onPressed: ()  {
                   shareNews(context);
                   FirebaseAnalytics.instance.logEvent(
-                      name: "ndp_share_news",
-                      parameters: {"title": "${_newsItem.title}"});
+                      name: 'ndp_share_news',
+                      parameters: {'title': _newsItem.title},);
                 },
-                icon: Icon(Icons.share, color: Colors.white)),
-            SizedBox(width: 8)
+                icon: const Icon(Icons.share, color: Colors.white),),
+            const SizedBox(width: 8)
           ],
         ),
         body: Container(
-          margin: EdgeInsets.only(left: 4,right: 4,top: 12,bottom: 4),
+          margin: const EdgeInsets.only(left: 4,right: 4,top: 12,bottom: 4),
           child: Column(
             children: [
               Expanded(
@@ -118,62 +118,62 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
                           child: Image.network(
-                            _newsItem?.imgUrl ?? "",
+                            _newsItem?.imgUrl ?? '',
                             fit: BoxFit.cover,
                             errorBuilder: (ctx, obj, stack) {
                               return Container(
                                   child: Image.asset(
-                                "assets/images/placeholder.png",
+                                'assets/images/placeholder.png',
                                 fit: BoxFit.cover,
-                              ));
+                              ),);
                             },
                           ),
-                        )),
+                        ),),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                       child: Text(_newsItem.title,
                           style: GoogleFonts.hind(
                               textStyle:
-                                  Theme.of(context).textTheme.headline6)),
+                                  Theme.of(context).textTheme.headline6,),),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(AppUtils.formatDate(_newsItem.date)),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     MarkdownView(_newsItem.details, _scrollController),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     GestureDetector(
                       onTap: (){
                         shareNews(context);
                         FirebaseAnalytics.instance.logEvent(
-                            name: "ndp_bttm_share_news",
-                            parameters: {"title": "${_newsItem.title}"});
+                            name: 'ndp_bttm_share_news',
+                            parameters: {'title': _newsItem.title},);
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
+                        children: const [
                           Text(StringConst.doShare),
                           SizedBox(width:8),
                           Icon(Icons.share),
                           SizedBox(width:48),
                         ],),
                     ),
-                    list.length !=0?Padding(
+                    if (list.isNotEmpty) Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                        SizedBox(height: 8),
-                        Text(
+                        const SizedBox(height: 8),
+                        const Text(
                           StringConst.moreNews,
                           style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),
                         ),
-                        Divider(),
-                        SizedBox(height: 8),
+                        const Divider(),
+                        const SizedBox(height: 8),
                         ...list,
-                      ]),
-                    ):Container()
+                      ],),
+                    ) else Container()
                   ],
                 ),
               ),
@@ -181,17 +181,17 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
               BannerAdWidget()
             ],
           ),
-        ));
+        ),);
   }
 
   Future<void> shareNews(BuildContext context) async {
      try {
       LoaderController().showLoader(context);
-      String downloadLink =
+      final downloadLink =
           await RemoteConfigService().getAppDownloadLink();
       AppUtils.shareNews(_newsItem, appLink: downloadLink);
     } catch (e) {
-      print("NewsDetailPage shareNews error:$e");
+      print('NewsDetailPage shareNews error:$e');
     } finally {
       LoaderController().dismissLoader(context);
     }
@@ -203,12 +203,12 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
         savingNews = true;
       });
       try {
-        bool status = await NewsService().saveNews(newsItem);
+        final status = await NewsService().saveNews(newsItem);
         if (status) {
           BroadcastEvents().publish(NewsBookmarked);
         }
       } catch (e) {
-        print("ERROR:$e");
+        print('ERROR:$e');
       }
       setState(() {
         savingNews = false;
@@ -225,7 +225,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
         await NewsService().removeSavedNews(id);
         BroadcastEvents().publish(NewsBookmarkRemove);
       } catch (e) {
-        print("ERROR:$e");
+        print('ERROR:$e');
       }
       setState(() {
         removeBookmarkingNews = false;

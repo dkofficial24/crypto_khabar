@@ -5,10 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MarkdownView extends StatelessWidget {
-  final String data;
-  final ScrollController controller;
 
   const MarkdownView(this.data, this.controller);
+  final String data;
+  final ScrollController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +21,16 @@ class MarkdownView extends StatelessWidget {
         try {
           launch(href);
         } catch (e) {
-          print("$e");
+          print('$e');
         }
       },
       imageBuilder: (Uri uri, String title, String alt) {
         return GestureDetector(
           onTap: (){
             Navigator.pushNamed(context, AppRoutes.ImagePreviewer,
-                arguments: uri.toString() ?? '');
+                arguments: uri.toString() ?? '',);
           },
-          child: Container(
+          child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.30,
               width: MediaQuery.of(context).size.width,
               child: ClipRRect(
@@ -41,12 +41,12 @@ class MarkdownView extends StatelessWidget {
                   errorBuilder: (ctx, obj, stack) {
                     return Container(
                         child: Image.asset(
-                      "assets/images/placeholder.png",
+                      'assets/images/placeholder.png',
                       fit: BoxFit.cover,
-                    ));
+                    ),);
                   },
                 ),
-              )),
+              ),),
         );
       },
     );

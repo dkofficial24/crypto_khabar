@@ -6,45 +6,43 @@ import 'package:sqflite/sqflite.dart';
 
 class NewsDbService{
 
-  static NewsDbService _instance;
+  factory NewsDbService() {
+    _instance ??= NewsDbService._internal();
+    return _instance;
+  }
 
   NewsDbService._internal() {
     init();
   }
 
-  factory NewsDbService() {
-    if (_instance == null) {
-      _instance = NewsDbService._internal();
-    }
-    return _instance;
-  }
+  static NewsDbService _instance;
 
-  final String tableName = "SavedNewsTable";
+  final String tableName = 'SavedNewsTable';
   Database database;
 
   Future init() async {
-    var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'saved_news_db4.db');
+    final databasesPath = await getDatabasesPath();
+    final path = join(databasesPath, 'saved_news_db4.db');
 
     database =
     await openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute(
-          "create table $tableName (id String primary key,title text,details text,date integer,author text,source text,imgUrl text,category text,sourceLink text)");
+          'create table $tableName (id String primary key,title text,details text,date integer,author text,source text,imgUrl text,category text,sourceLink text)',);
      // print("Table created !");
-    });
-    NewsService().loadAllSavedNewsId();
+    },);
+    await NewsService().loadAllSavedNewsId();
   }
 
   Future<bool> saveNews(NewsItem newsItem) async {
     try {
       if (database != null) {
         //database.insert(tableName, newsItem.toJson());
-        database.rawInsert("insert or replace into $tableName values(?,?,?,?,?,?,?,?,?)",[newsItem.id,newsItem.title,newsItem.details,newsItem.date,newsItem.author,
+        await database.rawInsert('insert or replace into $tableName values(?,?,?,?,?,?,?,?,?)',[newsItem.id,newsItem.title,newsItem.details,newsItem.date,newsItem.author,
           newsItem.source,newsItem.imgUrl,newsItem.category,newsItem.sourceLink,]);
        // print("SavedDbService saveNews successfully");
-        FirebaseAnalytics.instance.logEvent(name: 'save_news',parameters: {
-          "save_news":newsItem.title
-        });
+        await FirebaseAnalytics.instance.logEvent(name: 'save_news',parameters: {
+          'save_news':newsItem.title
+        },);
         return true;
       }
     } catch (e) {
@@ -55,22 +53,22 @@ class NewsDbService{
 
   Future<List<NewsItem>> getAllSavedNews() async {
     if (database == null) return [];
-    List<Map<String, dynamic>> mapList =
-    await database.rawQuery("Select * from $tableName");
+    final List<Map<String, dynamic>> mapList =
+    await database.rawQuery('Select * from $tableName');
 
     if (mapList == null) {
       return [];
     }
 
-    List<NewsItem> newsList = [];
-    mapList.forEach((map) {
+    final newsList = <NewsItem>[];
+    for (final map in mapList) {
       newsList.add(NewsItem.fromJson(map));
-    });
+    }
     return newsList;
   }
 
   Future removeSavedNews(String id)async{
-    await database.rawDelete("delete from $tableName where id=?",[id]);
+    await database.rawDelete('delete from $tableName where id=?',[id]);
   //  print("removed Saved News !");
   }
 

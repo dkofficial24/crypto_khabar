@@ -1,18 +1,17 @@
 import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class DisclaimerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String disclaimerMsg = ModalRoute.of(context).settings.arguments;
+    final String disclaimerMsg = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      appBar: AppBar(title: Text(StringConst.disclaimer),),
+      appBar: AppBar(title: const Text(StringConst.disclaimer),),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Container(
-          child: Text(disclaimerMsg,style:TextStyle(fontSize: 16)),
+          child: Text(disclaimerMsg,style:const TextStyle(fontSize: 16)),
         ),
       ),
     );

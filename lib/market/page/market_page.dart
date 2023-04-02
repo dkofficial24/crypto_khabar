@@ -1,4 +1,3 @@
-import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/provider/market_provider.dart';
 import 'package:crypto_khabar/market/widget/market_item.widget.dart';
 import 'package:crypto_khabar/market/widget/market_shimmer_widget.dart';
@@ -6,7 +5,6 @@ import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -21,7 +19,7 @@ class MarketPage extends StatefulWidget {
 class _MarketPageState extends State<MarketPage> {
   final formatter = NumberFormat.currency(
     locale: 'HI',
-    name: "",
+    name: '',
     symbol: '₹ ',
     decimalDigits: 6,
   );
@@ -29,10 +27,11 @@ class _MarketPageState extends State<MarketPage> {
   final ScrollController _scrollController = ScrollController();
   RefreshController _refreshController;
 
+  @override
   void initState() {
     formatter.minimumFractionDigits = 0;
     formatter.maximumFractionDigits = 7;
-    _refreshController = RefreshController(initialRefresh: false);
+    _refreshController = RefreshController();
     super.initState();
   }
 
@@ -46,34 +45,31 @@ class _MarketPageState extends State<MarketPage> {
     return Scaffold(
       body: Consumer<MarketProvider>(builder: (context, marketProvider, child) {
         return marketProvider.shimmer
-            ? MarketShimmerWidget()
+            ? const MarketShimmerWidget()
             : Column(
                 children: [
                   Expanded(
                     child: SmartRefresher(
                       controller: _refreshController,
-                      enablePullUp: false,
                       reverse: false,
-                      enableTwoLevel: false,
-                      enablePullDown: true,
                       onRefresh: () {
                         FirebaseAnalytics.instance
-                            .logEvent(name: "market_refresh");
+                            .logEvent(name: 'market_refresh');
                         marketProvider.onRefresh(_refreshController);
                       },
                       child: ListView.separated(
                         controller: _scrollController,
                         itemCount: marketProvider.marketItemList.length,
                         shrinkWrap: true,
-                        physics: ScrollPhysics(),
+                        physics: const ScrollPhysics(),
                         itemBuilder: (context, index) {
-                          MarketItem item =
+                          final item =
                               marketProvider.marketItemList[index];
-                          double bottomPadding = index ==
+                          final bottomPadding = index ==
                                   marketProvider.marketItemList.length - 1
                               ? 16
                               : 8;
-                          double topPadding = index == 0 ? 16 : 8;
+                          final topPadding = index == 0 ? 16 : 8;
                           return InkWell(
                             onLongPress: (){
                               if (item.isFavorite) {
@@ -109,14 +105,14 @@ class _MarketPageState extends State<MarketPage> {
                           );
                         },
                         separatorBuilder: (ctx, index) {
-                          return Divider();
+                          return const Divider();
                         },
                       ),
                     ),
                   ),
                   Container(
                     color: Theme.of(context).secondaryHeaderColor,
-                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: InkWell(
                       onTap: () async {
                         marketProvider.selectSortingFilter();
@@ -124,29 +120,29 @@ class _MarketPageState extends State<MarketPage> {
                             ?.addPostFrameCallback((_) {
                           _scrollController.animateTo(0,
                               duration: const Duration(milliseconds: 400),
-                              curve: Curves.fastOutSlowIn);
+                              curve: Curves.fastOutSlowIn,);
                         });
-                        FirebaseAnalytics.instance
-                            .logEvent(name: "tap_market_filter");
+                        await FirebaseAnalytics.instance
+                            .logEvent(name: 'tap_market_filter');
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(6.0),
+                            padding: const EdgeInsets.all(6),
                             child:
-                                Text("${marketProvider.marketFilterName} ${StringConst.accordingToFilter}"),
+                                Text('${marketProvider.marketFilterName} ${StringConst.accordingToFilter}'),
                           ),
                           Row(
                             children: [
-                              Text(StringConst.changeFilter),
-                              SizedBox(width: 4),
+                              const Text(StringConst.changeFilter),
+                              const SizedBox(width: 4),
                               Icon(marketProvider.filterIconData,
                                   size: 15,
                                   color: Theme.of(context).brightness ==
                                           Brightness.light
                                       ? Colors.black
-                                      : Colors.white),
+                                      : Colors.white,),
                             ],
                           )
                         ],
@@ -155,7 +151,7 @@ class _MarketPageState extends State<MarketPage> {
                   ),
                 ],
               );
-      }),
+      },),
     );
   }
 }

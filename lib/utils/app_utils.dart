@@ -10,22 +10,22 @@ import 'package:share_plus/share_plus.dart';
 
 class AppUtils {
   static String formatDate(int date) {
-    final DateFormat formatter = DateFormat('MMM-dd,yyyy hh:mm a');
+    final formatter = DateFormat('MMM-dd,yyyy hh:mm a');
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
   }
 
   static String chartHorizontalTime(int date) {
-    final DateFormat formatter = DateFormat('MMM-dd hh');
+    final formatter = DateFormat('MMM-dd hh');
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
   }
 
   static String formatOnlyDate(int date) {
-    final DateFormat formatter = DateFormat('MMM-dd,yyyy');
+    final formatter = DateFormat('MMM-dd,yyyy');
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
   }
 
   static String formatDateTime(DateTime date) {
-    final DateFormat formatter = DateFormat('MMM-dd,yyyy');
+    final formatter = DateFormat('MMM-dd,yyyy');
     return formatter.format(date);
   }
 
@@ -35,26 +35,26 @@ class AppUtils {
   }
 
   static void shareNews(NewsItem newsItem, {String appLink = ''}) {
-    String detail = "${newsItem.title} \n\n $appLink";
+    final detail = '${newsItem.title} \n\n $appLink';
     Share.share(detail, subject: newsItem.title);
     NewsService().incrementShareCount(newsItem.id);
   }
 
   static void shareArticle(Article article, {String appLink = ''}) {
-    String detail = "${article.title} \n '$appLink";
+    final detail = "${article.title} \n '$appLink";
     Share.share(detail, subject: article.title);
   }
 
   static Future<bool> isThemeManuallySet() async {
-    String status = await SharedPrefHelper().getValue("isThemeManuallySetKey");
+    final status = await SharedPrefHelper().getValue('isThemeManuallySetKey');
     if (status == null) {
       return false;
     }
-    return status == "true";
+    return status == 'true';
   }
 
   static Future markThemeManuallySet() async {
-    await SharedPrefHelper().saveValue("isThemeManuallySetKey", true);
+    await SharedPrefHelper().saveValue('isThemeManuallySetKey', true);
   }
 
   static bool isValidUrl(String url) {
@@ -65,12 +65,12 @@ class AppUtils {
   }
 
   static String currencyFormat(int num) {
-    var _formattedNumber = NumberFormat.compactCurrency(
+    final formattedNumber = NumberFormat.compactCurrency(
       decimalDigits: 2,
       locale: 'en_IN',
-      name: "",
+      name: '',
     ).format(num);
-    return _formattedNumber;
+    return formattedNumber;
   }
 
   static bool isDarkTheme(BuildContext context) {
@@ -81,20 +81,18 @@ class AppUtils {
 
   static void showSnackBar(BuildContext context, String text,
       {Function action,
-      String actionText = "Dismiss",
+      String actionText = 'Dismiss',
       Duration duration = _snackBarDisplayDuration,
       Color backgroundColor = Colors.black,
       Color textColor,
-      SnackBarBehavior behavior = SnackBarBehavior.fixed}) {
+      SnackBarBehavior behavior = SnackBarBehavior.fixed,}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(text),
         backgroundColor: backgroundColor,
         behavior: behavior,
         action: SnackBarAction(
-          onPressed: action != null
-              ? action
-              : () {
+          onPressed: action ?? () {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 },
           label: actionText,

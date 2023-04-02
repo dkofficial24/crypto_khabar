@@ -30,13 +30,14 @@ class _MarketTabScreenState extends State<MarketTabScreen>
     tabController.addListener(() {
         if(tabController.index == 1){
           FirebaseAnalytics.instance
-              .logEvent(name: "mts_fav_coin_tab");
+              .logEvent(name: 'mts_fav_coin_tab');
         }
 
     });
     super.initState();
   }
 
+  @override
   dispose() {
     tabController.dispose();
     _marketProvider.dispose();
@@ -47,41 +48,40 @@ class _MarketTabScreenState extends State<MarketTabScreen>
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      initialIndex: 0,
       child: ChangeNotifierProvider(
         create: (ctx) => _marketProvider,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(StringConst.appName),
+            title: const Text(StringConst.appName),
             actions: [
               IconButton(
-                icon: Icon(Icons.info),
+                icon: const Icon(Icons.info),
                 onPressed: () async {
                   AppUtils.showSnackBar(context, StringConst.favCoinGuideMsg);
-                  FirebaseAnalytics.instance
-                      .logEvent(name: "mts_info_abt_fav");
+                  await FirebaseAnalytics.instance
+                      .logEvent(name: 'mts_info_abt_fav');
                 },
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: () async {
-                    FirebaseAnalytics.instance
-                        .logEvent(name: "mts_search_coin");
+                    await FirebaseAnalytics.instance
+                        .logEvent(name: 'mts_search_coin');
                     await showSearch(
                       context: context,
                       delegate: CryptoSearchDelegate(),
                     );
-                    _marketProvider.fetchAllMarketData();
+                    await _marketProvider.fetchAllMarketData();
                   },
                 ),
               ),
-              SizedBox(width: 4,)
+              const SizedBox(width: 4,)
             ],
             bottom: TabBar(
               controller: tabController,
-              tabs: [
+              tabs: const [
                 Tab(
                   icon: Icon(Icons.auto_graph),
                 ),
@@ -93,7 +93,7 @@ class _MarketTabScreenState extends State<MarketTabScreen>
           ),
           body: TabBarView(
             controller: tabController,
-            children: [MarketPage(), FavoriteCoinWidget()],
+            children: const [MarketPage(), FavoriteCoinWidget()],
           ),
         ),
       ),

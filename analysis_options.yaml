@@ -3,3 +3,7 @@ include: package:very_good_analysis/analysis_options.3.1.0.yaml
 linter:
   rules:
     public_member_api_docs: false
+    inference_failure_on_instance_creation: false
+    use_build_context_synchronously: false
+    lines_longer_than_80_chars: false
+    inference_failure_on_untyped_parameter: false

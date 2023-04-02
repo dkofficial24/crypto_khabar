@@ -1,5 +1,4 @@
 
-import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/provider/crypto_search.provider.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/market/widget/market_item.widget.dart';
@@ -14,7 +13,7 @@ class CryptoSearchDelegate extends SearchDelegate {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -25,7 +24,7 @@ class CryptoSearchDelegate extends SearchDelegate {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);
       },
@@ -44,8 +43,8 @@ class CryptoSearchDelegate extends SearchDelegate {
 
   Widget _searchedItem(String query){
     if(query.isNotEmpty) {
-      List<MarketItem> items = provider.searchCrypto(query);
-      if(items.length>0) {
+      final items = provider.searchCrypto(query);
+      if(items.isNotEmpty) {
         return ListView.separated(
             itemBuilder: (context, index) {
               return InkWell(
@@ -59,16 +58,16 @@ class CryptoSearchDelegate extends SearchDelegate {
                   }
                 },
                 child: MarketItemWidget(
-                    marketItem: items[index], formatter: provider.formatter),
+                    marketItem: items[index], formatter: provider.formatter,),
               );
             }, separatorBuilder: (context, index) {
-          return Divider();
+          return const Divider();
         },
-            itemCount: items.length);
+            itemCount: items.length,);
       }else{
-        return Center(child:Text(StringConst.coinNotAvailable));
+        return const Center(child:Text(StringConst.coinNotAvailable));
       }
     }
-    return Center();
+    return const Center();
   }
 }

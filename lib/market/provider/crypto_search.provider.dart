@@ -6,34 +6,34 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:intl/intl.dart';
 
 class CryptoSearchProvider {
-  MarketService marketService;
-  List<MarketItem> data;
-  List<MarketItem> filteredData = [];
-  final formatter = NumberFormat.currency(
-    locale: 'HI',
-    name: "",
-    symbol: '₹ ',
-    decimalDigits: 6,
-  );
 
   CryptoSearchProvider(this.marketService) {
     formatter.minimumFractionDigits = 0;
     formatter.maximumFractionDigits = 7;
     data = marketService.getMarketData();
   }
+  MarketService marketService;
+  List<MarketItem> data;
+  List<MarketItem> filteredData = [];
+  final formatter = NumberFormat.currency(
+    locale: 'HI',
+    name: '',
+    symbol: '₹ ',
+    decimalDigits: 6,
+  );
 
   Future markCoinFavorite(MarketItem favoriteCoin) async {
-    marketService.markCoinAsFavorite(favoriteCoin);
-    AppUtils.showToast("${favoriteCoin.name} ${StringConst.favCoinAddMsg}");
-    FirebaseAnalytics.instance
-        .logEvent(name: "csp_coin_added_fav");
+    await marketService.markCoinAsFavorite(favoriteCoin);
+    AppUtils.showToast('${favoriteCoin.name} ${StringConst.favCoinAddMsg}');
+    await FirebaseAnalytics.instance
+        .logEvent(name: 'csp_coin_added_fav');
   }
 
   Future removeCoinFromFavorite(MarketItem marketItem) async {
-    marketService.removeCoinFromFavorite(marketItem);
-    AppUtils.showToast("${marketItem.name} ${StringConst.favCoinRemoveMsg}");
-    FirebaseAnalytics.instance
-        .logEvent(name: "csp_coin_removed_fav");
+    await marketService.removeCoinFromFavorite(marketItem);
+    AppUtils.showToast('${marketItem.name} ${StringConst.favCoinRemoveMsg}');
+    await FirebaseAnalytics.instance
+        .logEvent(name: 'csp_coin_removed_fav');
   }
 
   List<MarketItem> searchCrypto(String input) {
@@ -43,7 +43,7 @@ class CryptoSearchProvider {
     filteredData.clear();
     filteredData.addAll(data);
     filteredData.retainWhere(
-        (element) => element.name.toLowerCase().contains(input) || element.symbol.toLowerCase().contains(input));
+        (element) => element.name.toLowerCase().contains(input) || element.symbol.toLowerCase().contains(input),);
     return filteredData;
   }
 }

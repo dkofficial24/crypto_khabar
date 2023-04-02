@@ -3,7 +3,7 @@ import 'package:shimmer/shimmer.dart';
 
 class MarketShimmerWidget extends StatelessWidget {
 
-  MarketShimmerWidget();
+  const MarketShimmerWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class MarketShimmerWidget extends StatelessWidget {
         shrinkWrap: true,
         itemBuilder: (ctx, index) {
           return Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Row(
               children: [
                 ClipRRect(
@@ -26,7 +26,7 @@ class MarketShimmerWidget extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -36,22 +36,21 @@ class MarketShimmerWidget extends StatelessWidget {
                       height: 10,
                       color: Colors.white,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
                           width: MediaQuery.of(context).size.width * 0.03,
                           height: 10,
                           color: Colors.white,
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Container(
                           width: MediaQuery.of(context).size.width * 0.1,
                           height: 10,
                           color: Colors.white,
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Container(
                           width: MediaQuery.of(context).size.width * 0.1,
                           height: 10,
@@ -61,7 +60,7 @@ class MarketShimmerWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -70,7 +69,7 @@ class MarketShimmerWidget extends StatelessWidget {
                       height: 10,
                       color: Colors.white,
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Container(
                       width: MediaQuery.of(context).size.width * 0.3,
                       height: 10,
@@ -83,7 +82,7 @@ class MarketShimmerWidget extends StatelessWidget {
           );
         },
         separatorBuilder: (ctx, index) {
-          return Divider();
+          return const Divider();
         },
       ),
     );
