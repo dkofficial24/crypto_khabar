@@ -1,16 +1,4 @@
 class NewsItem {
-  String id;
-  String title;
-  String details;
-  int date;
-  String author;
-  String source;
-  String imgUrl;
-  List<String> imgUrls;
-  String category;
-  String sourceLink;
-  String vdoUrl;
-  bool showNotification;
 
   NewsItem(
       {
@@ -25,38 +13,50 @@ class NewsItem {
         this.category,
         this.sourceLink,
         this.vdoUrl,
-        this.showNotification = true
+        this.showNotification = true,
       });
 
   NewsItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    title = json['title'] ?? "";
-    details = json['details'] ?? "";
+    title = json['title'] ?? '';
+    details = json['details'] ?? '';
     date = json['date'] ?? 0;
-    author = json['author'] ?? "";
-    source = json['source'] ?? "";
-    imgUrl = json['imgUrl'] ?? "";
+    author = json['author'] ?? '';
+    source = json['source'] ?? '';
+    imgUrl = json['imgUrl'] ?? '';
     category = json['category'];
-    sourceLink = json['sourceLink'] ?? "";
-    vdoUrl = json['vdoUrl'] ?? "";
+    sourceLink = json['sourceLink'] ?? '';
+    vdoUrl = json['vdoUrl'] ?? '';
     showNotification = json['showNotification'] ?? true;
    // imgUrls = json['imgUrls']?.cast<String>();
   }
+  String id;
+  String title;
+  String details;
+  int date;
+  String author;
+  String source;
+  String imgUrl;
+  List<String> imgUrls;
+  String category;
+  String sourceLink;
+  String vdoUrl;
+  bool showNotification;
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['details'] = this.details;
-    data['date'] = this.date;
-    data['author'] = this.author;
-    data['source'] = this.source;
-    data['imgUrl'] = this.imgUrl;
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['details'] = details;
+    data['date'] = date;
+    data['author'] = author;
+    data['source'] = source;
+    data['imgUrl'] = imgUrl;
    // data['imgUrls'] = this.imgUrls;
-    data['category'] = this.category;
-    data['vdoUrl'] = this.vdoUrl;
-    data['sourceLink'] = this.sourceLink;
-    data['showNotification'] = this.showNotification;
+    data['category'] = category;
+    data['vdoUrl'] = vdoUrl;
+    data['sourceLink'] = sourceLink;
+    data['showNotification'] = showNotification;
     return data;
   }
 }

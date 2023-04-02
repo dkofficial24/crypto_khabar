@@ -1,4 +1,3 @@
-import 'package:crypto_khabar/market/page/market_page.dart';
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
 import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
@@ -19,7 +18,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   ProfileSettingProvider provider;
-  String version = "";
+  String version = '';
 
   @override
   void initState() {
@@ -42,13 +41,13 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (ctx, provider, child) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(StringConst.appName),
+              title: const Text(StringConst.appName),
             ),
             body: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: ListView(
                   children: [
-                    SizedBox(height: 12),
+                    const SizedBox(height: 12),
                     ProfileItem(
                       title: StringConst.darkTheme,
                       iconData: Icons.brightness_6_outlined,
@@ -63,24 +62,24 @@ class _ProfilePageState extends State<ProfilePage> {
                           });
                           FirebaseAnalytics.instance.logEvent(
                               name: 'theme_change',
-                              parameters: {"isDark": value});
+                              parameters: {'isDark': value},);
                         },
                         value: provider.isDarkMode,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ProfileItem(
                       title: StringConst.bookmarkNews,
                       iconData: Icons.bookmark_outline,
                       callback: () {
                         Navigator.pushNamed(context, AppRoutes.SavedNewsPage);
                       },
-                      lastChild: Icon(
+                      lastChild: const Icon(
                         Icons.arrow_forward_ios,
                         size: 15,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ProfileItem(
                       title: StringConst.notifications,
                       iconData: Icons.notifications_outlined,
@@ -91,56 +90,56 @@ class _ProfilePageState extends State<ProfilePage> {
                           provider.setNotificationReceiveStatus(value);
                           FirebaseAnalytics.instance.logEvent(
                               name: 'notification_status',
-                              parameters: {"notification_status:": value});
+                              parameters: {'notification_status:': value},);
                         },
                         value: provider.getNotification,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ProfileItem(
                       title: StringConst.feedback,
                       iconData: Icons.feedback_outlined,
                       callback: () async {
-                        Navigator.pushNamed(context, AppRoutes.FeedbackPage);
-                        FirebaseAnalytics.instance
-                            .logEvent(name: "feedback_page_open");
+                        await Navigator.pushNamed(context, AppRoutes.FeedbackPage);
+                        await FirebaseAnalytics.instance
+                            .logEvent(name: 'feedback_page_open');
                       },
                       lastChild: Container(),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ProfileItem(
                       title: StringConst.disclaimer,
                       iconData: Icons.info_outline_rounded,
                       callback: () async {
-                        String disclaimer =
+                        final disclaimer =
                             ProfileSettingService().getDisclaimerMsg();
-                        Navigator.pushNamed(context, AppRoutes.DisclaimerPage,
-                            arguments: disclaimer);
-                        FirebaseAnalytics.instance
-                            .logEvent(name: "disclaimer_page_open");
+                        await Navigator.pushNamed(context, AppRoutes.DisclaimerPage,
+                            arguments: disclaimer,);
+                        await FirebaseAnalytics.instance
+                            .logEvent(name: 'disclaimer_page_open');
                       },
                       lastChild: Container(),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     ProfileItem(
                       title: StringConst.shareApp,
                       iconData: Icons.share,
                       callback: () async {
                         LoaderController().showLoader(context);
-                        String downloadLink =
+                        final downloadLink =
                             await RemoteConfigService().getAppDownloadLink();
                         LoaderController().dismissLoader(context);
-                        Share.share(downloadLink,
+                        await Share.share(downloadLink,
                             subject:
-                                StringConst.shareAppMsg);
-                        FirebaseAnalytics.instance.logEvent(name: "share_app");
+                                StringConst.shareAppMsg,);
+                        await FirebaseAnalytics.instance.logEvent(name: 'share_app');
                       },
                       lastChild: Container(),
                     ),
-                    SizedBox(height: 32),
-                    Center(child: Text("${StringConst.appVersion} ${version ?? ""}",style: TextStyle(color: Colors.grey),))
+                    const SizedBox(height: 32),
+                    Center(child: Text("${StringConst.appVersion} ${version ?? ""}",style: const TextStyle(color: Colors.grey),))
                   ],
-                )),
+                ),),
           );
         },
       ),
@@ -149,10 +148,6 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class ProfileItem extends StatelessWidget {
-  final String title;
-  final IconData iconData;
-  final Function callback;
-  final Widget lastChild;
 
   const ProfileItem({
     @required this.title,
@@ -160,6 +155,10 @@ class ProfileItem extends StatelessWidget {
     @required this.lastChild,
     this.callback,
   });
+  final String title;
+  final IconData iconData;
+  final Function callback;
+  final Widget lastChild;
 
   @override
   Widget build(BuildContext context) {
@@ -171,23 +170,23 @@ class ProfileItem extends StatelessWidget {
         }
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         child: Row(
           children: [
             GestureDetector(
               child: Container(
-                padding: EdgeInsets.all(2),
-                child: Icon(
-                  iconData,
-                  color: Theme.of(context).iconTheme.color,
-                ),
+                padding: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                   //  color: Colors.cyan,
                 ),
+                child: Icon(
+                  iconData,
+                  color: Theme.of(context).iconTheme.color,
+                ),
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Text(
               title,
               style: Theme.of(context).textTheme.subtitle1,

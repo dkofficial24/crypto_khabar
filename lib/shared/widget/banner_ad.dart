@@ -22,7 +22,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   @override
   Widget build(BuildContext context) {
       return AdHelper.isAdEnabled() && isBannerAdReady
-          ? Container(
+          ? SizedBox(
         width: bannerAd.size.width.toDouble(),
         height: bannerAd.size.height.toDouble()+4,
         child: AdWidget(ad: bannerAd),
@@ -34,7 +34,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
     if (AdHelper.isAdEnabled()) {
       bannerAd = BannerAd(
         adUnitId: AdHelper.bannerAdUnitId,
-        request: AdRequest(),
+        request: const AdRequest(),
         size: AdSize.banner,
         listener: BannerAdListener(
           onAdLoaded: (_) {

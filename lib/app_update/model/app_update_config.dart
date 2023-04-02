@@ -1,16 +1,4 @@
 class AppUpdateConfig {
-  String title;
-  String content;
-  String positiveButton;
-  String negativeButton;
-  String latestVersion;
-  String minimumVersion;
-  String appUrl;
-  bool shouldUpdateShowDialog;
-
-  AppUpdateType appUpdateType;
-  int priority;
-  int daysForFlexibleUpdate;
 
   AppUpdateConfig();
 
@@ -29,6 +17,18 @@ class AppUpdateConfig {
         ? AppUpdateType.FLEXIBLE
         : AppUpdateType.IMMEDIATE;
   }
+  String title;
+  String content;
+  String positiveButton;
+  String negativeButton;
+  String latestVersion;
+  String minimumVersion;
+  String appUrl;
+  bool shouldUpdateShowDialog;
+
+  AppUpdateType appUpdateType;
+  int priority;
+  int daysForFlexibleUpdate;
 }
 
 enum AppUpdateType { FLEXIBLE, IMMEDIATE }

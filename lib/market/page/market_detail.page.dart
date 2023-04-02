@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
@@ -9,8 +10,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:interactive_chart/interactive_chart.dart';
 import 'package:intl/intl.dart';
-
-import '../../constants.dart';
 
 class MarketDetailPage extends StatefulWidget {
   @override
@@ -25,15 +24,15 @@ class _MarketDetailState extends State<MarketDetailPage> {
 
   final formatter = NumberFormat.currency(
     locale: 'HI',
-    name: "",
+    name: '',
     symbol: '₹ ',
     decimalDigits: 6,
   );
 
   Future<List<CandleData>> fetchCandles(MarketItem marketItem) async {
     final url =
-        "https://api.coingecko.com/api/v3/coins/${marketItem.id}/ohlc?vs_currency=inr&days=1";
-    Response res = await Dio().get(url);
+        'https://api.coingecko.com/api/v3/coins/${marketItem.id}/ohlc?vs_currency=inr&days=1';
+    final res = await Dio().get(url);
     return (res.data as List<dynamic>)
         .map((e) => CandleData.fromJson(e))
         .toList()
@@ -65,12 +64,12 @@ class _MarketDetailState extends State<MarketDetailPage> {
   }
 
   void initFetchDataTimer() {
-    timer = Timer.periodic(Duration(seconds: 30), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       if (isAppInBackground) return;
-      print("Loading market item");
+      print('Loading market item');
       try {
-        List<MarketItem> list = _marketService.getMarketData();
-        MarketItem item =
+        final list = _marketService.getMarketData();
+        final item =
             list.where((element) => element.symbol == marketItem.symbol).first;
         if (item != null) {
           setState(() {
@@ -105,47 +104,47 @@ class _MarketDetailState extends State<MarketDetailPage> {
                   return ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Image.asset(
-                        "assets/images/placeholder.png",
+                        'assets/images/placeholder.png',
                         fit: BoxFit.cover,
                         width: 20,
                         height: 20,
-                      ));
+                      ),);
                 },
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(marketItem.name),
-              Spacer(),
+              const Spacer(),
               IconButton(
                   onPressed: () {
                     if (marketItem.isFavorite) {
                       FirebaseAnalytics.instance
-                          .logEvent(name: "mdp_coin_added_fav");
+                          .logEvent(name: 'mdp_coin_added_fav');
                       marketItem.isFavorite = false;
                       _marketService.removeCoinFromFavorite(marketItem);
-                      AppUtils.showToast("${marketItem.name} ${StringConst.favCoinRemoveMsg}");
+                      AppUtils.showToast('${marketItem.name} ${StringConst.favCoinRemoveMsg}');
                     } else {
                       _marketService.markCoinAsFavorite(marketItem);
-                      AppUtils.showToast("${marketItem.name} ${StringConst.favCoinAddMsg}");
+                      AppUtils.showToast('${marketItem.name} ${StringConst.favCoinAddMsg}');
                       marketItem.isFavorite = true;
                       FirebaseAnalytics.instance
-                          .logEvent(name: "mdp_coin_removed_fav");
+                          .logEvent(name: 'mdp_coin_removed_fav');
                     }
                     setState(() {});
                   },
                   icon: Icon(
-                      marketItem.isFavorite ? Icons.star : Icons.star_border))
+                      marketItem.isFavorite ? Icons.star : Icons.star_border,),)
             ],
           ),
         ),
         body: Container(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.4,
-                  child: Container(
+                  child: SizedBox(
                     // padding: const EdgeInsets.all(10),
                     width: double.infinity,
                     height: 400,
@@ -181,116 +180,116 @@ class _MarketDetailState extends State<MarketDetailPage> {
                                   overlayBackgroundColor:
                                       Colors.blue.withOpacity(0.9),
                                   overlayTextStyle:
-                                      TextStyle(color: Colors.white),
+                                      const TextStyle(color: Colors.white),
                                   timeLabelHeight: 32,
                                   volumeHeightFactor:
                                       0, // volume area is 20% of total height
                                 ),
                                 timeLabel: (timestamp, visibleDataCount) =>
-                                    "\n",
+                                    '\n',
                                 overlayInfo: (candle) => {
-                                  "Date": AppUtils.formatDate(candle.timestamp),
-                                  "Open":
-                                      candle.open?.toStringAsFixed(2) ?? "-",
-                                  "Close":
-                                      candle.close?.toStringAsFixed(2) ?? "-",
-                                  "High": "${candle.high?.toStringAsFixed(2)}",
-                                  "Low": "${candle.low?.toStringAsFixed(2)}",
+                                  'Date': AppUtils.formatDate(candle.timestamp),
+                                  'Open':
+                                      candle.open?.toStringAsFixed(2) ?? '-',
+                                  'Close':
+                                      candle.close?.toStringAsFixed(2) ?? '-',
+                                  'High': candle.high?.toStringAsFixed(2),
+                                  'Low': candle.low?.toStringAsFixed(2),
                                 },
                                 onTap: (candle) {
                                   FirebaseAnalytics.instance
-                                      .logEvent(name: "chart_tap");
+                                      .logEvent(name: 'chart_tap');
                                 },
                                 onCandleResize: (width) {
                                   FirebaseAnalytics.instance
-                                      .logEvent(name: "chart_zoom");
+                                      .logEvent(name: 'chart_zoom');
                                 },
                               ),
                             )
-                          : Center(
+                          : const Center(
                               child: CircularProgressIndicator(),
                             ),
                     ),
                   ),
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 SizedBox(
                   // height: MediaQuery.of(context).size.height * 0.6,
                   child: Card(
                     elevation: 4,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 16),
+                          horizontal: 16, vertical: 16,),
                       child: Column(
                         children: [
                           MarketInfoWidget(
                               name: StringConst.rank,
-                              value: marketItem.marketCapRank.toString()),
+                              value: marketItem.marketCapRank.toString(),),
                           MarketInfoWidget(name: StringConst.coinName, value: marketItem.name),
                           MarketInfoWidget(
                               name: StringConst.coinCurrentValue,
                               value: marketItem.currentPrice != null
-                                  ? "${formatter.format(marketItem.currentPrice)}"
-                                  : "-"),
+                                  ? formatter.format(marketItem.currentPrice)
+                                  : '-',),
                           MarketInfoWidget(
                               name: StringConst.coinMarketCap,
                               value: marketItem.marketCap != null
                                   ? formatter.format(marketItem.marketCap)
-                                  : "-"),
+                                  : '-',),
                           MarketInfoWidget(
                               name: StringConst.coinSign,
-                              value: marketItem.symbol.toUpperCase()),
+                              value: marketItem.symbol.toUpperCase(),),
                           MarketInfoWidget(
                               name: StringConst.coinChangeIn24Hrs,
                               value: marketItem.priceChangePercentage24h != null
-                                  ? "${marketItem.priceChangePercentage24h}%"
-                                  : "-",valueColor: marketItem.priceChangePercentage24h>0?Colors.green:Colors.red),
+                                  ? '${marketItem.priceChangePercentage24h}%'
+                                  : '-',valueColor: marketItem.priceChangePercentage24h>0?Colors.green:Colors.red,),
                           MarketInfoWidget(
                               name: StringConst.coinHighLevelIn24Hrs,
                               value: marketItem.high24h != null
-                                  ? "${formatter.format(marketItem.high24h)}"
-                                  : "-"),
+                                  ? formatter.format(marketItem.high24h)
+                                  : '-',),
                           MarketInfoWidget(
                               name: StringConst.coinLowLevelIn24Hrs,
                               value: marketItem.low24h != null
-                                  ? "${formatter.format(marketItem.low24h)}"
-                                  : "-"),
+                                  ? formatter.format(marketItem.low24h)
+                                  : '-',),
                           MarketInfoWidget(
                               name: StringConst.coinHighestLevel,
                               value: marketItem.ath != null
-                                  ? "${formatter.format(marketItem.ath)}"
-                                  : "-"),
+                                  ? formatter.format(marketItem.ath)
+                                  : '-',),
                           MarketInfoWidget(
                               name: StringConst.coinHighestLevelDate,
                               value: marketItem.athDate != null
-                                  ? "${AppUtils.formatDateTime(DateTime.parse(marketItem.athDate))}"
-                                  : "-"),
+                                  ? AppUtils.formatDateTime(DateTime.parse(marketItem.athDate))
+                                  : '-',),
                           MarketInfoWidget(
                               name: StringConst.coinLowestLevel,
                               value: marketItem.atl != null
-                                  ? "${formatter.format(marketItem.atl)}"
-                                  : "-"),
+                                  ? formatter.format(marketItem.atl)
+                                  : '-',),
                           MarketInfoWidget(
                               name: StringConst.coinLowestLevelDate,
                               value: marketItem.atlDate != null
-                                  ? "${AppUtils.formatDateTime(DateTime.parse(marketItem.atlDate))}"
-                                  : "-"),
+                                  ? AppUtils.formatDateTime(DateTime.parse(marketItem.atlDate))
+                                  : '-',),
                           MarketInfoWidget(
                               name:  StringConst.circulatingSupply,
                               value: marketItem.circulatingSupply != null
-                                  ? "${marketItem.circulatingSupply}"
-                                  : "-"),
+                                  ? '${marketItem.circulatingSupply}'
+                                  : '-',),
                           MarketInfoWidget(
                               name: StringConst.totalSupply,
                               value: marketItem.totalSupply != null
-                                  ? "${marketItem.totalSupply}"
-                                  : "-"),
+                                  ? '${marketItem.totalSupply}'
+                                  : '-',),
                           MarketInfoWidget(
                               name: StringConst.totalQuantity,
                               value: marketItem.totalVolume != null
-                                  ? "${marketItem.totalVolume}"
-                                  : "-",
-                              isLastItem: true),
+                                  ? '${marketItem.totalVolume}'
+                                  : '-',
+                              isLastItem: true,),
                           //  MarketInfoWidget(name: "अधिकतम आपूर्ति",value: "${marketItem.maxSupply}"),
                         ],
                       ),
@@ -315,16 +314,16 @@ class _MarketDetailState extends State<MarketDetailPage> {
 }
 
 class MarketInfoWidget extends StatelessWidget {
+
+  const MarketInfoWidget(
+      {@required this.name,
+      @required this.value,
+      this.isLastItem = false,
+      this.valueColor,});
   final String name;
   final String value;
   final bool isLastItem;
   final Color valueColor;
-
-  MarketInfoWidget(
-      {@required this.name,
-      @required this.value,
-      this.isLastItem = false,
-      this.valueColor});
 
   @override
   Widget build(BuildContext context) {
@@ -336,16 +335,14 @@ class MarketInfoWidget extends StatelessWidget {
             Text(name),
             Text(value,
                 style: TextStyle(
-                    color: valueColor == null
-                        ? AppUtils.isDarkTheme(context)
+                    color: valueColor ?? (AppUtils.isDarkTheme(context)
                             ? Colors.white
-                            : Colors.black
-                        : valueColor))
+                            : Colors.black),),)
           ],
         ),
-        SizedBox(height: 8),
-        !isLastItem ? Divider() : Container(),
-        !isLastItem ? SizedBox(height: 8) : Container(),
+        const SizedBox(height: 8),
+        if (!isLastItem) const Divider() else Container(),
+        if (!isLastItem) const SizedBox(height: 8) else Container(),
       ],
     );
   }

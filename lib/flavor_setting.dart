@@ -4,13 +4,13 @@ import 'package:crypto_khabar/app_configs.dart';
 import 'package:flutter/services.dart';
 
 class FlavorSetting {
-  FlavorSetting._();
-
-  static final FlavorSetting _instance = FlavorSetting._();
 
   factory FlavorSetting() {
     return _instance;
   }
+  FlavorSetting._();
+
+  static final FlavorSetting _instance = FlavorSetting._();
 
   Environment _environment = Environment.DEV;
 
@@ -22,10 +22,10 @@ class FlavorSetting {
 
   void _setEnvironment(String flavorStr) {
     switch (flavorStr) {
-      case "dev":
+      case 'dev':
         _environment = Environment.DEV;
         break;
-      case "prod":
+      case 'prod':
         _environment = Environment.PROD;
         break;
       default:
@@ -50,11 +50,11 @@ class FlavorSetting {
 
   setupFlavorEnvironment() async {
     try {
-      MethodChannel methodChannel = MethodChannel("flavor");
-      String flavor = await methodChannel.invokeMethod('getFlavor');
+      const methodChannel = MethodChannel('flavor');
+      final flavor = await methodChannel.invokeMethod('getFlavor');
       setBuildFlavor(flavor);
     } catch (e) {
-      print("$e");
+      print('$e');
     }
   }
 }

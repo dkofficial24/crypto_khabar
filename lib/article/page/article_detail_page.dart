@@ -24,7 +24,7 @@ class DetailPageState extends State<ArticleDetailPage> {
   @override
   void initState() {
     _scrollController = ScrollController();
-    FirebaseAnalytics.instance.logEvent(name: "adp_detail_article");
+    FirebaseAnalytics.instance.logEvent(name: 'adp_detail_article');
     super.initState();
   }
 
@@ -33,9 +33,8 @@ class DetailPageState extends State<ArticleDetailPage> {
     if (isVideoContain) {
       _controller = YoutubePlayerController(
         initialVideoId: _article.vdoUrl,
-        flags: YoutubePlayerFlags(
+        flags: const YoutubePlayerFlags(
           autoPlay: false,
-          mute: false,
         ),
       );
     }
@@ -53,19 +52,19 @@ class DetailPageState extends State<ArticleDetailPage> {
   //  print("Link: ${_article.imgUrl}");
     return Scaffold(
         appBar: AppBar(
-          title: Text(StringConst.article),
+          title: const Text(StringConst.article),
           actions: [
             IconButton(
                 onPressed: () {
                   shareArticle();
-                  FirebaseAnalytics.instance.logEvent(name: "adp_top_share_article");
+                  FirebaseAnalytics.instance.logEvent(name: 'adp_top_share_article');
                 },
-                icon: Icon(Icons.share, color: Colors.white)),
-            SizedBox(width: 8)
+                icon: const Icon(Icons.share, color: Colors.white),),
+            const SizedBox(width: 8)
           ],
         ),
         body: Container(
-          margin: EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
           child: Column(
             children: [
               videoWidget(),
@@ -73,42 +72,40 @@ class DetailPageState extends State<ArticleDetailPage> {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    isVideoContain
-                        ? Container()
-                        : Container(
+                    if (isVideoContain) Container() else Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             height: MediaQuery.of(context).size.height * 0.25,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(16),
                               child: Image.network(
-                                _article?.imgUrl ?? "",
+                                _article?.imgUrl ?? '',
                                 fit: BoxFit.fitWidth,
                                 errorBuilder: (ctx, obj, stack) {
                                   return Container(
                                       child: Image.asset(
-                                    "assets/images/placeholder.png",
+                                    'assets/images/placeholder.png',
                                     fit: BoxFit.cover,
-                                  ));
+                                  ),);
                                 },
                               ),
-                            )),
+                            ),),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                       child: Text(_article.title,
-                          style: Theme.of(context).textTheme.headline6),
+                          style: Theme.of(context).textTheme.headline6,),
                     ),
                     MarkdownView(_article.detail, _scrollController),
-                    SizedBox(height:4),
+                    const SizedBox(height:4),
                     GestureDetector(
                       onTap: (){
                         shareArticle();
-                        FirebaseAnalytics.instance.logEvent(name: "adp_bttm_share_article");
+                        FirebaseAnalytics.instance.logEvent(name: 'adp_bttm_share_article');
                       },
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
+                          children: const [
                             Text(StringConst.doShare),
                             SizedBox(width:8),
                             Icon(Icons.share),
@@ -123,11 +120,11 @@ class DetailPageState extends State<ArticleDetailPage> {
               BannerAdWidget()
             ],
           ),
-        ));
+        ),);
   }
 
   Future<void> shareArticle() async {
-    String downloadLink = await RemoteConfigService().getAppDownloadLink();
+    final downloadLink = await RemoteConfigService().getAppDownloadLink();
     AppUtils.shareArticle(_article, appLink: downloadLink);
   }
 
@@ -137,12 +134,12 @@ class DetailPageState extends State<ArticleDetailPage> {
         savingArticle = true;
       });
       try {
-        bool status = await ArticleService().saveArticle(article);
+        final bool status = await ArticleService().saveArticle(article);
         if (status) {
           AppUtils.showToast(StringConst.articleBookmarked);
         }
       } catch (e) {
-        print("ERROR:$e");
+        print('ERROR:$e');
       }
       setState(() {
         savingArticle = false;
@@ -160,9 +157,9 @@ class DetailPageState extends State<ArticleDetailPage> {
                 controller: _controller,
                 showVideoProgressIndicator: true,
                 bottomActions: [
-                  const SizedBox(width: 14.0),
+                  const SizedBox(width: 14),
                   CurrentPosition(),
-                  const SizedBox(width: 8.0),
+                  const SizedBox(width: 8),
                   ProgressBar(
                     isExpanded: true,
                   ),
@@ -171,7 +168,7 @@ class DetailPageState extends State<ArticleDetailPage> {
                 ],
                 progressColors: ProgressBarColors(
                     handleColor: Theme.of(context).primaryColor,
-                    backgroundColor: Theme.of(context).primaryColor),
+                    backgroundColor: Theme.of(context).primaryColor,),
                 progressIndicatorColor: Colors.amber,
                 onReady: () {},
                 aspectRatio: 4 / 3,

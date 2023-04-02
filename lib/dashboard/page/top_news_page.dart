@@ -42,7 +42,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     _topNewsProvider = TopNewsProvider();
-    _refreshController = RefreshController(initialRefresh: false);
+    _refreshController = RefreshController();
     init();
     super.initState();
   }
@@ -75,7 +75,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(StringConst.appName),
+        title: const Text(StringConst.appName),
       ),
       // drawer: Drawer(
       //   child: DrawerMenuWidget(),
@@ -88,7 +88,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                 ? newsRowShimmer()
                 : Padding(
                     padding:
-                        EdgeInsets.only(right: 16, left: 16, top: 8, bottom: 0),
+                        const EdgeInsets.only(right: 16, left: 16, top: 8),
                     //padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Column(
                       children: [
@@ -101,20 +101,16 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                           scrollOffset: 80,
                           child: SmartRefresher(
                             controller: _refreshController,
-                            enablePullUp: false,
                             reverse: false,
-                            enableTwoLevel: false,
-                            enablePullDown: true,
                             onRefresh: () {
                               provider.onRefresh(_refreshController);
                             },
                             child: ListView.separated(
                                 itemBuilder: (ctx, index) {
-                                  int usedIndex = index - 1;
+                                  final usedIndex = index - 1;
                                   if (index == 0) {
                                     return _topNewsProvider
-                                                .featuredNewsItemList.length >
-                                            0
+                                                .featuredNewsItemList.isNotEmpty
                                         ? CarouselWidget()
                                         : Container();
                                   }
@@ -124,11 +120,11 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                                     return provider.isLoading
                                         ? Center(
                                             child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 4, horizontal: 4),
+                                              padding: const EdgeInsets.symmetric(
+                                                  vertical: 4, horizontal: 4,),
                                               height: 30,
                                               width: 30,
-                                              child: CircularProgressIndicator(
+                                              child: const CircularProgressIndicator(
                                                 strokeWidth: 2,
                                               ),
                                             ),
@@ -136,9 +132,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                                         : Container();
                                   }
                                   if ((index % 5 == 0) ||
-                                      (_topNewsProvider.featuredNewsItemList
-                                                  .length ==
-                                              0 &&
+                                      (_topNewsProvider.featuredNewsItemList.isEmpty &&
                                           index == 1)) {
                                     return createSlidable(
                                       provider.newsItemList[usedIndex],
@@ -153,7 +147,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                                                   index: usedIndex,
                                                   newsItem:
                                                       provider.newsItemList[
-                                                          usedIndex]));
+                                                          usedIndex],),);
                                         },
                                       ),
                                     );
@@ -171,25 +165,25 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                                             arguments: NewsDetailsArgs(
                                                 index: usedIndex,
                                                 newsItem: provider
-                                                    .newsItemList[usedIndex]));
+                                                    .newsItemList[usedIndex],),);
                                       },
                                     ),
                                   );
                                 },
                                 separatorBuilder: (ctx, index) {
                                   if (index == 0) return Container();
-                                  return Divider();
+                                  return const Divider();
                                   return Container(
-                                    margin: EdgeInsets.symmetric(vertical: 8),
+                                    margin: const EdgeInsets.symmetric(vertical: 8),
                                     height: 1,
                                     width: MediaQuery.of(context).size.width,
                                     color: Colors.grey,
                                   );
                                 },
                                 itemCount:
-                                    _topNewsProvider.newsItemList.length + 2),
+                                    _topNewsProvider.newsItemList.length + 2,),
                           ),
-                        )),
+                        ),),
                         Divider(
                           height: 1,
                           thickness: 1,
@@ -197,7 +191,7 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                         ),
                         BannerAdWidget()
                       ],
-                    ));
+                    ),);
           },
         ),
       ),
@@ -206,8 +200,10 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
 
   Widget newsRowShimmer() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Shimmer.fromColors(
+          baseColor: Colors.grey[300],
+          highlightColor: Colors.grey[100],
           child: ListView.builder(
               itemCount: 16,
               itemBuilder: (ctx, index) {
@@ -224,13 +220,13 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                             width: double.infinity,
                             color: Colors.white,
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Container(
                             height: 10,
                             width: double.infinity,
                             color: Colors.white,
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Container(
                             height: 4,
                             width: MediaQuery.of(context).size.width * 0.35,
@@ -239,31 +235,26 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                         ],
                       ),
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Flexible(
-                      flex: 1,
                       child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 8),
+                          margin: const EdgeInsets.symmetric(vertical: 8),
                           height: 60,
                           width: 60,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: Container(color: Colors.white),
-                          )),
+                          ),),
                     )
                   ],
                 );
-              }),
-          baseColor: Colors.grey[300],
-          highlightColor: Colors.grey[100]),
+              },),),
     );
   }
 
   Slidable createSlidable(NewsItem newsItem, BuildContext context,
-      {@required Widget child}) {
+      {@required Widget child,}) {
     return Slidable(
-        closeOnScroll: true,
-        enabled: true,
         endActionPane: ActionPane(
           motion: const ScrollMotion(),
           children: [
@@ -294,12 +285,12 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
           ],
         ),
         key: UniqueKey(),
-        child: child);
+        child: child,);
   }
 
   Future<void> shareNews(BuildContext context, NewsItem newsItem) async {
     LoaderController().showLoader(context);
-    String downloadLink = await RemoteConfigService().getAppDownloadLink();
+    final downloadLink = await RemoteConfigService().getAppDownloadLink();
     LoaderController().dismissLoader(context);
     AppUtils.shareNews(newsItem, appLink: downloadLink);
   }

@@ -3,11 +3,11 @@ import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 
 class ColumnNewsListWidget extends StatelessWidget {
-  final NewsItem newsItem;
-  final Function callback;
 
   const ColumnNewsListWidget(
-      {@required this.newsItem, @required this.callback});
+      {@required this.newsItem, @required this.callback,});
+  final NewsItem newsItem;
+  final Function callback;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class ColumnNewsListWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height * 0.20,
               width: MediaQuery.of(context).size.width,
               child: ClipRRect(
@@ -29,33 +29,33 @@ class ColumnNewsListWidget extends StatelessWidget {
                   errorBuilder: (ctx, obj, stack) {
                     return Container(
                         child: Image.asset(
-                          "assets/images/placeholder.png",
+                          'assets/images/placeholder.png',
                           fit: BoxFit.cover,
-                        ));
+                        ),);
                   },
                 ):Container(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8),
                       child: Center(
                         child: Image.asset(
-                          "assets/images/placeholder.png",
+                          'assets/images/placeholder.png',
                           fit: BoxFit.cover,
                         ),
                       ),
-                    )),
+                    ),),
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               newsItem.title,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
               maxLines: 3,
               overflow: TextOverflow.fade,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              "${newsItem.source} . ${AppUtils.formatDate(newsItem.date)}",
-              style: TextStyle(fontSize: 12),
+              '${newsItem.source} . ${AppUtils.formatDate(newsItem.date)}',
+              style: const TextStyle(fontSize: 12),
             )
           ],
         ),

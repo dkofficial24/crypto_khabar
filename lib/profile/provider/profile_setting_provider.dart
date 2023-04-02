@@ -1,23 +1,22 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_khabar/profile/feedback_info.dart';
 import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProfileSettingProvider extends ChangeNotifier {
-  bool isDarkMode = false;
-  bool getNotification = false;
-  double rating = 5;
-  FeedbackInfo previousFeedback;
 
 
   ProfileSettingProvider() {
     init();
   }
+  bool isDarkMode = false;
+  bool getNotification = false;
+  double rating = 5;
+  FeedbackInfo previousFeedback;
 
-  void init() async {
+  Future<void> init() async {
     isDarkMode = await isDarkTheme();
     getNotification = await getNotificationReceiveStatus();
     notifyListeners();
@@ -45,20 +44,20 @@ class ProfileSettingProvider extends ChangeNotifier {
 
   Future shareFeedback(FeedbackInfo feedback) async {
     await ProfileSettingService().shareFeedback(feedback);
-    saveUserDetails(feedback);
+    await saveUserDetails(feedback);
   }
 
   Future saveUserDetails(FeedbackInfo feedback)async{
-    feedback.review = "";
-    await SharedPrefHelper().saveValue("userDetails", jsonEncode(feedback.toJson()));
+    feedback.review = '';
+    await SharedPrefHelper().saveValue('userDetails', jsonEncode(feedback.toJson()));
   //  print("User detail saved");
   }
 
   Future<FeedbackInfo> getUserDetails()async{
     try {
-      String value = await SharedPrefHelper().getValue("userDetails");
+      final value = await SharedPrefHelper().getValue('userDetails');
       if (value == null || value.isEmpty) return null;
-      FeedbackInfo info = FeedbackInfo.fromJson(jsonDecode(value));
+      final info = FeedbackInfo.fromJson(jsonDecode(value));
       return info;
     }catch(e){
       return null;

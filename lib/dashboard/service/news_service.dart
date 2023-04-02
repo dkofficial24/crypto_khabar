@@ -9,17 +9,17 @@ import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:crypto_khabar/utils/string_const.dart';
 
 class NewsService {
+
+  factory NewsService() {
+    return _newsService;
+  }
   NewsService._internal() {
     init();
   }
 
   static final NewsService _newsService = NewsService._internal();
 
-  factory NewsService() {
-    return _newsService;
-  }
-
-  Set<String> bookmarkedNewsIdSet = Set();
+  Set<String> bookmarkedNewsIdSet = {};
 
   List<NewsItem> newsItemList = [];
   StreamSubscription subscription;
@@ -42,7 +42,7 @@ class NewsService {
   }
 
   Future<bool> checkConnectivity() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
+    final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.mobile) {
       return true;
     } else if (connectivityResult == ConnectivityResult.wifi) {
@@ -52,12 +52,12 @@ class NewsService {
   }
 
   Future<List<NewsItem>> fetchNewsByPagination(
-      {bool appendInEnd = true}) async {
+      {bool appendInEnd = true,}) async {
     if(!_isNetConnected){
       _isNetConnected = await checkConnectivity();
     }
     if (_isNetConnected) {
-      List<NewsItem> itemList = await NewsFirebaseService()
+      final itemList = await NewsFirebaseService()
           .fetchNewsByPagination(appendInEnd: appendInEnd);
       if (appendInEnd) {
         newsItemList.addAll(itemList);
@@ -74,17 +74,17 @@ class NewsService {
   }
 
   removeDuplicateNews() {
-    List<String> idCache = [];
-    List<NewsItem> _newsItemList = [];
+    final idCache = <String>[];
+    var newsItemList = <NewsItem>[];
 
-    newsItemList.forEach((element) {
+    for (final element in newsItemList) {
       if (!idCache.contains(element.id)) {
         idCache.add(element.id);
-        _newsItemList.add(element);
+        newsItemList.add(element);
       }
-    });
+    }
     newsItemList.clear();
-    newsItemList = _newsItemList;
+    newsItemList = newsItemList;
   }
 
   List<NewsItem> getFetchedNews() {
@@ -110,11 +110,11 @@ class NewsService {
   }
 
   Future loadAllSavedNewsId() async {
-    List<NewsItem> listNews = await getAllSavedNews();
+    final listNews = await getAllSavedNews();
     bookmarkedNewsIdSet.clear();
-    listNews.forEach((newsItem) {
+    for (final newsItem in listNews) {
       bookmarkedNewsIdSet.add(newsItem.id);
-    });
+    }
   }
 
   void markNewsItemSaved(String id) {
