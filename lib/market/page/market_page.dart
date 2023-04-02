@@ -93,8 +93,8 @@ class _MarketPageState extends State<MarketPage> {
                               child: MarketItemWidget(
                                 marketItem: item,
                                 formatter: formatter,
-                                topPadding: topPadding,
-                                bottomPadding: bottomPadding,
+                                topPadding: topPadding.toDouble(),
+                                bottomPadding: bottomPadding.toDouble(),
                                 onMarketItemClick: (){
                                   if(mounted) {
                                     marketProvider.fetchAllMarketData();

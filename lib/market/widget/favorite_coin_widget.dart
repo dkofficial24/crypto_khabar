@@ -74,8 +74,8 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
                           child: MarketItemWidget(
                             marketItem: item,
                             formatter: formatter,
-                            topPadding: topPadding,
-                            bottomPadding: bottomPadding,
+                            topPadding: topPadding.toDouble(),
+                            bottomPadding: bottomPadding.toDouble(),
                             onMarketItemClick: (){
                               if(mounted) {
                                 marketProvider.fetchAllMarketData();
