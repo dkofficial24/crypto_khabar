@@ -18,16 +18,16 @@ class RemoteConfigService {
     init();
   }
 
-  RemoteConfig _remoteConfig;
+  FirebaseRemoteConfig _remoteConfig;
   AppUpdateConfig _appUpdateConfig;
   bool _isAdEnabled = true;
   Completer<AppUpdateConfig> appUpdateCompleter = Completer();
 
   init() async {
     try {
-      _remoteConfig = RemoteConfig.instance;
+      _remoteConfig = FirebaseRemoteConfig.instance;
       await _remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
+        fetchTimeout: const Duration(seconds: 30),
         minimumFetchInterval: const Duration(minutes: 10),
       ));
       await _remoteConfig.fetchAndActivate();

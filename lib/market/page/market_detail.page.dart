@@ -41,6 +41,20 @@ class _MarketDetailState extends State<MarketDetailPage> {
         .toList();
   }
 
+  // factory CandleData.fromJson(Map<String, dynamic> json) {
+  //   return CandleData(
+  //     timestamp: json['timestamp'],
+  //     open: json['open'],
+  //     high: json['high'],
+  //     low: json['low'],
+  //     close: json['close'],
+  //     volume: json['volume'],
+  //     trends: (json['trends'] as List<dynamic>?)
+  //         ?.map((trend) => trend as double?)
+  //         ?.toList(),
+  //   );
+  // }
+
   @override
   void initState() {
     formatter.minimumFractionDigits = 0;
