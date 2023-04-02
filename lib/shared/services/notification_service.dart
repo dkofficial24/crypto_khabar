@@ -39,7 +39,7 @@ class NotificationService {
         AndroidNotificationDetails(
       "ChannelId",
       "ChannelName",
-      "ChannelDesc",
+          "ChannelDesc",
       icon: 'mipmap/ic_launcher',
       //groupKey: "12345678",
     );

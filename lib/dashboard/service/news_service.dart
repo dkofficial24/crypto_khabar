@@ -6,6 +6,7 @@ import 'package:crypto_khabar/dashboard/service/saved_db_service.dart';
 import 'package:crypto_khabar/shared/firebase_service/firebase_push_notification_service.dart';
 import 'package:crypto_khabar/shared/firebase_service/news_firebase_service.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 
 class NewsService {
   NewsService._internal() {
@@ -37,7 +38,7 @@ class NewsService {
       }
     });
     PushNotificationService();
-    SavedDbService();
+    NewsDbService();
   }
 
   Future<bool> checkConnectivity() async {
@@ -66,7 +67,7 @@ class NewsService {
       removeDuplicateNews();
       return newsItemList;
     } else {
-      AppUtils.showToast("इंटरनेट उपलब्ध नहीं है।");
+      AppUtils.showToast(StringConst.noInternet);
     }
 
     return newsItemList;
@@ -96,16 +97,16 @@ class NewsService {
 
   Future<bool> saveNews(NewsItem newsItem) async {
     markNewsItemSaved(newsItem.id);
-    return await SavedDbService().saveNews(newsItem);
+    return await NewsDbService().saveNews(newsItem);
   }
 
   Future<List<NewsItem>> getAllSavedNews() async {
-    return await SavedDbService().getAllSavedNews();
+    return await NewsDbService().getAllSavedNews();
   }
 
   Future removeSavedNews(String id) async {
     removeNewsItemFromBookmark(id);
-    await SavedDbService().removeSavedNews(id);
+    await NewsDbService().removeSavedNews(id);
   }
 
   Future loadAllSavedNewsId() async {

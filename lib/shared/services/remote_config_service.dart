@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:crypto_khabar/app_update/model/app_update_config.dart';
 import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigService {
@@ -17,16 +18,16 @@ class RemoteConfigService {
     init();
   }
 
-  RemoteConfig _remoteConfig;
+  FirebaseRemoteConfig _remoteConfig;
   AppUpdateConfig _appUpdateConfig;
   bool _isAdEnabled = true;
   Completer<AppUpdateConfig> appUpdateCompleter = Completer();
 
   init() async {
     try {
-      _remoteConfig = RemoteConfig.instance;
+      _remoteConfig = FirebaseRemoteConfig.instance;
       await _remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
+        fetchTimeout: const Duration(seconds: 30),
         minimumFetchInterval: const Duration(minutes: 10),
       ));
       await _remoteConfig.fetchAndActivate();
@@ -68,9 +69,7 @@ class RemoteConfigService {
       await downloadUpdateConfig();
     }
     String linkUrl = _appUpdateConfig.appUrl;
-    linkUrl = linkUrl +
-        " " +
-        "क्रिप्टो से संबधित ख़बर पढ़ने के लिए क्रिप्टो खबर ऐप डाउनलोड करें";
+    linkUrl = linkUrl + " " + StringConst.shareAppMsg;
     return linkUrl;
   }
 }

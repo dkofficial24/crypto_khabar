@@ -3,7 +3,11 @@ import 'dart:async';
 import 'package:crypto_khabar/ad/service/ad_helper.dart';
 import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/market/model/market_model.dart';
+import 'package:crypto_khabar/market/service/market_db_service.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
+import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -13,36 +17,44 @@ enum SortMarket { Rank, Gainer, Loser }
 
 class MarketProvider extends ChangeNotifier {
   List<MarketItem> marketItemList = [];
+  List<MarketItem> favoriteCoinsData = [];
   bool isLoading = false;
   bool shimmer = false;
   bool isBannerAdReady = false;
   BannerAd bannerAd;
   Timer timer;
+  MarketService marketService;
 
   SortMarket currentSortFilter = SortMarket.Rank;
-  String marketFilterName = "रैंक";
+  String marketFilterName = StringConst.rank;
   IconData filterIconData = Icons.arrow_circle_up;
+  MarketDbService marketDbService;
 
-  MarketProvider() {
+  MarketProvider(MarketDbService marketDbService, MarketService marketService) {
+    this.marketDbService = marketDbService;
+    this.marketService = marketService;
     shimmer = true;
     notifyListeners();
     fetchAllMarketData().then((value) {
       shimmer = false;
       notifyListeners();
     });
+    marketService.loadFavoriteCoinsData().then((value) {
+      notifyListeners();
+    });
     initFetchDataTimer();
-  //  initAd();
+    //  initAd();
   }
 
   void initFetchDataTimer() {
     timer = Timer.periodic(Duration(seconds: 30), (timer) {
-      if(isAppInBackground)return;
+      if (isAppInBackground) return;
       print("Fetching market data");
       try {
         fetchAllMarketData().then((value) {
           notifyListeners();
         });
-      }catch(e){}
+      } catch (e) {}
     });
   }
 
@@ -73,13 +85,29 @@ class MarketProvider extends ChangeNotifier {
         return (b.priceChangePercentage24h
             .compareTo(a.priceChangePercentage24h));
       });
+
+      favoriteCoinsData.sort((a, b) {
+        return (b.priceChangePercentage24h
+            .compareTo(a.priceChangePercentage24h));
+      });
+
+
     } else if (currentSortFilter == SortMarket.Loser) {
       marketItemList.sort((a, b) {
         return (a.priceChangePercentage24h
             .compareTo(b.priceChangePercentage24h));
       });
+
+      favoriteCoinsData.sort((a, b) {
+        return (a.priceChangePercentage24h
+            .compareTo(b.priceChangePercentage24h));
+      });
     } else if (currentSortFilter == SortMarket.Rank) {
       marketItemList.sort((a, b) {
+        return (a.marketCapRank.compareTo(b.marketCapRank));
+      });
+
+      favoriteCoinsData.sort((a, b) {
         return (a.marketCapRank.compareTo(b.marketCapRank));
       });
     }
@@ -88,15 +116,15 @@ class MarketProvider extends ChangeNotifier {
   selectSortingFilter() {
     if (currentSortFilter == SortMarket.Rank) {
       currentSortFilter = SortMarket.Gainer;
-      marketFilterName = "लाभ";
+      marketFilterName = StringConst.profit;
       filterIconData = Icons.add;
     } else if (currentSortFilter == SortMarket.Gainer) {
       currentSortFilter = SortMarket.Loser;
-      marketFilterName = "हानि";
+      marketFilterName = StringConst.loss;
       filterIconData = Icons.remove;
     } else {
       currentSortFilter = SortMarket.Rank;
-      marketFilterName = "रैंक";
+      marketFilterName = StringConst.rank;
       filterIconData = Icons.arrow_circle_up;
     }
     sortMarketData();
@@ -107,7 +135,10 @@ class MarketProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     marketItemList =
-        await MarketService().fetchAllMarketData(appendInEnd: appendInEnd);
+        await marketService.fetchAllMarketData(appendInEnd: appendInEnd);
+    marketService.refreshFavoriteData();
+    await marketService.loadFavoriteCoinsData();
+    favoriteCoinsData = marketService.getFavoriteCoinData();
     sortMarketData();
     isLoading = false;
     notifyListeners();
@@ -116,6 +147,24 @@ class MarketProvider extends ChangeNotifier {
   void onRefresh(RefreshController refreshController) async {
     await fetchAllMarketData(appendInEnd: false);
     refreshController.refreshCompleted();
+  }
+
+  Future markCoinFavorite(MarketItem marketItem) async {
+    marketService.markCoinAsFavorite(marketItem);
+    favoriteCoinsData = marketService.getFavoriteCoinData();
+    AppUtils.showToast("${marketItem.name} ${StringConst.favCoinAddMsg}");
+    notifyListeners();
+    FirebaseAnalytics.instance
+        .logEvent(name: "mp_coin_added_fav");
+  }
+
+  Future removeCoinFromFavorite(MarketItem marketItem) async {
+    marketService.removeCoinFromFavorite(marketItem);
+    favoriteCoinsData = marketService.getFavoriteCoinData();
+    AppUtils.showToast("${marketItem.name} ${StringConst.favCoinRemoveMsg}");
+    notifyListeners();
+    FirebaseAnalytics.instance
+        .logEvent(name: "mp_coin_removed_fav");
   }
 
   void dispose() {

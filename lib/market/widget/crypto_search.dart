@@ -3,6 +3,7 @@ import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/provider/crypto_search.provider.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
 import 'package:crypto_khabar/market/widget/market_item.widget.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:flutter/material.dart';
 
 class CryptoSearchDelegate extends SearchDelegate {
@@ -47,14 +48,25 @@ class CryptoSearchDelegate extends SearchDelegate {
       if(items.length>0) {
         return ListView.separated(
             itemBuilder: (context, index) {
-              return MarketItemWidget(
-                  marketItem: items[index], formatter: provider.formatter);
+              return InkWell(
+                onLongPress: (){
+                  if (items[index].isFavorite) {
+                    items[index].isFavorite = false;
+                    provider.removeCoinFromFavorite(items[index]);
+                  } else {
+                    items[index].isFavorite = true;
+                    provider.markCoinFavorite(items[index]);
+                  }
+                },
+                child: MarketItemWidget(
+                    marketItem: items[index], formatter: provider.formatter),
+              );
             }, separatorBuilder: (context, index) {
           return Divider();
         },
             itemCount: items.length);
       }else{
-        return Center(child:Text("उपलब्ध नहीं है"));
+        return Center(child:Text(StringConst.coinNotAvailable));
       }
     }
     return Center();

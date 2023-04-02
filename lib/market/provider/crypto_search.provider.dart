@@ -1,5 +1,8 @@
 import 'package:crypto_khabar/market/model/market_model.dart';
 import 'package:crypto_khabar/market/service/market_service.dart';
+import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:intl/intl.dart';
 
 class CryptoSearchProvider {
@@ -17,6 +20,20 @@ class CryptoSearchProvider {
     formatter.minimumFractionDigits = 0;
     formatter.maximumFractionDigits = 7;
     data = marketService.getMarketData();
+  }
+
+  Future markCoinFavorite(MarketItem favoriteCoin) async {
+    marketService.markCoinAsFavorite(favoriteCoin);
+    AppUtils.showToast("${favoriteCoin.name} ${StringConst.favCoinAddMsg}");
+    FirebaseAnalytics.instance
+        .logEvent(name: "csp_coin_added_fav");
+  }
+
+  Future removeCoinFromFavorite(MarketItem marketItem) async {
+    marketService.removeCoinFromFavorite(marketItem);
+    AppUtils.showToast("${marketItem.name} ${StringConst.favCoinRemoveMsg}");
+    FirebaseAnalytics.instance
+        .logEvent(name: "csp_coin_removed_fav");
   }
 
   List<MarketItem> searchCrypto(String input) {

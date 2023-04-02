@@ -4,6 +4,7 @@ import 'package:crypto_khabar/shared/services/remote_config_service.dart';
 import 'package:crypto_khabar/shared/widget/banner_ad.dart';
 import 'package:crypto_khabar/shared/widget/markdown_common.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
+import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
@@ -52,7 +53,7 @@ class DetailPageState extends State<ArticleDetailPage> {
   //  print("Link: ${_article.imgUrl}");
     return Scaffold(
         appBar: AppBar(
-          title: Text("आर्टिकल"),
+          title: Text(StringConst.article),
           actions: [
             IconButton(
                 onPressed: () {
@@ -108,7 +109,7 @@ class DetailPageState extends State<ArticleDetailPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text("शेयर करें"),
+                            Text(StringConst.doShare),
                             SizedBox(width:8),
                             Icon(Icons.share),
                             SizedBox(width:48),
@@ -119,7 +120,7 @@ class DetailPageState extends State<ArticleDetailPage> {
                 ),
               ),
               Divider(height: 1,thickness: 1,color: Colors.grey.withOpacity(0.1),),
-           //   BannerAdWidget()
+              BannerAdWidget()
             ],
           ),
         ));
@@ -138,7 +139,7 @@ class DetailPageState extends State<ArticleDetailPage> {
       try {
         bool status = await ArticleService().saveArticle(article);
         if (status) {
-          AppUtils.showToast("आर्टिकल बुकमार्क हो गयी");
+          AppUtils.showToast(StringConst.articleBookmarked);
         }
       } catch (e) {
         print("ERROR:$e");

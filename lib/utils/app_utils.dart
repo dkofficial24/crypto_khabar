@@ -3,14 +3,12 @@ import 'package:crypto_khabar/constants.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AppUtils {
-
   static String formatDate(int date) {
     final DateFormat formatter = DateFormat('MMM-dd,yyyy hh:mm a');
     return formatter.format(DateTime.fromMillisecondsSinceEpoch(date));
@@ -31,9 +29,9 @@ class AppUtils {
     return formatter.format(date);
   }
 
-  static void showToast(String msg) {
+  static void showToast(String msg, {Toast toastLength = Toast.LENGTH_SHORT}) {
     if (isAppInBackground) return;
-    Fluttertoast.showToast(msg: msg);
+    Fluttertoast.showToast(msg: msg, toastLength: toastLength);
   }
 
   static void shareNews(NewsItem newsItem, {String appLink = ''}) {
@@ -75,7 +73,35 @@ class AppUtils {
     return _formattedNumber;
   }
 
-  static bool isDarkTheme(BuildContext context){
+  static bool isDarkTheme(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark;
+  }
+
+  static const Duration _snackBarDisplayDuration = Duration(milliseconds: 4000);
+
+  static void showSnackBar(BuildContext context, String text,
+      {Function action,
+      String actionText = "Dismiss",
+      Duration duration = _snackBarDisplayDuration,
+      Color backgroundColor = Colors.black,
+      Color textColor,
+      SnackBarBehavior behavior = SnackBarBehavior.fixed}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        backgroundColor: backgroundColor,
+        behavior: behavior,
+        action: SnackBarAction(
+          onPressed: action != null
+              ? action
+              : () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                },
+          label: actionText,
+          textColor: Colors.white,
+        ),
+        duration: duration,
+      ),
+    );
   }
 }
