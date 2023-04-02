@@ -33,14 +33,11 @@ class _MarketDetailState extends State<MarketDetailPage> {
     final url =
         'https://api.coingecko.com/api/v3/coins/${marketItem.id}/ohlc?vs_currency=inr&days=1';
     final res = await Dio().get(url);
-    List<List<dynamic>> list = (res.data as List<dynamic>);
-    List<CandleData> candleDataList = [];
-    list.forEach((List<dynamic> candleList) {
-      candleDataList.forEach((element) {
-        print('');
-      });
-    });
-    return [];
+    return (res.data as List<dynamic>)
+        .map((e) => fromJson(e))
+        .toList()
+        .reversed
+        .toList();
   }
 
    CandleData fromJson(Map<String, dynamic> json) {
