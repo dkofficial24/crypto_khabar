@@ -1,17 +1,17 @@
-# crypto_khabar
+*Crypto Khabar*
 
-A new Flutter project.
+Crypto Khabar is a platform that provides latest news, articles and analysis related to cryptocurrency in Hindi language. In addition to this, it also features a coin tracking tool that allows users to monitor the performance of 100 coins in real-time.
 
-## Getting Started
+*Features*
 
-This project is a starting point for a Flutter application.
+Latest news and articles related to cryptocurrency in Hindi language.
+Analysis and insights on current trends and market movements.
+Coin tracking tool that allows users to monitor the performance of 100 coins in real-time.
+User-friendly interface that is easy to navigate and use.
+Regularly updated content to ensure that users have access to the latest information.
 
-A few resources to get you started if this is your first Flutter project:
+*Technologies Used*
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-testing
+Flutter for building the user interface.
+Node.js and Firebase for the backend server.
+CoinGecko API for real-time coin tracking data.
