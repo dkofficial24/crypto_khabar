@@ -1,4 +1,4 @@
-*Crypto Khabar*
+### Crypto Khabar
 
 Crypto Khabar is a platform that provides latest news, articles and analysis related to cryptocurrency in Hindi language. In addition to this, it also features a coin tracking tool that allows users to monitor the performance of 100 coins in real-time.
 
