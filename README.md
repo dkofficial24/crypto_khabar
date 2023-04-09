@@ -15,3 +15,4 @@ Regularly updated content to ensure that users have access to the latest informa
 Flutter for building the user interface.
 Node.js and Firebase for the backend server.
 CoinGecko API for real-time coin tracking data.
+
