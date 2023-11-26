@@ -1,4 +1,3 @@
-import 'package:crypto_khabar/market/page/market_page.dart';
 import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
 import 'package:crypto_khabar/profile/service/profile_setting_service.dart';
 import 'package:crypto_khabar/shared/services/remote_config_service.dart';
@@ -18,7 +17,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  ProfileSettingProvider provider;
+  late ProfileSettingProvider provider;
   String version = "";
 
   @override
@@ -131,14 +130,17 @@ class _ProfilePageState extends State<ProfilePage> {
                             await RemoteConfigService().getAppDownloadLink();
                         LoaderController().dismissLoader(context);
                         Share.share(downloadLink,
-                            subject:
-                                StringConst.shareAppMsg);
+                            subject: StringConst.shareAppMsg);
                         FirebaseAnalytics.instance.logEvent(name: "share_app");
                       },
                       lastChild: Container(),
                     ),
                     SizedBox(height: 32),
-                    Center(child: Text("${StringConst.appVersion} ${version ?? ""}",style: TextStyle(color: Colors.grey),))
+                    Center(
+                        child: Text(
+                      "${StringConst.appVersion} ${version}",
+                      style: TextStyle(color: Colors.grey),
+                    ))
                   ],
                 )),
           );
@@ -151,13 +153,13 @@ class _ProfilePageState extends State<ProfilePage> {
 class ProfileItem extends StatelessWidget {
   final String title;
   final IconData iconData;
-  final Function callback;
+  final Function? callback;
   final Widget lastChild;
 
   const ProfileItem({
-    @required this.title,
-    @required this.iconData,
-    @required this.lastChild,
+    required this.title,
+    required this.iconData,
+    required this.lastChild,
     this.callback,
   });
 
@@ -167,7 +169,7 @@ class ProfileItem extends StatelessWidget {
       behavior: HitTestBehavior.translucent,
       onTap: () {
         if (callback != null) {
-          callback();
+          callback!();
         }
       },
       child: Container(
@@ -190,7 +192,7 @@ class ProfileItem extends StatelessWidget {
             SizedBox(width: 16),
             Text(
               title,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             Expanded(
               child: Container(),

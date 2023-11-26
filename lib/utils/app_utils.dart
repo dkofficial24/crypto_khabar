@@ -46,7 +46,7 @@ class AppUtils {
   }
 
   static Future<bool> isThemeManuallySet() async {
-    String status = await SharedPrefHelper().getValue("isThemeManuallySetKey");
+    String? status = await SharedPrefHelper().getValue("isThemeManuallySetKey");
     if (status == null) {
       return false;
     }
@@ -57,7 +57,7 @@ class AppUtils {
     await SharedPrefHelper().saveValue("isThemeManuallySetKey", true);
   }
 
-  static bool isValidUrl(String url) {
+  static bool isValidUrl(String? url) {
     if (url == null || url.isEmpty) {
       return false;
     }
@@ -80,11 +80,11 @@ class AppUtils {
   static const Duration _snackBarDisplayDuration = Duration(milliseconds: 4000);
 
   static void showSnackBar(BuildContext context, String text,
-      {Function action,
+      {VoidCallback? action,
       String actionText = "Dismiss",
       Duration duration = _snackBarDisplayDuration,
       Color backgroundColor = Colors.black,
-      Color textColor,
+      Color? textColor,
       SnackBarBehavior behavior = SnackBarBehavior.fixed}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

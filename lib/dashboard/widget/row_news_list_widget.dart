@@ -1,5 +1,4 @@
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
-import 'package:crypto_khabar/utils/app_routes.dart';
 import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +7,7 @@ class NewsRowListWidget extends StatelessWidget {
   final Function callback;
   final int index;
 
-  const NewsRowListWidget({@required this.newsItem, @required this.callback, this.index = -1});
+  const NewsRowListWidget({required this.newsItem, required this.callback, this.index = -1});
 
   @override
   Widget build(BuildContext context) {

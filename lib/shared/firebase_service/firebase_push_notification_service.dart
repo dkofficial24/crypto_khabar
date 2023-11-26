@@ -3,8 +3,6 @@ import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/page/dashboard_page.dart';
 import 'package:crypto_khabar/dashboard/service/news_service.dart';
-import 'package:crypto_khabar/shared/firebase_service/news_firebase_service.dart';
-import 'package:crypto_khabar/shared/services/notification_service.dart';
 import 'package:crypto_khabar/shared/services/shared_pref_helper.dart';
 import 'package:crypto_khabar/shared/widget/loader_controller.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
@@ -25,7 +23,7 @@ class PushNotificationService {
     return _instance;
   }
 
-  String token;
+  String? token;
 
   void init() {
     try {
@@ -48,15 +46,14 @@ class PushNotificationService {
 
       FirebaseMessaging.onMessage.listen((RemoteMessage remoteMessage) {
         final remoteNotification = remoteMessage.notification;
-      //  print("message received...");
+        //  print("message received...");
         // if (ProfileSettingService().notificationStatus) {
         //   NotificationService().showNotification(
         //       remoteNotification.title, remoteNotification.body);
         // }
-     //BroadcastEvents().publish(NewsReceivedEvent);
+        //BroadcastEvents().publish(NewsReceivedEvent);
       });
       FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) async {
-        if (remoteMessage == null) return;
         if ((await isMessageIdExists(remoteMessage.messageId))) return;
         await onNotificationClick(remoteMessage);
       });
@@ -68,10 +65,12 @@ class PushNotificationService {
   }
 
   Future onNotificationClick(RemoteMessage remoteMessage) async {
-    setLastSharedMsg(remoteMessage.messageId);
+    if (remoteMessage.messageId != null) {
+      setLastSharedMsg(remoteMessage.messageId!);
+    }
     if (remoteMessage.data['type'] == 'news') {
       await fetchNewsById(remoteMessage.data['id']);
-    }else if (remoteMessage.data['article'] == 'news') {
+    } else if (remoteMessage.data['article'] == 'news') {
       //todo load article and open article detail page
     }
   }
@@ -90,12 +89,11 @@ class PushNotificationService {
       LoaderController().showLoader(globalContext);
       NewsItem newsItem = await NewsService().fetchNewsById(id);
       LoaderController().dismissLoader(globalContext);
-      BroadcastEvents().publish(NewsReceivedEvent);
-      if(newsItem.category.toLowerCase().contains("news") && newsItem.details.isNotEmpty) {
+      BroadcastEvents().publish(NewsReceivedEvent, arguments: null);
+      if (newsItem.category.toLowerCase().contains("news") &&
+          newsItem.details.isNotEmpty) {
         Navigator.pushNamed(globalContext, AppRoutes.NewsDetailsPage,
-            arguments: NewsDetailsArgs(
-                index:0,
-                newsItem:newsItem));
+            arguments: NewsDetailsArgs(index: 0, newsItem: newsItem));
         FirebaseAnalytics.instance.logEvent(
             name: "app_open_by_notification_click",
             parameters: {"title": newsItem.title});
@@ -110,8 +108,8 @@ class PushNotificationService {
     SharedPrefHelper().saveValue("LastSavedMsgId", msgId);
   }
 
-  Future<bool> isMessageIdExists(String msgId) async {
-    String value = await SharedPrefHelper().getValue("LastSavedMsgId");
+  Future<bool> isMessageIdExists(String? msgId) async {
+    String? value = await SharedPrefHelper().getValue("LastSavedMsgId");
     if (value == null) {
       return false;
     }
@@ -122,7 +120,4 @@ class PushNotificationService {
 
 Future onBackgroundMessage(RemoteMessage remoteMessage) async {
   return;
-  final remoteNotification = remoteMessage.notification;
-  NotificationService()
-      .showNotification(remoteNotification.title, remoteNotification.body);
 }

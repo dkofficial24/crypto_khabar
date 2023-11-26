@@ -12,11 +12,11 @@ class MarketItemWidget extends StatelessWidget {
   final NumberFormat formatter;
   final double topPadding, bottomPadding;
   static const double rowGap = 8;
-  final Function onMarketItemClick;
+  final Function? onMarketItemClick;
 
   MarketItemWidget(
-      {@required this.marketItem,
-      @required this.formatter,
+      {required this.marketItem,
+      required this.formatter,
       this.topPadding = 8,
       this.bottomPadding = 8,
       this.onMarketItemClick});
@@ -28,7 +28,7 @@ class MarketItemWidget extends StatelessWidget {
         await Navigator.pushNamed(context, AppRoutes.MarketDetailPage,
             arguments: marketItem);
         if (onMarketItemClick != null) {
-          onMarketItemClick();
+          onMarketItemClick!();
         }
       },
       child: Padding(
@@ -121,7 +121,7 @@ class MarketItemWidget extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                        "${StringConst.coinMarketCap} ${AppUtils.currencyFormat(marketItem.marketCap)}",
+                        "${StringConst.coinMarketCap} ${AppUtils.currencyFormat(marketItem.marketCap.toInt())}",
                         style:
                             TextStyle(color: bottomColor, fontSize: fontSize)),
                     const SizedBox(width: 2),

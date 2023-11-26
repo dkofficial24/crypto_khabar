@@ -20,13 +20,13 @@ class ProfileSettingService {
   }
 
   String getDisclaimerMsg() {
-    if (disclaimerMsg == null || disclaimerMsg.isEmpty) {
+    if (disclaimerMsg.isEmpty) {
       disclaimerMsg = defaultDisclaimerMsg;
     }
     return disclaimerMsg;
   }
 
-  bool _notificationStatus;
+  bool? _notificationStatus;
 
   static ProfileSettingService _authService = ProfileSettingService._internal();
 
@@ -34,20 +34,21 @@ class ProfileSettingService {
     return _authService;
   }
 
-  bool get notificationStatus => _notificationStatus;
+  bool get notificationStatus => _notificationStatus ?? false;
 
   init() {
     try {
       SharedPrefHelper().getValue("user_id").then((userId) {
         if (userId == null) {
           String uid = Uuid().v4();
-          User user = User(uid: uid,joiningDate: DateTime.now().millisecondsSinceEpoch);
+          User user = User(
+              uid: uid, joiningDate: DateTime.now().millisecondsSinceEpoch);
           SharedPrefHelper().saveValue("user_id", user.toJson());
           FirebaseAnalytics.instance.logEvent(name: "new_user");
           incrementUserCount();
         }
       });
-    }catch(e){
+    } catch (e) {
       print("Error ProfileSettingService init $e");
     }
 
@@ -78,7 +79,7 @@ class ProfileSettingService {
 
   Future<bool> isDarkTheme() async {
     SharedPrefHelper sharedPrefHelper = SharedPrefHelper();
-    String value = await sharedPrefHelper.getValue("isDarkTheme");
+    String? value = await sharedPrefHelper.getValue("isDarkTheme");
     if (value == null) {
       return false;
     }
@@ -92,7 +93,7 @@ class ProfileSettingService {
 
   Future<bool> getNotificationReceiveStatus() async {
     SharedPrefHelper sharedPrefHelper = SharedPrefHelper();
-    String value = await sharedPrefHelper.getValue("NotificationReceiveStatus");
+    String? value = await sharedPrefHelper.getValue("NotificationReceiveStatus");
     if (value == null) {
       return true;
     }

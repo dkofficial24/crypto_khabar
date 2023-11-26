@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MarketShimmerWidget extends StatelessWidget {
-
   MarketShimmerWidget();
 
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300],
-      highlightColor: Colors.grey[100],
+      baseColor: Colors.grey[300] ?? Colors.grey,
+      highlightColor: Colors.grey[100] ?? Colors.grey,
       child: ListView.separated(
         itemCount: 16,
         shrinkWrap: true,

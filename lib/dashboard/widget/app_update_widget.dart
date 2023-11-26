@@ -7,7 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 class AppUpdateWidget extends StatelessWidget {
   final String title;
   final String desc;
-  const AppUpdateWidget({@required this.title,@required this.desc});
+
+  const AppUpdateWidget({required this.title, required this.desc});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +19,14 @@ class AppUpdateWidget extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.65,
         decoration: BoxDecoration(
             gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              //tileMode: TileMode.clamp,
-              colors: [
-                Color.fromRGBO(9, 198, 249, 1),
-                Color.fromRGBO(4, 93, 233, 1),
-              ],
-            )),
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          //tileMode: TileMode.clamp,
+          colors: [
+            Color.fromRGBO(9, 198, 249, 1),
+            Color.fromRGBO(4, 93, 233, 1),
+          ],
+        )),
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Column(
@@ -33,10 +34,10 @@ class AppUpdateWidget extends StatelessWidget {
             children: [
               Center(
                   child: Text(
-                    title,
-                    style:
+                title,
+                style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  )),
+              )),
               SizedBox(height: 4),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -56,8 +57,8 @@ class AppUpdateWidget extends StatelessWidget {
                 child: ElevatedButton(
                     onPressed: () {
                       if (Platform.isAndroid) {
-                        launch(
-                            "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
+                        launchUrl(Uri.parse(
+                            "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar"));
                       }
                     },
                     child: Text(StringConst.doUpdate)),

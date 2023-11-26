@@ -3,7 +3,6 @@ import 'package:crypto_khabar/profile/provider/profile_setting_provider.dart';
 import 'package:crypto_khabar/shared/widget/view_utils.dart';
 import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,12 +13,13 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class _FeedbackPageState extends State<FeedbackPage> {
-  ProfileSettingProvider provider;
+  late ProfileSettingProvider provider;
   TextEditingController nameController = TextEditingController();
+
   //TextEditingController emailController = TextEditingController();
   TextEditingController messageController = TextEditingController();
   final key = GlobalKey<FormState>();
-  bool shouldShowFeedback;
+  bool? shouldShowFeedback;
 
   @override
   void initState() {
@@ -28,7 +28,9 @@ class _FeedbackPageState extends State<FeedbackPage> {
       setState(() {
         provider.previousFeedback = feedback;
       });
-      loadStatus(feedback);
+      if (feedback != null) {
+        loadStatus(feedback);
+      }
     }).onError((error, stackTrace) {
       setState(() {
         shouldShowFeedback = true;
@@ -37,16 +39,13 @@ class _FeedbackPageState extends State<FeedbackPage> {
     super.initState();
   }
 
-  loadStatus(FeedbackInfo info){
+  loadStatus(FeedbackInfo info) {
     DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(info.date);
     DateTime current = DateTime.now();
     int daysDiff = current.difference(dateTime).inDays;
-    shouldShowFeedback = daysDiff>15;
-    setState(() {
-
-    });
+    shouldShowFeedback = daysDiff > 15;
+    setState(() {});
   }
-
 
   bool isValidEmail(email) {
     return RegExp(
@@ -56,9 +55,9 @@ class _FeedbackPageState extends State<FeedbackPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(provider.previousFeedback != null){
+    if (provider.previousFeedback != null) {
       nameController.text = provider.previousFeedback?.name ?? "";
-     // emailController.text = provider.previousFeedback.email;
+      // emailController.text = provider.previousFeedback.email;
     }
 
     return Scaffold(
@@ -68,13 +67,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
         body: mainWidget());
   }
 
-  Widget mainWidget(){
-    if(shouldShowFeedback == null){
-      return Center(
-          child:Text(StringConst.pleaseWait)
-      );
+  Widget mainWidget() {
+    if (shouldShowFeedback == null) {
+      return Center(child: Text(StringConst.pleaseWait));
     }
-    if(shouldShowFeedback){
+    if (shouldShowFeedback ?? false) {
       return SingleChildScrollView(
         child: Form(
           key: key,
@@ -90,56 +87,60 @@ class _FeedbackPageState extends State<FeedbackPage> {
                 SizedBox(
                   height: 20,
                 ),
-                buildTextFormField(StringConst.feedbackReview, messageController, 5,
-                        (value) {
-                      if (value == null || value.isEmpty) {
-                        return StringConst.writeFeedbackReview;
-                      } else {
-                        return null;
-                      }
-                    }),
+                buildTextFormField(
+                    StringConst.feedbackReview, messageController, 5, (value) {
+                  if (value == null || value.isEmpty) {
+                    return StringConst.writeFeedbackReview;
+                  } else {
+                    return null;
+                  }
+                }),
                 SizedBox(
                   height: 20,
                 ),
                 Center(child: ratingWidget()),
-                SizedBox(height: 44,),
+                SizedBox(
+                  height: 44,
+                ),
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         padding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 50)),
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 50)),
                     child: Text(StringConst.sendFeedbackReview),
-                    onPressed: () async{
-                      if (key.currentState.validate()) {
+                    onPressed: () async {
+                      if (key.currentState?.validate() ?? false) {
                         FeedbackInfo feedback = FeedbackInfo(
-                            name:"User",
-                            email:"",
+                            name: "User",
+                            email: "",
                             review: messageController.text,
                             rating: provider.rating,
-                            date: DateTime.now().millisecondsSinceEpoch
-                        );
+                            date: DateTime.now().millisecondsSinceEpoch);
                         await provider.shareFeedback(feedback).then((value) {
-                          if(mounted)
-                          setState(() {
-                            shouldShowFeedback = false;
-                          });
+                          if (mounted)
+                            setState(() {
+                              shouldShowFeedback = false;
+                            });
                         });
 
-                        FirebaseAnalytics.instance.logEvent(name: "feedback_shared");
+                        FirebaseAnalytics.instance
+                            .logEvent(name: "feedback_shared");
 
-                        if(provider.rating >=4){
+                        if (provider.rating >= 4) {
                           showActionDialog(
-                            context,title: StringConst.feedbackReviewRating,
+                            context,
+                            title: StringConst.feedbackReviewRating,
                             content: StringConst.askForRatingMsg,
                             positiveTextButton: StringConst.now,
                             negativeTextButton: StringConst.later,
-                            positiveAction: (){
+                            positiveAction: () {
                               try {
-                                launch(
-                                    "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
+                                launchUrl(Uri.parse(
+                                    'https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar'));
                                 Navigator.pop(context);
-                                FirebaseAnalytics.instance.logEvent(name: "rating_dialog");
-                              }catch(e){}
+                                FirebaseAnalytics.instance
+                                    .logEvent(name: "rating_dialog");
+                              } catch (e) {}
                             },
                           );
                         }
@@ -158,37 +159,39 @@ class _FeedbackPageState extends State<FeedbackPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(StringConst.feedbackThanksMsg,style:TextStyle(fontSize: 16),),
+          Text(
+            StringConst.feedbackThanksMsg,
+            style: TextStyle(fontSize: 16),
+          ),
         ],
       ),
     );
-
   }
 
   Widget ratingWidget() {
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    RatingBar.builder(
-                      initialRating: 5,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (rating) {
-                        provider.rating = rating;
-                      },
-                    ),SizedBox(
-                      height: 20,
-                    ),
-                  ],
-                );
+      children: [
+        RatingBar.builder(
+          initialRating: 5,
+          minRating: 1,
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 5,
+          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+          itemBuilder: (context, _) => Icon(
+            Icons.star,
+            color: Colors.amber,
+          ),
+          onRatingUpdate: (rating) {
+            provider.rating = rating;
+          },
+        ),
+        SizedBox(
+          height: 20,
+        ),
+      ],
+    );
   }
 
   Widget buildTextFormField(text, controller, int maxLine, validate) {
@@ -198,7 +201,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
           children: [
             Text(
               text,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.titleMedium,
             )
           ],
         ),

@@ -9,7 +9,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-BuildContext globalContext;
+late BuildContext globalContext;
 
 class DashboardPage extends StatefulWidget {
   @override

@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class BannerAdWidget extends StatefulWidget {
-
   @override
   _BannerAdWidgetState createState() => _BannerAdWidgetState();
 }
 
 class _BannerAdWidgetState extends State<BannerAdWidget> {
   bool isBannerAdReady = false;
-  BannerAd bannerAd;
+  BannerAd? bannerAd;
 
   @override
   void initState() {
@@ -21,13 +20,13 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-      return AdHelper.isAdEnabled() && isBannerAdReady
-          ? Container(
-        width: bannerAd.size.width.toDouble(),
-        height: bannerAd.size.height.toDouble()+4,
-        child: AdWidget(ad: bannerAd),
-      )
-          : Container();
+    return AdHelper.isAdEnabled() && isBannerAdReady
+        ? Container(
+            width: bannerAd!.size.width.toDouble(),
+            height: bannerAd!.size.height.toDouble() + 4,
+            child: AdWidget(ad: bannerAd!),
+          )
+        : Container();
   }
 
   initAd() {
@@ -52,13 +51,13 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
           },
         ),
       );
-      bannerAd.load();
+      bannerAd?.load();
     }
   }
 
   @override
   void dispose() {
-    bannerAd.dispose();
+    bannerAd?.dispose();
     super.dispose();
   }
 }

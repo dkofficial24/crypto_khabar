@@ -26,8 +26,8 @@ class TopNewsPage extends StatefulWidget {
 }
 
 class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
-  TopNewsProvider _topNewsProvider;
-  RefreshController _refreshController;
+  late TopNewsProvider _topNewsProvider;
+  late RefreshController _refreshController;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -254,13 +254,13 @@ class _TopNewsPageState extends State<TopNewsPage> with WidgetsBindingObserver {
                   ],
                 );
               }),
-          baseColor: Colors.grey[300],
-          highlightColor: Colors.grey[100]),
+          baseColor: Colors.grey[100] ?? Colors.grey,
+          highlightColor: Colors.grey[100] ?? Colors.grey),
     );
   }
 
   Slidable createSlidable(NewsItem newsItem, BuildContext context,
-      {@required Widget child}) {
+      {required Widget child}) {
     return Slidable(
         closeOnScroll: true,
         enabled: true,

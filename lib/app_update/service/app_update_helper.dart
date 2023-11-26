@@ -33,7 +33,7 @@ class AppUpdateHelper {
   Future checkLatestUpdate(BuildContext context) async {
     if (FlavorSetting().isProdEnvironment()) {
       try {
-        AppUpdateConfig config =
+        AppUpdateConfig? config =
             await RemoteConfigService().getAppUpdateConfig();
         if (config == null) {
           return;
@@ -54,7 +54,7 @@ class AppUpdateHelper {
         if (Platform.isAndroid && !isForceUpdate) {
           _checkForInAppUpdate(context, config);
         } else {
-          if (shouldUpdate && globalContext != null) {
+          if (shouldUpdate) {
             await _doTraditionalUpdate(
                 config, isForceUpdate, appCurrentVersion);
           }
@@ -65,8 +65,8 @@ class AppUpdateHelper {
     }
   }
 
-  Future<void> _doTraditionalUpdate(
-      AppUpdateConfig config, bool isForceUpdate, int appCurrentVersion) async {
+  Future<void> _doTraditionalUpdate(AppUpdateConfig? config, bool isForceUpdate,
+      int appCurrentVersion) async {
     await Future.delayed(Duration(seconds: 5));
     if (await _shouldShowUpdateDialog()) {
       showUpdateDialog(globalContext,
@@ -75,7 +75,7 @@ class AppUpdateHelper {
           positiveTextButton: config?.positiveButton ?? DefaultUpdateButtonText,
           negativeTextButton: config?.negativeButton ?? DefaultIgnoreButtonTxt,
           forceUpdate: isForceUpdate, positiveAction: () {
-        launch(config.appUrl);
+        launchUrl(Uri.parse(config?.appUrl ?? ''));
         FirebaseAnalytics.instance
             .logEvent(name: "app_update_accepted", parameters: {
           "appCurrentVersion": appCurrentVersion,
@@ -134,7 +134,7 @@ class AppUpdateHelper {
   }
 
   Future<int> _getUpdateCheckLaterTime() async {
-    String value = await SharedPrefHelper().getValue("updateCheckLaterTime");
+    String? value = await SharedPrefHelper().getValue("updateCheckLaterTime");
     if (value == null || value.isEmpty) {
       return -1;
     }
@@ -144,7 +144,7 @@ class AppUpdateHelper {
   Future<void> _checkForInAppUpdate(
       BuildContext context, AppUpdateConfig appUpdateConfig) async {
     InAppUpdate.checkForUpdate().then((AppUpdateInfo appUpdateInfo) async {
-      if (appUpdateInfo?.updateAvailability ==
+      if (appUpdateInfo.updateAvailability ==
           UpdateAvailability.updateAvailable) {
         if (await _shouldShowUpdateDialog()) {
           if (appUpdateConfig.appUpdateType == AppUpdateType.IMMEDIATE ||

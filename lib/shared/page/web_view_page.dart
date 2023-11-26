@@ -8,7 +8,7 @@ class WebViewPage extends StatefulWidget {
 
 class WebViewPageState extends State<WebViewPage> {
   bool isLoading = false;
-  String link;
+  String? link;
   int index = 1;
   @override
   void initState() {
@@ -18,7 +18,7 @@ class WebViewPageState extends State<WebViewPage> {
   @override
   Widget build(BuildContext context) {
     if (link == null) {
-      link = ModalRoute.of(context).settings.arguments;
+      link = ModalRoute.of(context)?.settings.arguments as String?;
     }
     return Container();
     // return Scaffold(

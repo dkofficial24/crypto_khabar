@@ -12,14 +12,16 @@ class ArticleService {
   factory ArticleService() {
     return _instance;
   }
-  QueryDocumentSnapshot last;
+
+  QueryDocumentSnapshot? last;
 
   List<Article> articleList = [];
 
-  Future<List<Article>> fetchArticleByPagination({bool appendInEnd}) async {
+  Future<List<Article>> fetchArticleByPagination(
+      {bool appendInEnd = true}) async {
     if (NewsService().netConnectionStatus) {
       List<Article> itemList =
-      await _fetchArticleByPagination(appendInEnd: appendInEnd);
+          await _fetchArticleByPagination(appendInEnd: appendInEnd);
       if (appendInEnd) {
         articleList.addAll(itemList);
       } else {
@@ -36,7 +38,7 @@ class ArticleService {
       {bool appendInEnd = true}) async {
     List<Article> articleList = [];
     CollectionReference articleRef =
-    FirebaseFirestore.instance.collection("article");
+        FirebaseFirestore.instance.collection("article");
     QuerySnapshot data;
 
     if (last == null || !appendInEnd) {
@@ -45,14 +47,15 @@ class ArticleService {
       data = await articleRef
           .orderBy("date", descending: true)
           .limit(4)
-          .startAfterDocument(last)
+          .startAfterDocument(last!)
           .get();
     }
-    if (data != null && data.docs.length > 0) {
+    if (data.docs.length > 0) {
       last = data.docs[data.docs.length - 1];
       data.docs.forEach((element) {
         if (element.exists) {
-          articleList.add(Article.fromJson(element.data()));
+          articleList
+              .add(Article.fromJson(element.data() as Map<String, dynamic>));
         }
       });
     }

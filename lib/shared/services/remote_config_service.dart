@@ -18,8 +18,8 @@ class RemoteConfigService {
     init();
   }
 
-  FirebaseRemoteConfig _remoteConfig;
-  AppUpdateConfig _appUpdateConfig;
+  late FirebaseRemoteConfig _remoteConfig;
+  AppUpdateConfig? _appUpdateConfig;
   bool _isAdEnabled = true;
   Completer<AppUpdateConfig> appUpdateCompleter = Completer();
 
@@ -53,7 +53,7 @@ class RemoteConfigService {
     }
   }
 
-  Future<AppUpdateConfig> getAppUpdateConfig() async {
+  Future<AppUpdateConfig?> getAppUpdateConfig() async {
     if (appUpdateCompleter.isCompleted) {
       return _appUpdateConfig;
     }
@@ -68,7 +68,7 @@ class RemoteConfigService {
     if (_appUpdateConfig == null) {
       await downloadUpdateConfig();
     }
-    String linkUrl = _appUpdateConfig.appUrl;
+    String linkUrl = _appUpdateConfig?.appUrl ?? '';
     linkUrl = linkUrl + " " + StringConst.shareAppMsg;
     return linkUrl;
   }

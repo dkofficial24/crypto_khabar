@@ -27,223 +27,94 @@ class MarketItem {
   String lastUpdated;
   bool isFavorite = false;
 
-  MarketItem(
-      {this.id,
-      this.symbol,
-      this.name,
-      this.image,
-      this.currentPrice,
-      this.marketCap,
-      this.marketCapRank,
-      this.fullyDilutedValuation,
-      this.totalVolume,
-      this.high24h,
-      this.low24h,
-      this.priceChange24h,
-      this.priceChangePercentage24h,
-      this.marketCapChange24h,
-      this.marketCapChangePercentage24h,
-      this.circulatingSupply,
-      this.totalSupply,
-      this.maxSupply,
-      this.ath,
-      this.athChangePercentage,
-      this.athDate,
-      this.atl,
-      this.atlChangePercentage,
-      this.atlDate,
-      this.roi,
-      this.lastUpdated});
+  MarketItem({
+    required this.id,
+    required this.symbol,
+    required this.name,
+    required this.image,
+    required this.currentPrice,
+    required this.marketCap,
+    required this.marketCapRank,
+    required this.fullyDilutedValuation,
+    required this.totalVolume,
+    required this.high24h,
+    required this.low24h,
+    required this.priceChange24h,
+    required this.priceChangePercentage24h,
+    required this.marketCapChange24h,
+    required this.marketCapChangePercentage24h,
+    required this.circulatingSupply,
+    required this.totalSupply,
+    required this.maxSupply,
+    required this.ath,
+    required this.athChangePercentage,
+    required this.athDate,
+    required this.atl,
+    required this.atlChangePercentage,
+    required this.atlDate,
+    required this.roi,
+    required this.lastUpdated,
+  });
 
-  MarketItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    symbol = json['symbol'];
-    name = json['name'];
-    image = json['image'];
-    currentPrice = json['current_price'];
-    marketCap = json['market_cap'];
-    marketCapRank = json['market_cap_rank'];
-    fullyDilutedValuation = json['fully_diluted_valuation'];
-    totalVolume = json['total_volume'];
-    high24h = json['high_24h'];
-    low24h = json['low_24h'];
-    priceChange24h = json['price_change_24h'];
-    priceChangePercentage24h = json['price_change_percentage_24h'];
-    marketCapChange24h = json['market_cap_change_24h'];
-    marketCapChangePercentage24h = json['market_cap_change_percentage_24h'];
-    circulatingSupply = json['circulating_supply'];
-    totalSupply = json['total_supply'];
-    maxSupply = json['max_supply'];
-    ath = json['ath'];
-    athChangePercentage = json['ath_change_percentage'];
-    athDate = json['ath_date'];
-    atl = json['atl'];
-    atlChangePercentage = json['atl_change_percentage'];
-    atlDate = json['atl_date'];
-    roi = json['roi'];
-    lastUpdated = json['last_updated'];
+  factory MarketItem.fromJson(Map<String, dynamic> json) {
+    return MarketItem(
+      id: json['id'] ?? '',
+      symbol: json['symbol'] ?? '',
+      name: json['name'] ?? '',
+      image: json['image'] ?? '',
+      currentPrice: json['current_price'] ?? 0,
+      marketCap: json['market_cap'] ?? 0,
+      marketCapRank: json['market_cap_rank'] ?? 0,
+      fullyDilutedValuation: json['fully_diluted_valuation'] ?? 0,
+      totalVolume: json['total_volume'] ?? 0,
+      high24h: json['high_24h'] ?? 0,
+      low24h: json['low_24h'] ?? 0,
+      priceChange24h: json['price_change_24h'] ?? 0,
+      priceChangePercentage24h: json['price_change_percentage_24h'] ?? 0,
+      marketCapChange24h: json['market_cap_change_24h'] ?? 0,
+      marketCapChangePercentage24h: json['market_cap_change_percentage_24h'] ?? 0,
+      circulatingSupply: json['circulating_supply'] ?? 0,
+      totalSupply: json['total_supply'] ?? 0,
+      maxSupply: json['max_supply'] ?? 0,
+      ath: json['ath'] ?? 0,
+      athChangePercentage: json['ath_change_percentage'] ?? 0,
+      athDate: json['ath_date'] ?? '',
+      atl: json['atl'] ?? 0,
+      atlChangePercentage: json['atl_change_percentage'] ?? 0,
+      atlDate: json['atl_date'] ?? '',
+      roi: json['roi'] ?? <String, dynamic>{},
+      lastUpdated: json['last_updated'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['symbol'] = this.symbol;
-    data['name'] = this.name;
-    data['image'] = this.image;
-    data['current_price'] = this.currentPrice;
-    data['market_cap'] = this.marketCap;
-    data['market_cap_rank'] = this.marketCapRank;
-    data['fully_diluted_valuation'] = this.fullyDilutedValuation;
-    data['total_volume'] = this.totalVolume;
-    data['high_24h'] = this.high24h;
-    data['low_24h'] = this.low24h;
-    data['price_change_24h'] = this.priceChange24h;
-    data['price_change_percentage_24h'] = this.priceChangePercentage24h;
-    data['market_cap_change_24h'] = this.marketCapChange24h;
-    data['market_cap_change_percentage_24h'] =
-        this.marketCapChangePercentage24h;
-    data['circulating_supply'] = this.circulatingSupply;
-    data['total_supply'] = this.totalSupply;
-    data['max_supply'] = this.maxSupply;
-    data['ath'] = this.ath;
-    data['ath_change_percentage'] = this.athChangePercentage;
-    data['ath_date'] = this.athDate;
-    data['atl'] = this.atl;
-    data['atl_change_percentage'] = this.atlChangePercentage;
-    data['atl_date'] = this.atlDate;
-    data['roi'] = this.roi;
-    data['last_updated'] = this.lastUpdated;
-    return data;
+    return {
+      'id': id,
+      'symbol': symbol,
+      'name': name,
+      'image': image,
+      'current_price': currentPrice,
+      'market_cap': marketCap,
+      'market_cap_rank': marketCapRank,
+      'fully_diluted_valuation': fullyDilutedValuation,
+      'total_volume': totalVolume,
+      'high_24h': high24h,
+      'low_24h': low24h,
+      'price_change_24h': priceChange24h,
+      'price_change_percentage_24h': priceChangePercentage24h,
+      'market_cap_change_24h': marketCapChange24h,
+      'market_cap_change_percentage_24h': marketCapChangePercentage24h,
+      'circulating_supply': circulatingSupply,
+      'total_supply': totalSupply,
+      'max_supply': maxSupply,
+      'ath': ath,
+      'ath_change_percentage': athChangePercentage,
+      'ath_date': athDate,
+      'atl': atl,
+      'atl_change_percentage': atlChangePercentage,
+      'atl_date': atlDate,
+      'roi': roi,
+      'last_updated': lastUpdated,
+    };
   }
 }
-
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-//
-// class ExchangeModel {
-//   String name;
-//   String shortName;
-//   int rank;
-//   double currentValue;
-//   double marketCap;
-//   double grossRate;
-//   IconData icon;
-//   IconData star;
-//   IconData grossIcon;
-//
-//   ExchangeModel({
-//     @required this.name,
-//     @required this.shortName,
-//     @required this.rank,
-//     @required this.currentValue,
-//     @required this.marketCap,
-//     @required this.grossRate,
-//     @required this.icon,
-//     @required this.star,
-//     @required this.grossIcon,
-//   });
-// }
-//
-// List<ExchangeModel> exchangeModelList = <ExchangeModel>[
-//   ExchangeModel(
-//     name: "Bitcoin",
-//     shortName: "BTC",
-//     rank: 1,
-//     currentValue: 41287.54,
-//     marketCap: 783.87,
-//     grossRate: 5.46,
-//     icon: CupertinoIcons.bitcoin,
-//     star: Icons.star_border_outlined,
-//     grossIcon: CupertinoIcons.arrowtriangle_up_fill,
-//   ),
-//   ExchangeModel(
-//       name: "Ethereum",
-//       shortName: "ETH",
-//       rank: 2,
-//       currentValue: 2762.76,
-//       marketCap: 331.51,
-//       grossRate: 5.42,
-//       icon: CupertinoIcons.add,
-//       grossIcon: CupertinoIcons.arrowtriangle_up_fill,
-//       star: Icons.star_border_outlined),
-//   ExchangeModel(
-//       name: "Tether",
-//       shortName: "USDT",
-//       rank: 3,
-//       currentValue: 1.000,
-//       marketCap: 80.148,
-//       grossRate: 0.004,
-//       icon: CupertinoIcons.drop_triangle,
-//       star: Icons.star_border_outlined,
-//       grossIcon: CupertinoIcons.arrowtriangle_up_fill),
-//   ExchangeModel(
-//       name: "BNB",
-//       shortName: "BNB",
-//       rank: 4,
-//       currentValue: 387.14,
-//       marketCap: 63.99,
-//       grossRate: 5.02,
-//       icon: CupertinoIcons.map,
-//       grossIcon: CupertinoIcons.arrowtriangle_up_fill,
-//       star: Icons.star_border_outlined),
-//   ExchangeModel(
-//       name: "USD Coin",
-//       shortName: "USDT",
-//       rank: 5,
-//       currentValue: 0.9997,
-//       marketCap: 52.46,
-//       grossRate: 0.02,
-//       icon: CupertinoIcons.money_dollar,
-//       star: Icons.star_border_outlined,
-//       grossIcon: CupertinoIcons.arrowtriangle_down_fill),
-//   ExchangeModel(
-//       name: "XRP",
-//       shortName: "XRP",
-//       rank: 6,
-//       currentValue: 0.7916,
-//       marketCap: 38.03,
-//       grossRate: 0.31,
-//       icon: CupertinoIcons.drop,
-//       star: Icons.star_border_outlined,
-//       grossIcon: CupertinoIcons.arrowtriangle_down_fill),
-//   ExchangeModel(
-//       name: "Cardano",
-//       shortName: "ADA",
-//       rank: 7,
-//       currentValue: 0.8504,
-//       marketCap: 28.66,
-//       grossRate: 0.95,
-//       icon: CupertinoIcons.shuffle,
-//       star: Icons.star_border_outlined,
-//       grossIcon: CupertinoIcons.arrowtriangle_down_fill),
-//   ExchangeModel(
-//       name: "Solana",
-//       shortName: "SOL",
-//       rank: 8,
-//       currentValue: 87.09,
-//       marketCap: 27.86,
-//       grossRate: 0.01,
-//       icon: CupertinoIcons.camera,
-//       star: Icons.star_border_outlined,
-//       grossIcon: CupertinoIcons.arrowtriangle_down_fill),
-//   ExchangeModel(
-//       name: "Dogecoin",
-//       shortName: "DOGE",
-//       rank: 9,
-//       currentValue: 0.1174,
-//       marketCap: 15.578,
-//       grossRate: 0.52,
-//       icon: CupertinoIcons.rectangle_expand_vertical,
-//       star: Icons.star_border_outlined,
-//       grossIcon: CupertinoIcons.arrowtriangle_down_fill),
-//   ExchangeModel(
-//       name: "Shiba Inu",
-//       shortName: "SHIB",
-//       rank: 10,
-//       currentValue: 0.00002247,
-//       marketCap: 12.33,
-//       grossRate: 0.519,
-//       icon: CupertinoIcons.staroflife,
-//       star: Icons.star_border_outlined,
-//       grossIcon: CupertinoIcons.arrowtriangle_down_fill)
-// ];

@@ -6,14 +6,11 @@ import 'package:crypto_khabar/utils/string_const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class MarketPage extends StatefulWidget {
-  const MarketPage({Key key}) : super(key: key);
-
   @override
   _MarketPageState createState() => _MarketPageState();
 }
@@ -27,7 +24,7 @@ class _MarketPageState extends State<MarketPage> {
   );
 
   final ScrollController _scrollController = ScrollController();
-  RefreshController _refreshController;
+  late RefreshController _refreshController;
 
   void initState() {
     formatter.minimumFractionDigits = 0;
@@ -69,13 +66,13 @@ class _MarketPageState extends State<MarketPage> {
                         itemBuilder: (context, index) {
                           MarketItem item =
                               marketProvider.marketItemList[index];
-                          double bottomPadding = index ==
-                                  marketProvider.marketItemList.length - 1
-                              ? 16
-                              : 8;
+                          double bottomPadding =
+                              index == marketProvider.marketItemList.length - 1
+                                  ? 16
+                                  : 8;
                           double topPadding = index == 0 ? 16 : 8;
                           return InkWell(
-                            onLongPress: (){
+                            onLongPress: () {
                               if (item.isFavorite) {
                                 item.isFavorite = false;
                                 marketProvider.removeCoinFromFavorite(item);
@@ -85,7 +82,7 @@ class _MarketPageState extends State<MarketPage> {
                               }
                             },
                             child: InkWell(
-                              onLongPress: (){
+                              onLongPress: () {
                                 if (item.isFavorite) {
                                   item.isFavorite = false;
                                   marketProvider.removeCoinFromFavorite(item);
@@ -99,8 +96,8 @@ class _MarketPageState extends State<MarketPage> {
                                 formatter: formatter,
                                 topPadding: topPadding,
                                 bottomPadding: bottomPadding,
-                                onMarketItemClick: (){
-                                  if(mounted) {
+                                onMarketItemClick: () {
+                                  if (mounted) {
                                     marketProvider.fetchAllMarketData();
                                   }
                                 },
@@ -120,8 +117,7 @@ class _MarketPageState extends State<MarketPage> {
                     child: InkWell(
                       onTap: () async {
                         marketProvider.selectSortingFilter();
-                        SchedulerBinding.instance
-                            ?.addPostFrameCallback((_) {
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
                           _scrollController.animateTo(0,
                               duration: const Duration(milliseconds: 400),
                               curve: Curves.fastOutSlowIn);
@@ -134,8 +130,8 @@ class _MarketPageState extends State<MarketPage> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(6.0),
-                            child:
-                                Text("${marketProvider.marketFilterName} ${StringConst.accordingToFilter}"),
+                            child: Text(
+                                "${marketProvider.marketFilterName} ${StringConst.accordingToFilter}"),
                           ),
                           Row(
                             children: [
@@ -159,5 +155,3 @@ class _MarketPageState extends State<MarketPage> {
     );
   }
 }
-
-

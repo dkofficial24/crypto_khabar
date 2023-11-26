@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class FavoriteCoinWidget extends StatefulWidget {
-  const FavoriteCoinWidget({Key key}) : super(key: key);
 
   @override
   State<FavoriteCoinWidget> createState() => _FavoriteCoinWidgetState();
@@ -95,7 +94,7 @@ class _FavoriteCoinWidgetState extends State<FavoriteCoinWidget> {
                     child: InkWell(
                       onTap: () async {
                         marketProvider.selectSortingFilter();
-                        SchedulerBinding.instance?.addPostFrameCallback((_) {
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
                           _scrollController.animateTo(0,
                               duration: const Duration(milliseconds: 400),
                               curve: Curves.fastOutSlowIn);

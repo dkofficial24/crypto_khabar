@@ -5,7 +5,6 @@ import 'package:crypto_khabar/dashboard/model/news_details_args.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
 import 'package:crypto_khabar/dashboard/provider/top_news_provider.dart';
 import 'package:crypto_khabar/utils/app_routes.dart';
-import 'package:crypto_khabar/utils/app_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,29 +42,28 @@ class CarouselWidget extends StatelessWidget {
                     return GestureDetector(
                       onTap: () {
                         if (newsItem.category.toLowerCase().contains("news") &&
-                            (newsItem.details?.isNotEmpty ?? false)) {
+                            (newsItem.details.isNotEmpty)) {
                           Navigator.pushNamed(
                               context, AppRoutes.NewsDetailsPage,
                               arguments: NewsDetailsArgs(
-                                  index:-1,
-                                  newsItem: newsItem));
+                                  index: -1, newsItem: newsItem));
                         } else if (newsItem.category
                             .toLowerCase()
                             .contains("app_update")) {
                           if (Platform.isAndroid) {
-                            launch(
-                                "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar");
+                            launchUrl(Uri.parse(
+                                "https://play.google.com/store/apps/details?id=com.edgetechapps.crypto_khabar"));
                           }
                         } else if (newsItem.category
                             .toLowerCase()
                             .contains("short")) {
                           if (!isShortVideo(newsItem)) {
-                            if(newsItem.sourceLink!=null) {
-                              launch(newsItem.sourceLink);
+                            if (newsItem.sourceLink.isNotEmpty) {
+                              launchUrl(Uri.parse(newsItem.sourceLink));
                             }
                           }
                         } else {
-                         // AppUtils.showToast("डिटेल में उपलब्ध नहीं है।");
+                          // AppUtils.showToast("डिटेल में उपलब्ध नहीं है।");
                         }
                         FirebaseAnalytics.instance.logEvent(
                             name: "carousle_click",
@@ -166,9 +164,7 @@ class CarouselWidget extends StatelessWidget {
   }
 
   bool isShortVideo(NewsItem newsItem) {
-    if (newsItem.category == "short" &&
-        newsItem.vdoUrl != null &&
-        newsItem.vdoUrl.isNotEmpty) {
+    if (newsItem.category == "short" && newsItem.vdoUrl.isNotEmpty) {
       return true;
     }
     return false;
@@ -185,7 +181,7 @@ class PlayerWidget extends StatefulWidget {
 }
 
 class _PlayerWidgetState extends State<PlayerWidget> {
-  YoutubePlayerController _controller;
+  late YoutubePlayerController _controller;
 
   @override
   void initState() {
@@ -223,9 +219,10 @@ class _PlayerWidgetState extends State<PlayerWidget> {
               handleColor: Theme.of(context).primaryColor,
               backgroundColor: Theme.of(context).primaryColor),
           progressIndicatorColor: Colors.amber,
-          onReady: () {},onEnded: (meta){
-          // _controller.reset();
-        },
+          onReady: () {},
+          onEnded: (meta) {
+            // _controller.reset();
+          },
           aspectRatio: 4 / 3,
         ),
       ),

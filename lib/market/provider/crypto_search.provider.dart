@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 
 class CryptoSearchProvider {
   MarketService marketService;
-  List<MarketItem> data;
+  late List<MarketItem> data;
   List<MarketItem> filteredData = [];
   final formatter = NumberFormat.currency(
     locale: 'HI',

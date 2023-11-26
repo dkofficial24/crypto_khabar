@@ -6,7 +6,7 @@ class SharedPrefHelper {
     await prefs.setString(key, value.toString());
   }
 
-  Future<String> getValue(String key) async {
+  Future<String?> getValue(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);
   }

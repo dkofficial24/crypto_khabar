@@ -22,7 +22,7 @@ class NewsService {
   Set<String> bookmarkedNewsIdSet = Set();
 
   List<NewsItem> newsItemList = [];
-  StreamSubscription subscription;
+  late StreamSubscription subscription;
   bool _isNetConnected = true;
 
   bool get netConnectionStatus => _isNetConnected;

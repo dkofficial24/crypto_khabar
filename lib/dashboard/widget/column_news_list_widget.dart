@@ -4,10 +4,9 @@ import 'package:flutter/material.dart';
 
 class ColumnNewsListWidget extends StatelessWidget {
   final NewsItem newsItem;
-  final Function callback;
+  final GestureTapCallback callback;
 
-  const ColumnNewsListWidget(
-      {@required this.newsItem, @required this.callback});
+  const ColumnNewsListWidget({required this.newsItem, required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -23,26 +22,28 @@ class ColumnNewsListWidget extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: AppUtils.isValidUrl(newsItem.imgUrl)?Image.network(
-                  newsItem.imgUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (ctx, obj, stack) {
-                    return Container(
-                        child: Image.asset(
-                          "assets/images/placeholder.png",
-                          fit: BoxFit.cover,
-                        ));
-                  },
-                ):Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Image.asset(
-                          "assets/images/placeholder.png",
-                          fit: BoxFit.cover,
+                child: AppUtils.isValidUrl(newsItem.imgUrl)
+                    ? Image.network(
+                        newsItem.imgUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (ctx, obj, stack) {
+                          return Container(
+                              child: Image.asset(
+                            "assets/images/placeholder.png",
+                            fit: BoxFit.cover,
+                          ));
+                        },
+                      )
+                    : Container(
+                        child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Image.asset(
+                            "assets/images/placeholder.png",
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                    )),
+                      )),
               ),
             ),
             SizedBox(height: 8),

@@ -21,9 +21,9 @@ class NewsDetailsPage extends StatefulWidget {
 }
 
 class _NewsDetailsPageState extends State<NewsDetailsPage> {
-  NewsItem _newsItem;
-  NewsDetailsArgs newsDetailsArgs;
-  ScrollController _scrollController;
+  NewsItem? _newsItem;
+  NewsDetailsArgs? newsDetailsArgs;
+  late ScrollController _scrollController;
   bool savingNews = false;
   bool removeBookmarkingNews = false;
   List<Widget> list = [];
@@ -36,7 +36,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
   }
 
   void initRelatedNews(int index) {
-    if(index == -1) return;
+    if (index == -1) return;
     List<NewsItem> newsList = NewsService().newsItemList;
     int currentIndex = index;
     List nextNewsList = [];
@@ -51,14 +51,14 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
       count++;
       return Column(
         children: [
-          NewsRowListWidget(newsItem: e, callback: (clickedIndex) {
-            if(index == -1)return;
-            Navigator.pushReplacementNamed(context,
-                AppRoutes.NewsDetailsPage,
-                arguments: NewsDetailsArgs(
-                    index:clickedIndex,
-                    newsItem: e));
-          },index: index+count,
+          NewsRowListWidget(
+            newsItem: e,
+            callback: (clickedIndex) {
+              if (index == -1) return;
+              Navigator.pushReplacementNamed(context, AppRoutes.NewsDetailsPage,
+                  arguments: NewsDetailsArgs(index: clickedIndex, newsItem: e));
+            },
+            index: index + count,
           ),
           Divider()
         ],
@@ -71,10 +71,11 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
   @override
   Widget build(BuildContext context) {
     if (_newsItem == null) {
-      newsDetailsArgs = ModalRoute.of(context).settings.arguments;
-      _newsItem = newsDetailsArgs.newsItem;
-      initRelatedNews(newsDetailsArgs.index);
-      incrementView(_newsItem.id);
+      newsDetailsArgs =
+          ModalRoute.of(context)?.settings.arguments as NewsDetailsArgs?;
+      _newsItem = newsDetailsArgs!.newsItem;
+      initRelatedNews(newsDetailsArgs?.index ?? -1);
+      incrementView(_newsItem!.id);
     }
     return Scaffold(
         appBar: AppBar(
@@ -82,30 +83,32 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
           actions: [
             IconButton(
                 onPressed: () {
-                  if (isNewsBookmarked(_newsItem.id)) {
-                    removeNewsFromBookmark(_newsItem.id);
-                  } else {
-                    bookmarkNews(_newsItem);
+                  if (_newsItem != null) {
+                    if (isNewsBookmarked(_newsItem!.id)) {
+                      removeNewsFromBookmark(_newsItem!.id);
+                    } else {
+                      bookmarkNews(_newsItem!);
+                    }
                   }
                 },
                 icon: Icon(
-                    isNewsBookmarked(_newsItem.id)
+                    isNewsBookmarked(_newsItem!.id)
                         ? Icons.bookmark
                         : Icons.bookmark_border,
                     color: Colors.white)),
             IconButton(
-                onPressed: ()  {
+                onPressed: () {
                   shareNews(context);
                   FirebaseAnalytics.instance.logEvent(
                       name: "ndp_share_news",
-                      parameters: {"title": "${_newsItem.title}"});
+                      parameters: {"title": "${_newsItem?.title ?? ''}"});
                 },
                 icon: Icon(Icons.share, color: Colors.white)),
             SizedBox(width: 8)
           ],
         ),
         body: Container(
-          margin: EdgeInsets.only(left: 4,right: 4,top: 12,bottom: 4),
+          margin: EdgeInsets.only(left: 4, right: 4, top: 12, bottom: 4),
           child: Column(
             children: [
               Expanded(
@@ -131,53 +134,63 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
                         )),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                      child: Text(_newsItem.title,
+                      child: Text(_newsItem!.title,
                           style: GoogleFonts.hind(
                               textStyle:
-                                  Theme.of(context).textTheme.headline6)),
+                                  Theme.of(context).textTheme.titleLarge)),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(AppUtils.formatDate(_newsItem.date)),
+                      child: Text(AppUtils.formatDate(_newsItem!.date)),
                     ),
                     SizedBox(height: 8),
-                    MarkdownView(_newsItem.details, _scrollController),
+                    MarkdownView(_newsItem!.details, _scrollController),
                     SizedBox(height: 4),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         shareNews(context);
                         FirebaseAnalytics.instance.logEvent(
                             name: "ndp_bttm_share_news",
-                            parameters: {"title": "${_newsItem.title}"});
+                            parameters: {"title": "${_newsItem!.title}"});
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(StringConst.doShare),
-                          SizedBox(width:8),
+                          SizedBox(width: 8),
                           Icon(Icons.share),
-                          SizedBox(width:48),
-                        ],),
+                          SizedBox(width: 48),
+                        ],
+                      ),
                     ),
-                    list.length !=0?Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                        SizedBox(height: 8),
-                        Text(
-                          StringConst.moreNews,
-                          style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),
-                        ),
-                        Divider(),
-                        SizedBox(height: 8),
-                        ...list,
-                      ]),
-                    ):Container()
+                    list.length != 0
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 8),
+                                  Text(
+                                    StringConst.moreNews,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                  Divider(),
+                                  SizedBox(height: 8),
+                                  ...list,
+                                ]),
+                          )
+                        : Container()
                   ],
                 ),
               ),
-              Divider(height: 1,thickness: 1,color: Colors.grey.withOpacity(0.1),),
+              Divider(
+                height: 1,
+                thickness: 1,
+                color: Colors.grey.withOpacity(0.1),
+              ),
               BannerAdWidget()
             ],
           ),
@@ -185,11 +198,10 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
   }
 
   Future<void> shareNews(BuildContext context) async {
-     try {
+    try {
       LoaderController().showLoader(context);
-      String downloadLink =
-          await RemoteConfigService().getAppDownloadLink();
-      AppUtils.shareNews(_newsItem, appLink: downloadLink);
+      String downloadLink = await RemoteConfigService().getAppDownloadLink();
+      AppUtils.shareNews(_newsItem!, appLink: downloadLink);
     } catch (e) {
       print("NewsDetailPage shareNews error:$e");
     } finally {
@@ -205,7 +217,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
       try {
         bool status = await NewsService().saveNews(newsItem);
         if (status) {
-          BroadcastEvents().publish(NewsBookmarked);
+          BroadcastEvents().publish(NewsBookmarked, arguments: null);
         }
       } catch (e) {
         print("ERROR:$e");
@@ -223,7 +235,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
       });
       try {
         await NewsService().removeSavedNews(id);
-        BroadcastEvents().publish(NewsBookmarkRemove);
+        BroadcastEvents().publish(NewsBookmarkRemove,arguments: null);
       } catch (e) {
         print("ERROR:$e");
       }
@@ -241,7 +253,7 @@ class _NewsDetailsPageState extends State<NewsDetailsPage> {
     try {
       await NewsService().incrementView(id);
     } catch (e) {
- //     print("incrementView err $e");
+      //     print("incrementView err $e");
     }
   }
 

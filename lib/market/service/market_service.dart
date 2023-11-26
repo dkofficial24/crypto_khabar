@@ -8,7 +8,7 @@ import 'package:crypto_khabar/shared/firebase_service/market_firebase_service.da
 import 'package:crypto_khabar/utils/app_utils.dart';
 
 class MarketService {
-  MarketDbService marketDbService;
+  late MarketDbService marketDbService;
 
   MarketService._internal() {
     init();

@@ -1,4 +1,5 @@
 import 'dart:async';
+
 // import 'package:device_preview/device_preview.dart';
 import 'package:broadcast_events/broadcast_events.dart';
 import 'package:crypto_khabar/flavor_setting.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'constants.dart';
 
 void main() async {
@@ -62,12 +64,12 @@ class _MyAppState extends State<MyApp> {
               brightness: Brightness.dark,
               iconTheme: IconThemeData(color: Colors.blue),
               primaryColor: Colors.black,
-              accentColor: Colors.cyan[600],
+              hintColor: Colors.cyan[600],
             )
           : ThemeData(
               brightness: Brightness.light,
               primaryColor: Colors.lightBlue[800],
-              accentColor: Colors.cyan[600],
+              hintColor: Colors.cyan[600],
               iconTheme: IconThemeData(color: Colors.lightBlue[800]),
               // // fontFamily: 'Georgia',
               //  textTheme: TextTheme(

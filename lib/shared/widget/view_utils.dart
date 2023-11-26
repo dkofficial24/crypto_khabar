@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 showActionDialog(BuildContext context,
-    {@required String title,
-    @required String content,
-    @required String positiveTextButton,
-    @required String negativeTextButton,
-    @required Function positiveAction}) {
+    {required String title,
+    required String content,
+    required String positiveTextButton,
+    required String negativeTextButton,
+    required VoidCallback positiveAction}) {
   showDialog(
       context: context,
       builder: (ctx) {
@@ -32,24 +32,19 @@ showActionDialog(BuildContext context,
 }
 
 showUpdateDialog(BuildContext context,
-    {@required String title,
-    @required String content,
-    @required String positiveTextButton,
-    @required String negativeTextButton,
-    @required Function positiveAction,
-    Function negativeAction,
-    Function onBackPress,
+    {required String title,
+    required String content,
+    required String positiveTextButton,
+    required String negativeTextButton,
+    required VoidCallback positiveAction,
+    Function? negativeAction,
+    Function? onBackPress,
     bool forceUpdate = false}) {
   showDialog(
       context: context,
       builder: (ctx) {
-        return WillPopScope(
-          onWillPop: () async {
-            if (onBackPress != null) {
-              onBackPress(!forceUpdate);
-            }
-            return !forceUpdate;
-          },
+        return PopScope(
+          canPop: forceUpdate ,
           child: AlertDialog(
             title: Text(title),
             content: Text(content),

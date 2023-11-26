@@ -16,8 +16,8 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticlePageState extends State<ArticlePage> {
-  ArticleProvider _provider;
-  RefreshController _refreshController;
+  late ArticleProvider _provider;
+  late RefreshController _refreshController;
 
   @override
   void initState() {
@@ -39,8 +39,7 @@ class _ArticlePageState extends State<ArticlePage> {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(
-                          16, 16, 16, 4),
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 4),
                       child: LazyLoadScrollView(
                         isLoading: _provider.isLoading,
                         scrollOffset: 50,
@@ -72,7 +71,11 @@ class _ArticlePageState extends State<ArticlePage> {
                       ),
                     ),
                   ),
-                  Divider(height: 1,thickness: 1,color: Colors.grey.withOpacity(0.1),),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.grey.withOpacity(0.1),
+                  ),
                   BannerAdWidget()
                 ],
               );
@@ -102,7 +105,7 @@ class _ArticlePageState extends State<ArticlePage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: CachedNetworkImage(
-                  imageUrl: article?.imgUrl ?? "",
+                  imageUrl: article.imgUrl ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(),
                   errorWidget: (context, url, error) => Container(
@@ -115,7 +118,7 @@ class _ArticlePageState extends State<ArticlePage> {
             ),
             SizedBox(height: 8),
             Text(
-              article.title,
+              article.title ?? '',
               softWrap: true,
               textAlign: TextAlign.left,
               overflow: TextOverflow.ellipsis,
@@ -125,7 +128,7 @@ class _ArticlePageState extends State<ArticlePage> {
             SizedBox(height: 8),
             Expanded(
               child: Text(
-                article.detail,
+                article.detail ?? '',
                 softWrap: false,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -155,11 +158,11 @@ class _ArticlePageState extends State<ArticlePage> {
         return Container(
           child: Column(
             children: [
-              Text(article.title,
+              Text(article.title ?? '',
                   style: GoogleFonts.hind(fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
               Text(
-                article.detail,
+                article.detail ?? '',
                 style: GoogleFonts.hind(),
                 maxLines: 1,
               )

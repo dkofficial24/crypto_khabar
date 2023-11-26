@@ -42,12 +42,16 @@ class _LoaderDialog extends StatelessWidget {
   final String desc;
   final bool isDismissible;
 
-  _LoaderDialog({this.title, this.desc, this.isDismissible});
+  _LoaderDialog({
+    required this.title,
+    required this.desc,
+    required this.isDismissible,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: () async => isDismissible,
+    return PopScope(
+        canPop: isDismissible,
         child: AlertDialog(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(8.0))),
@@ -58,7 +62,10 @@ class _LoaderDialog extends StatelessWidget {
 }
 
 class _LoadingIndicator extends StatelessWidget {
-  _LoadingIndicator({this.title, this.desc});
+  _LoadingIndicator({
+    required this.title,
+    required this.desc,
+  });
 
   final String title;
   final String desc;

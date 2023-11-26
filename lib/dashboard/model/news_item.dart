@@ -1,4 +1,33 @@
 class NewsItem {
+  NewsItem({
+    required this.id,
+    this.title = '',
+    this.details = '',
+    this.date = 0,
+    this.author = '',
+    this.source = '',
+    this.imgUrl = '',
+    this.imgUrls = const [],
+    required this.category,
+    this.sourceLink = '',
+    this.vdoUrl = '',
+    this.showNotification = true,
+  });
+
+  NewsItem.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as String,
+        title = json['title'] as String? ?? '',
+        details = json['details'] as String? ?? '',
+        date = json['date'] as int? ?? 0,
+        author = json['author'] as String? ?? '',
+        source = json['source'] as String? ?? '',
+        imgUrl = json['imgUrl'] as String? ?? '',
+        imgUrls = (json['imgUrls'] as List?)?.cast<String>() ?? [],
+        category = json['category'] as String,
+        sourceLink = json['sourceLink'] as String? ?? '',
+        vdoUrl = json['vdoUrl'] as String? ?? '',
+        showNotification = json['showNotification'] as bool? ?? true;
+
   String id;
   String title;
   String details;
@@ -12,51 +41,20 @@ class NewsItem {
   String vdoUrl;
   bool showNotification;
 
-  NewsItem(
-      {
-        this.id,
-        this.title,
-        this.details,
-        this.date,
-        this.author,
-        this.source,
-        this.imgUrl,
-        this.imgUrls,
-        this.category,
-        this.sourceLink,
-        this.vdoUrl,
-        this.showNotification = true
-      });
-
-  NewsItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'] ?? "";
-    details = json['details'] ?? "";
-    date = json['date'] ?? 0;
-    author = json['author'] ?? "";
-    source = json['source'] ?? "";
-    imgUrl = json['imgUrl'] ?? "";
-    category = json['category'];
-    sourceLink = json['sourceLink'] ?? "";
-    vdoUrl = json['vdoUrl'] ?? "";
-    showNotification = json['showNotification'] ?? true;
-   // imgUrls = json['imgUrls']?.cast<String>();
-  }
-
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['details'] = this.details;
-    data['date'] = this.date;
-    data['author'] = this.author;
-    data['source'] = this.source;
-    data['imgUrl'] = this.imgUrl;
-   // data['imgUrls'] = this.imgUrls;
-    data['category'] = this.category;
-    data['vdoUrl'] = this.vdoUrl;
-    data['sourceLink'] = this.sourceLink;
-    data['showNotification'] = this.showNotification;
-    return data;
+    return {
+      'id': id,
+      'title': title,
+      'details': details,
+      'date': date,
+      'author': author,
+      'source': source,
+      'imgUrl': imgUrl,
+      'imgUrls': imgUrls,
+      'category': category,
+      'vdoUrl': vdoUrl,
+      'sourceLink': sourceLink,
+      'showNotification': showNotification,
+    };
   }
 }

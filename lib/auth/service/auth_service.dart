@@ -1,21 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 //Testing
 class AuthService {
-  UserCredential _userCredential;
-//test naresh
-  AuthService._internal();
-
-  static AuthService _authService = AuthService._internal();
-
   factory AuthService() {
     return _authService;
   }
 
+  AuthService._internal();
+
+  late UserCredential _userCredential;
+
+  static final AuthService _authService = AuthService._internal();
+
   UserCredential get userCredential => _userCredential;
 
-  Future loginAnonymously() async {
+  Future<void> loginAnonymously() async {
     _userCredential = await FirebaseAuth.instance.signInAnonymously();
   }
-
-
 }

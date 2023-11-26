@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 
 class NewsDbService{
 
-  static NewsDbService _instance;
+  static NewsDbService? _instance;
 
   NewsDbService._internal() {
     init();
@@ -16,11 +16,11 @@ class NewsDbService{
     if (_instance == null) {
       _instance = NewsDbService._internal();
     }
-    return _instance;
+    return _instance!;
   }
 
   final String tableName = "SavedNewsTable";
-  Database database;
+  Database? database;
 
   Future init() async {
     var databasesPath = await getDatabasesPath();
@@ -39,7 +39,7 @@ class NewsDbService{
     try {
       if (database != null) {
         //database.insert(tableName, newsItem.toJson());
-        database.rawInsert("insert or replace into $tableName values(?,?,?,?,?,?,?,?,?)",[newsItem.id,newsItem.title,newsItem.details,newsItem.date,newsItem.author,
+        database!.rawInsert("insert or replace into $tableName values(?,?,?,?,?,?,?,?,?)",[newsItem.id,newsItem.title,newsItem.details,newsItem.date,newsItem.author,
           newsItem.source,newsItem.imgUrl,newsItem.category,newsItem.sourceLink,]);
        // print("SavedDbService saveNews successfully");
         FirebaseAnalytics.instance.logEvent(name: 'save_news',parameters: {
@@ -56,9 +56,9 @@ class NewsDbService{
   Future<List<NewsItem>> getAllSavedNews() async {
     if (database == null) return [];
     List<Map<String, dynamic>> mapList =
-    await database.rawQuery("Select * from $tableName");
+    await database!.rawQuery("Select * from $tableName");
 
-    if (mapList == null) {
+    if (mapList.isEmpty) {
       return [];
     }
 
@@ -70,7 +70,7 @@ class NewsDbService{
   }
 
   Future removeSavedNews(String id)async{
-    await database.rawDelete("delete from $tableName where id=?",[id]);
+    await database!.rawDelete("delete from $tableName where id=?",[id]);
   //  print("removed Saved News !");
   }
 

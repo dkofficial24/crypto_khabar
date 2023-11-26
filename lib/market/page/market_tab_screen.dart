@@ -11,16 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MarketTabScreen extends StatefulWidget {
-  const MarketTabScreen({Key key}) : super(key: key);
-
   @override
   State<MarketTabScreen> createState() => _MarketTabScreenState();
 }
 
 class _MarketTabScreenState extends State<MarketTabScreen>
     with TickerProviderStateMixin {
-  MarketProvider _marketProvider;
-  TabController tabController;
+  late MarketProvider _marketProvider;
+  late TabController tabController;
 
   @override
   initState() {
@@ -28,11 +26,9 @@ class _MarketTabScreenState extends State<MarketTabScreen>
     tabController = TabController(length: 2, vsync: this);
 
     tabController.addListener(() {
-        if(tabController.index == 1){
-          FirebaseAnalytics.instance
-              .logEvent(name: "mts_fav_coin_tab");
-        }
-
+      if (tabController.index == 1) {
+        FirebaseAnalytics.instance.logEvent(name: "mts_fav_coin_tab");
+      }
     });
     super.initState();
   }
@@ -58,8 +54,7 @@ class _MarketTabScreenState extends State<MarketTabScreen>
                 icon: Icon(Icons.info),
                 onPressed: () async {
                   AppUtils.showSnackBar(context, StringConst.favCoinGuideMsg);
-                  FirebaseAnalytics.instance
-                      .logEvent(name: "mts_info_abt_fav");
+                  FirebaseAnalytics.instance.logEvent(name: "mts_info_abt_fav");
                 },
               ),
               Padding(
@@ -77,7 +72,9 @@ class _MarketTabScreenState extends State<MarketTabScreen>
                   },
                 ),
               ),
-              SizedBox(width: 4,)
+              SizedBox(
+                width: 4,
+              )
             ],
             bottom: TabBar(
               controller: tabController,

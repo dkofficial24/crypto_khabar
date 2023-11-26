@@ -13,7 +13,7 @@ class SavedNewsPage extends StatefulWidget {
 }
 
 class _SavedNewsPageState extends State<SavedNewsPage> {
-  SavedNewsProvider _provider;
+  late SavedNewsProvider _provider;
 
   @override
   void initState() {

@@ -21,14 +21,14 @@ class MarketProvider extends ChangeNotifier {
   bool isLoading = false;
   bool shimmer = false;
   bool isBannerAdReady = false;
-  BannerAd bannerAd;
-  Timer timer;
-  MarketService marketService;
+  late BannerAd bannerAd;
+  late Timer timer;
+  late MarketService marketService;
 
   SortMarket currentSortFilter = SortMarket.Rank;
   String marketFilterName = StringConst.rank;
   IconData filterIconData = Icons.arrow_circle_up;
-  MarketDbService marketDbService;
+  late MarketDbService marketDbService;
 
   MarketProvider(MarketDbService marketDbService, MarketService marketService) {
     this.marketDbService = marketDbService;
@@ -168,7 +168,7 @@ class MarketProvider extends ChangeNotifier {
   }
 
   void dispose() {
-    if (timer != null && timer.isActive) {
+    if (timer.isActive) {
       timer.cancel();
     }
   }

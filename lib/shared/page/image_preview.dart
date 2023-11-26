@@ -3,13 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ImagePreviewer extends StatelessWidget {
-  const ImagePreviewer({this.imgUrl});
-
-  final String imgUrl;
-
   @override
   Widget build(BuildContext context) {
-    String url = ModalRoute.of(context).settings.arguments;
+    String url = (ModalRoute.of(context)?.settings.arguments as String?) ?? '';
 
     return Container(
         child: PhotoView(

@@ -1,4 +1,3 @@
-import 'package:crypto_khabar/shared/firebase_service/firebase_push_notification_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -20,29 +19,27 @@ class NotificationService {
     final InitializationSettings initializationSettings =
         InitializationSettings(
             android: initializationSettingsAndroid, macOS: null);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: selectNotification);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (details) {
+        if (details.input != null) {
+          //todo ?
+        }
+      },
+    );
     // showNotification("Title","Bodyyy");
-  }
-
-  Future selectNotification(String payload) async {
-  //  print("Payloaddd  $payload");
-   // print("Payloaddd  $payload");
   }
 
   showNotification(String title, String body,
       {int id = 1001,
       String channelId = 'ChannelId',
       String channelName = 'NotificationChannel',
-      String payload}) async {
+      String? payload}) async {
     AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(
-      "ChannelId",
-      "ChannelName",
-          "ChannelDesc",
-      icon: 'mipmap/ic_launcher',
-      //groupKey: "12345678",
-    );
+        AndroidNotificationDetails("ChannelId", "ChannelName",
+            icon: 'mipmap/ic_launcher', groupKey: 'Crypto Khabar'
+            //groupKey: "12345678",
+            );
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
 

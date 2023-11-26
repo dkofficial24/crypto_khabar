@@ -6,7 +6,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MarketDbService {
-  static MarketDbService _instance;
+  static MarketDbService? _instance;
   Completer<bool> completer = Completer<bool>();
 
   MarketDbService._internal() {
@@ -17,11 +17,11 @@ class MarketDbService {
     if (_instance == null) {
       _instance = MarketDbService._internal();
     }
-    return _instance;
+    return _instance!;
   }
 
   final String tableName = "FavoriteCoinTable";
-  Database database;
+  Database? database;
 
   Future init() async {
     var databasesPath = await getDatabasesPath();
@@ -39,7 +39,7 @@ class MarketDbService {
     try {
       if (database != null) {
         //database.insert(tableName, newsItem.toJson());
-        database.rawInsert("insert or replace into $tableName values(?,?)",
+        database!.rawInsert("insert or replace into $tableName values(?,?)",
             [favoriteCoin.id, favoriteCoin.symbol]);
         FirebaseAnalytics.instance.logEvent(
             name: 'fav_coin_${favoriteCoin.symbol}');
@@ -57,9 +57,9 @@ class MarketDbService {
     }
     if (database == null) return [];
     List<Map<String, dynamic>> mapList =
-        await database.rawQuery("Select * from $tableName");
+        await database!.rawQuery("Select * from $tableName");
 
-    if (mapList == null) {
+    if (mapList.isEmpty) {
       return [];
     }
 
@@ -71,6 +71,6 @@ class MarketDbService {
   }
 
   Future removeCoinFromFavorite(String symbol) async {
-    await database.rawDelete("delete from $tableName where symbol=?", [symbol]);
+    await database!.rawDelete("delete from $tableName where symbol=?", [symbol]);
   }
 }

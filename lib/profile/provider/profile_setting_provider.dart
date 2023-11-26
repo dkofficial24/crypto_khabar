@@ -10,7 +10,7 @@ class ProfileSettingProvider extends ChangeNotifier {
   bool isDarkMode = false;
   bool getNotification = false;
   double rating = 5;
-  FeedbackInfo previousFeedback;
+  FeedbackInfo? previousFeedback;
 
 
   ProfileSettingProvider() {
@@ -54,9 +54,9 @@ class ProfileSettingProvider extends ChangeNotifier {
   //  print("User detail saved");
   }
 
-  Future<FeedbackInfo> getUserDetails()async{
+  Future<FeedbackInfo?> getUserDetails()async{
     try {
-      String value = await SharedPrefHelper().getValue("userDetails");
+      String? value = await SharedPrefHelper().getValue("userDetails");
       if (value == null || value.isEmpty) return null;
       FeedbackInfo info = FeedbackInfo.fromJson(jsonDecode(value));
       return info;

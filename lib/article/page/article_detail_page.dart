@@ -15,10 +15,10 @@ class ArticleDetailPage extends StatefulWidget {
 }
 
 class DetailPageState extends State<ArticleDetailPage> {
-  Article _article;
-  ScrollController _scrollController;
+  Article? _article;
+  late ScrollController _scrollController;
   bool savingArticle = false;
-  YoutubePlayerController _controller;
+  YoutubePlayerController? _controller;
   bool isVideoContain = false;
 
   @override
@@ -29,10 +29,11 @@ class DetailPageState extends State<ArticleDetailPage> {
   }
 
   void initVideoPlayerController() {
-    isVideoContain = _article.vdoUrl != null && _article.vdoUrl.isNotEmpty;
+    isVideoContain =
+        _article?.vdoUrl != null && (_article?.vdoUrl?.isNotEmpty ?? false);
     if (isVideoContain) {
       _controller = YoutubePlayerController(
-        initialVideoId: _article.vdoUrl,
+        initialVideoId: _article!.vdoUrl ?? '',
         flags: YoutubePlayerFlags(
           autoPlay: false,
           mute: false,
@@ -43,14 +44,11 @@ class DetailPageState extends State<ArticleDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    if(_article == null) {
-      _article = ModalRoute
-          .of(context)
-          .settings
-          .arguments;
+    if (_article == null) {
+      _article = ModalRoute.of(context)?.settings.arguments as Article;
       initVideoPlayerController();
     }
-  //  print("Link: ${_article.imgUrl}");
+    //  print("Link: ${_article.imgUrl}");
     return Scaffold(
         appBar: AppBar(
           title: Text(StringConst.article),
@@ -58,7 +56,8 @@ class DetailPageState extends State<ArticleDetailPage> {
             IconButton(
                 onPressed: () {
                   shareArticle();
-                  FirebaseAnalytics.instance.logEvent(name: "adp_top_share_article");
+                  FirebaseAnalytics.instance
+                      .logEvent(name: "adp_top_share_article");
                 },
                 icon: Icon(Icons.share, color: Colors.white)),
             SizedBox(width: 8)
@@ -93,16 +92,18 @@ class DetailPageState extends State<ArticleDetailPage> {
                               ),
                             )),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      child: Text(_article.title,
-                          style: Theme.of(context).textTheme.headline6),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                      child: Text(_article!.title ?? '',
+                          style: Theme.of(context).textTheme.titleLarge),
                     ),
-                    MarkdownView(_article.detail, _scrollController),
-                    SizedBox(height:4),
+                    MarkdownView(_article!.detail??'', _scrollController),
+                    SizedBox(height: 4),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         shareArticle();
-                        FirebaseAnalytics.instance.logEvent(name: "adp_bttm_share_article");
+                        FirebaseAnalytics.instance
+                            .logEvent(name: "adp_bttm_share_article");
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -110,16 +111,21 @@ class DetailPageState extends State<ArticleDetailPage> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(StringConst.doShare),
-                            SizedBox(width:8),
+                            SizedBox(width: 8),
                             Icon(Icons.share),
-                            SizedBox(width:48),
-                          ],),
+                            SizedBox(width: 48),
+                          ],
+                        ),
                       ),
                     )
                   ],
                 ),
               ),
-              Divider(height: 1,thickness: 1,color: Colors.grey.withOpacity(0.1),),
+              Divider(
+                height: 1,
+                thickness: 1,
+                color: Colors.grey.withOpacity(0.1),
+              ),
               BannerAdWidget()
             ],
           ),
@@ -128,7 +134,7 @@ class DetailPageState extends State<ArticleDetailPage> {
 
   Future<void> shareArticle() async {
     String downloadLink = await RemoteConfigService().getAppDownloadLink();
-    AppUtils.shareArticle(_article, appLink: downloadLink);
+    AppUtils.shareArticle(_article!, appLink: downloadLink);
   }
 
   Future saveArticle(Article article) async {
@@ -157,7 +163,7 @@ class DetailPageState extends State<ArticleDetailPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: YoutubePlayer(
-                controller: _controller,
+                controller: _controller!,
                 showVideoProgressIndicator: true,
                 bottomActions: [
                   const SizedBox(width: 14.0),
@@ -184,7 +190,7 @@ class DetailPageState extends State<ArticleDetailPage> {
   @override
   void dispose() {
     if (_controller != null) {
-      _controller.dispose();
+      _controller?.dispose();
     }
     super.dispose();
   }

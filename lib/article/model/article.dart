@@ -1,13 +1,13 @@
 class Article {
-  String id;
-  String title;
-  String detail;
-  String source;
-  String tags;
-  String imgUrl;
-  String vdoUrl;
-  int date;
-  String category;
+  String? id;
+  String? title;
+  String? detail;
+  String? source;
+  String? tags;
+  String? imgUrl;
+  String? vdoUrl;
+  int? date;
+  String? category;
 
   Article({
     this.id,
@@ -18,24 +18,24 @@ class Article {
     this.imgUrl,
     this.vdoUrl,
     this.date,
-    this.category
+    this.category,
   });
 
-  Map<String,dynamic> toJson(){
-    Map<String,dynamic> map = {};
-    map['id'] = id;
-    map['title'] = title;
-    map['detail'] = detail;
-    map['source'] = source;
-    map['tags'] = tags;
-    map['imgUrl'] = imgUrl;
-    map['vdoUrl'] = vdoUrl;
-    map['date'] = date;
-    map['category'] = category;
-    return map;
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'detail': detail,
+      'source': source,
+      'tags': tags,
+      'imgUrl': imgUrl,
+      'vdoUrl': vdoUrl,
+      'date': date,
+      'category': category,
+    };
   }
 
-  Article.fromJson(Map<String,dynamic> map){
+  Article.fromJson(Map<String, dynamic> map) {
     id = map['id'];
     title = map['title'];
     detail = map['detail'];
@@ -46,5 +46,4 @@ class Article {
     date = map['date'];
     category = map['category'];
   }
-
 }

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto_khabar/dashboard/model/news_item.dart';
-import 'package:uuid/uuid.dart';
 
 class NewsFirebaseService {
   NewsFirebaseService._internal();
@@ -11,8 +10,8 @@ class NewsFirebaseService {
     return _newsService;
   }
 
-  QueryDocumentSnapshot last;
-  QueryDocumentSnapshot featuredLast;
+  QueryDocumentSnapshot? last;
+  QueryDocumentSnapshot? featuredLast;
 
   Future<NewsItem> fetchNewsById(String id) async {
     CollectionReference newsRef = FirebaseFirestore.instance.collection("news");
@@ -20,13 +19,14 @@ class NewsFirebaseService {
         .where('id', isEqualTo: id)
         .orderBy('date', descending: true)
         .get();
-    if (data != null && data.docs.length > 0) {
-      return NewsItem.fromJson(data.docs[0].data());
+    if (data.docs.length > 0) {
+      return NewsItem.fromJson(data.docs[0].data() as Map<String, dynamic>);
     }
     throw Exception("No such id exists");
   }
 
-  Future<List<NewsItem>> fetchNewsByPagination({bool appendInEnd=true}) async {
+  Future<List<NewsItem>> fetchNewsByPagination(
+      {bool appendInEnd = true}) async {
     List<NewsItem> newsItemList = [];
     CollectionReference newsRef = FirebaseFirestore.instance.collection("news");
     QuerySnapshot data;
@@ -37,14 +37,14 @@ class NewsFirebaseService {
       data = await newsRef
           .orderBy("date", descending: true)
           .limit(6)
-          .startAfterDocument(last)
+          .startAfterDocument(last!)
           .get();
     }
-    if (data != null && data.docs.length > 0) {
+    if (data.docs.length > 0) {
       last = data.docs[data.docs.length - 1];
       data.docs.forEach((element) {
         if (element.exists) {
-          newsItemList.add(NewsItem.fromJson(element.data()));
+          newsItemList.add(NewsItem.fromJson(element.data() as Map<String, dynamic>));
         }
       });
     }
@@ -53,16 +53,17 @@ class NewsFirebaseService {
 
   Future<List<NewsItem>> fetchFeaturedNews() async {
     List<NewsItem> newsItemList = [];
-    CollectionReference newsRef = FirebaseFirestore.instance.collection("feature_news");
+    CollectionReference newsRef =
+        FirebaseFirestore.instance.collection("feature_news");
     QuerySnapshot data;
 
     data = await newsRef.orderBy('date', descending: true).limit(5).get();
 
-    if (data != null && data.docs.length > 0) {
+    if (data.docs.length > 0) {
       featuredLast = data.docs[data.docs.length - 1];
       data.docs.forEach((element) {
         if (element.exists) {
-          newsItemList.add(NewsItem.fromJson(element.data()));
+          newsItemList.add(NewsItem.fromJson(element.data() as Map<String, dynamic>));
         }
       });
     }
@@ -70,15 +71,14 @@ class NewsFirebaseService {
     return newsItemList;
   }
 
-  incrementView (String id)async{
-    final DocumentReference ref = FirebaseFirestore.instance.collection('news_content').doc(id);
-    Future.delayed(Duration(seconds: 2)).then((value) async{
-      await getLatestViewCount(id).then((int latestCount) async{
-        if(latestCount == 0){
-          await ref.set({
-            "views":1
-          });
-        }else {
+  incrementView(String id) async {
+    final DocumentReference ref =
+        FirebaseFirestore.instance.collection('news_content').doc(id);
+    Future.delayed(Duration(seconds: 2)).then((value) async {
+      await getLatestViewCount(id).then((int latestCount) async {
+        if (latestCount == 0) {
+          await ref.set({"views": 1});
+        } else {
           await ref.update({
             'views': latestCount + 1,
           });
@@ -87,29 +87,29 @@ class NewsFirebaseService {
     });
   }
 
-  Future<int> getLatestViewCount (String id) async {
+  Future<int> getLatestViewCount(String id) async {
     // if(widget.article.views != null){
     final String fieldName = 'views';
-    final DocumentReference ref = FirebaseFirestore.instance.collection('news_content').doc(id);
+    final DocumentReference ref =
+        FirebaseFirestore.instance.collection('news_content').doc(id);
     DocumentSnapshot snap = await ref.get();
-    int itemCount ;
+    int itemCount;
     try {
-       itemCount = snap[fieldName] ?? 0;
-    }catch(e){
+      itemCount = snap[fieldName] ?? 0;
+    } catch (e) {
       itemCount = 0;
     }
     return itemCount;
   }
 
-  incrementShareCount (String id)async{
-    final DocumentReference ref = FirebaseFirestore.instance.collection('news_share_counter').doc(id);
-    Future.delayed(Duration(seconds: 2)).then((value) async{
-      await getIncrementShareCount(id).then((int latestCount) async{
-        if(latestCount == 0){
-          await ref.set({
-            "share":1
-          });
-        }else {
+  incrementShareCount(String id) async {
+    final DocumentReference ref =
+        FirebaseFirestore.instance.collection('news_share_counter').doc(id);
+    Future.delayed(Duration(seconds: 2)).then((value) async {
+      await getIncrementShareCount(id).then((int latestCount) async {
+        if (latestCount == 0) {
+          await ref.set({"share": 1});
+        } else {
           await ref.update({
             'share': latestCount + 1,
           });
@@ -118,18 +118,18 @@ class NewsFirebaseService {
     });
   }
 
-  Future<int> getIncrementShareCount (String id) async {
+  Future<int> getIncrementShareCount(String id) async {
     // if(widget.article.views != null){
     final String fieldName = 'share';
-    final DocumentReference ref = FirebaseFirestore.instance.collection('news_share_counter').doc(id);
+    final DocumentReference ref =
+        FirebaseFirestore.instance.collection('news_share_counter').doc(id);
     DocumentSnapshot snap = await ref.get();
-    int itemCount ;
+    int itemCount;
     try {
       itemCount = snap[fieldName] ?? 0;
-    }catch(e){
+    } catch (e) {
       itemCount = 0;
     }
     return itemCount;
   }
-
 }
