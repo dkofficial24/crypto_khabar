@@ -27,7 +27,17 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 android {
+    namespace 'com.edgetechapps.crypto_khabar'
     compileSdkVersion 33
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -35,11 +45,12 @@ android {
 
     defaultConfig {
         applicationId "com.edgetechapps.crypto_khabar"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 33
         versionCode 20
         versionName "1.2.0"
         ndk {
+            //noinspection ChromeOsAbiSupport
             abiFilters "armeabi-v7a", "arm64-v8a", "x86_64"
         }
     }
@@ -78,5 +89,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-messaging:23.1.2'
+    implementation 'com.google.firebase:firebase-messaging:23.3.1'
 }
