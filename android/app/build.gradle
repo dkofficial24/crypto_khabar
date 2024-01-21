@@ -55,7 +55,7 @@ android {
         }
     }
 
-    flavorDimensions "app"
+    flavorDimensions =["app"]
 
     productFlavors {
         dev {
@@ -67,6 +67,10 @@ android {
             dimension "app"
             applicationId "com.edgetechapps.crypto_khabar"
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

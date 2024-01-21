@@ -8,12 +8,10 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        GeneratedPluginRegistrant.registerWith(flutterEngine);
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            "flavor"
-        ).setMethodCallHandler { _, result ->
-            result.success(BuildConfig.FLAVOR);
-        }
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "flavor")
+            .setMethodCallHandler { call, result ->
+                result.success(BuildConfig.FLAVOR)
+            }
     }
 }
