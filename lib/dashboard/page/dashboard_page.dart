@@ -22,7 +22,7 @@ class _DashboardPageState extends State<DashboardPage> {
   List<Widget> tabPage = [
     TopNewsPage(),
     ArticlePage(),
-    MarketTabScreen(),
+   // MarketTabScreen(),
     ProfilePage(),
   ];
 
@@ -56,10 +56,10 @@ class _DashboardPageState extends State<DashboardPage> {
             icon: Icon(Icons.local_library),
             label: StringConst.learnTab,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: StringConst.marketTab,
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.bar_chart),
+          //   label: StringConst.marketTab,
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.build),
             label: StringConst.settingTab,
@@ -77,9 +77,11 @@ class _DashboardPageState extends State<DashboardPage> {
         tabName = "tab_home";
       } else if (_selectedIndex == 1) {
         tabName = "tab_learn";
-      } else if (_selectedIndex == 2) {
-        tabName = "tab_market";
-      } else if (_selectedIndex == 3) {
+      }
+      // else if (_selectedIndex == 2) {
+      //   tabName = "tab_market";
+      // }
+      else if (_selectedIndex == 2) {
         tabName = "tab_setting";
       }
       FirebaseAnalytics.instance.logEvent(name: tabName);
@@ -93,9 +95,11 @@ class _DashboardPageState extends State<DashboardPage> {
       tabName = "tab_home";
     } else if (index == 1) {
       tabName = "tab_learn";
-    } else if (index == 2) {
-      tabName = "tab_market";
-    } else if (index == 3) {
+    }
+    // else if (index == 2) {
+    //   tabName = "tab_market";
+    // }
+    else if (index == 2) {
       tabName = "tab_setting";
     }
     FirebaseAnalytics.instance.logEvent(name: tabName);
